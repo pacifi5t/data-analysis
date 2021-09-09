@@ -9,14 +9,17 @@
     "clean": "rm -rf dist node_modules"
   },
   "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^1.0.0-next.11",
+    "@sveltejs/vite-plugin-svelte": "^1.0.0-next.22",
     "autoprefixer": "^10.3.4",
     "electron": "^14.0.0",
     "eslint": "^7.32.0",
     "prettier": "^2.3.2",
     "prettier-plugin-svelte": "^2.4.0",
-    "svelte": "^3.37.0",
-    "tailwindcss": "^2.2.12",
-    "vite": "^2.5.4"
+    "svelte": "^3.42.4",
+    "tailwindcss": "^2.2.14",
+    "vite": "^2.5.6"
+  },
+  "dependencies": {
+    "chart.js": "^3.5.1"
   }
 }
