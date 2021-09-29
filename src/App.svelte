@@ -1,9 +1,10 @@
 <script>
-  import logo from '../assets/svelte.png';
+  import { Router } from 'svelte-router-spa';
+  import { routes } from './routes';
 </script>
 
-<main class="container">
-  <img src={logo} alt="Svelte Logo" />
+<main id="wrapper" class="bg-gray-100">
+  <Router {routes} />
 </main>
 
 <style global lang="postcss">
