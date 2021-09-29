@@ -8,7 +8,7 @@ import makeAttractionsImporter from 'attractions/importer';
 
 export default defineConfig(({ command, mode }) => {
   return {
-    base: command === 'serve' ? '/' : resolve('./dist') + '/',
+    base: './',
     plugins: [
       svelte({
         preprocess: sveltePreprocess({
