@@ -5,10 +5,11 @@ import Metrics from './routes/Metrics.svelte';
 import Anomalies from './routes/Anomalies.svelte';
 
 class Route {
-  /**
-   * @param {string} name
-   */
-  constructor(name, component) {
+  name: string;
+  component: typeof Layout;
+  layout: typeof Layout;
+
+  constructor(name: string, component: typeof Layout) {
     this.name = name;
     this.component = component;
     this.layout = Layout;
