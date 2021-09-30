@@ -11,7 +11,7 @@
     <div class="flex items-center justify-between h-16">
       <div class="flex items-center">
         <div class="flex-shrink-0">
-          <img class="h-8 w-8" src="../assets/svelte.png" alt="Svelte" />
+          <img class="h-8 w-8" src="/svelte.png" alt="Svelte" />
         </div>
         <div class="md:block">
           <div class="ml-10 flex items-baseline space-x-4">
