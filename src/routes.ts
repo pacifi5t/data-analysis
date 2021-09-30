@@ -16,13 +16,6 @@ class Route {
   }
 }
 
-// export const routeMap = new Map([
-//   ['/', 'Data upload'],
-//   ['/plots', 'Plots'],
-//   ['/metrics', 'Metrics'],
-//   ['/anomalies', 'Anomalies']
-// ]);
-
 export const routes = [
   new Route('/', DataUpload),
   new Route('/plots', Plots),
