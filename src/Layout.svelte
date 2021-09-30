@@ -1,7 +1,41 @@
 <script lang="ts">
   export let currentRoute;
 
-  import {Route} from 'svelte-router-spa';
+  import { Route } from 'svelte-router-spa';
+  // import { routeMap } from './routes';
+  import NavItem from './components/NavItem.svelte';
 </script>
 
-<Route {currentRoute}/>
+<nav class="bg-gray-800">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <div class="flex items-center">
+        <div class="flex-shrink-0">
+          <img class="h-8 w-8" src="../assets/svelte.png" alt="Svelte" />
+        </div>
+        <div class="md:block">
+          <div class="ml-10 flex items-baseline space-x-4">
+            <NavItem label="Data upload" href="/" {currentRoute} />
+            <NavItem label="Plots" href="/plots" {currentRoute} />
+            <NavItem label="Metrics" href="/metrics" {currentRoute} />
+            <NavItem label="Anomalies" href="/anomalies" {currentRoute} />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+<!-- 
+<header class="bg-white shadow">
+  <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+    <h1 class="text-3xl font-bold text-gray-900">
+      {routeMap.get(currentRoute.name)}
+    </h1>
+  </div>
+</header>
+ -->
+<main>
+  <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <Route {currentRoute} />
+  </div>
+</main>
