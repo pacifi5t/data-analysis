@@ -16,6 +16,7 @@
           <div class="ml-10 flex items-baseline space-x-4">
             <NavItem label="Data upload" href="/" {currentRoute} />
             <NavItem label="EDF" href="/edf" {currentRoute} />
+            <NavItem label="Classes" href="/classes" {currentRoute} />
             <NavItem label="Metrics" href="/metrics" {currentRoute} />
             <NavItem label="Anomalies" href="/anomalies" {currentRoute} />
           </div>
