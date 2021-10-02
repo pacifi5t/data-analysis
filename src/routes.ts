@@ -1,6 +1,6 @@
 import Layout from './Layout.svelte';
 import DataUpload from './routes/DataUpload.svelte';
-import Plots from './routes/Plots.svelte';
+import Charts from './routes/Charts.svelte';
 import Metrics from './routes/Metrics.svelte';
 import Anomalies from './routes/Anomalies.svelte';
 
@@ -18,7 +18,7 @@ class Route {
 
 export const routes = [
   new Route('/', DataUpload),
-  new Route('/plots', Plots),
+  new Route('/charts', Charts),
   new Route('/metrics', Metrics),
   new Route('/anomalies', Anomalies)
 ];
