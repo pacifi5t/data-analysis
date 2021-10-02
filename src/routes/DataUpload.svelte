@@ -1,6 +1,7 @@
 <script lang="ts">
   import { FileDropzone } from 'attractions';
-  import { immutableDataStore, fileStore } from '../stores';
+  import { Series } from '../utils/series';
+  import { immutableDataStore, fileStore } from '../utils/stores';
 
   const reader = new FileReader();
   let uplodedFiles = [];
@@ -33,6 +34,7 @@
             data.push(Number.parseFloat(value));
           });
           immutableDataStore.set(data);
+          console.log(new Series(data));
         };
       } else {
         immutableDataStore.set([]);
