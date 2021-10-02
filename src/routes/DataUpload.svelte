@@ -20,11 +20,14 @@
   });
   immutableDataStore.subscribe((value) => {
     immutableData = value;
+    if(immutableData.length !== 0) {
+      console.log(immutableData);
+    }
   });
 
   $: {
     items = [];
-    for (let i = 0; i < immutableData.length; i++) {
+    for (let i = 0; i < immutableData.data.length; i++) {
       items.push({
         i: i.toString(),
         x: immutableData.data[i],
@@ -33,7 +36,6 @@
         F: immutableData.empDistrFunc.get(i)
       });
     }
-    console.log(items);
   }
 </script>
 

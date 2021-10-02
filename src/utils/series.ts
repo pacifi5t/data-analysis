@@ -44,6 +44,6 @@ export class Series {
         );
       }
     });
-    this.empDistrFunc.set(this.length - 1, 1);
+    this.empDistrFunc.set(this.data.length - 1, 1);
   }
 }
