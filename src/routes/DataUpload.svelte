@@ -12,9 +12,8 @@
     { text: 'empirical distribution function', value: 'F' }
   ];
   let items = [];
-
   let uplodedFiles = [];
-  let immutableData = [];
+  let immutableData: Series;
 
   fileStore.subscribe((value) => {
     uplodedFiles = value;
@@ -23,17 +22,15 @@
     immutableData = value;
   });
 
-  $: series = new Series(immutableData);
-
   $: {
     items = [];
-    for (let i = 0; i < series.data.length; i++) {
+    for (let i = 0; i < immutableData.length; i++) {
       items.push({
         i: i.toString(),
-        x: series.data[i],
-        n: series.count.get(i),
-        p: series.frequency.get(i).toPrecision(4),
-        F: series.empDistrFunc.get(i).toPrecision(4)
+        x: immutableData.data[i],
+        n: immutableData.count.get(i),
+        p: immutableData.frequency.get(i).toPrecision(4),
+        F: immutableData.empDistrFunc.get(i).toPrecision(4)
       });
     }
     console.log(items);
@@ -58,20 +55,20 @@
           str.split('\n').forEach((value) => {
             data.push(Number.parseFloat(value));
           });
-          immutableDataStore.set(data);
+          immutableDataStore.set(new Series(data));
         };
       } else {
-        immutableDataStore.set([]);
+        immutableDataStore.set(new Series());
       }
     }}
   />
 </div>
 
 {#if immutableData.length != 0}
-  {#if series.length !== 0}
-  <div class="flex flex-row justify-center overflow-auto">
-    <Table {headers} {items} />
-  </div>
+  {#if immutableData.length !== 0}
+    <div class="flex flex-row justify-center overflow-auto">
+      <Table {headers} {items} />
+    </div>
   {/if}
 {/if}
 

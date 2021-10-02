@@ -5,13 +5,18 @@ export class Series {
   frequency: Map<number, number>;
   empDistrFunc: Map<number, number>;
 
-  constructor(array: Array<number>) {
-    this.length = array.length;
+  constructor(array?: Array<number>) {
+    this.length = 0;
     this.data = [];
     this.count = new Map();
     this.frequency = new Map();
     this.empDistrFunc = new Map();
 
+    if (typeof array === 'undefined') {
+      return;
+    }
+
+    this.length = array.length;
     array
       .sort((a, b) => a - b)
       .forEach((elem) => {
