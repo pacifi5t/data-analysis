@@ -4,3 +4,9 @@ import { Series } from './series';
 export const fileStore = writable([]);
 
 export const immutableDataStore = writable(new Series());
+
+export const mutableDataStore = writable(new Series());
+
+immutableDataStore.subscribe((value) => {
+  mutableDataStore.set(value);
+});

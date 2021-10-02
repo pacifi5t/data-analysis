@@ -2,7 +2,7 @@
   import ApexCharts from 'apexcharts';
   import { onMount } from 'svelte';
   import { edfOptions } from '../utils/chart-options';
-  import { immutableDataStore } from '../utils/stores';
+  import { mutableDataStore } from '../utils/stores';
 
   function createChart(node: any, options: any) {
     let chart = new ApexCharts(node, options);
@@ -15,7 +15,7 @@
   onMount(() => {
     chart = createChart(document.getElementById('edf'), edfOptions);
 
-    immutableDataStore.subscribe((value) => {
+    mutableDataStore.subscribe((value) => {
       let parsedSeries: [number, number][] = [];
       for (let i = 0; i < value.length; i++) {
         parsedSeries.push([value.data[i], value.empDistrFunc.get(i)]);
