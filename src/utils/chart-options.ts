@@ -3,7 +3,7 @@ export const edfOptions = {
     type: 'line'
   },
   title: {
-    text: 'Empirical distribution function',
+    text: 'Empirical Distribution Function',
     align: 'center'
   },
   stroke: {
