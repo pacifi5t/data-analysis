@@ -1,9 +1,18 @@
 <script lang="ts">
-  import { FileDropzone } from 'attractions';
+  import { FileDropzone, Table } from 'attractions';
   import { Series } from '../utils/series';
   import { immutableDataStore, fileStore } from '../utils/stores';
 
   const reader = new FileReader();
+  const headers = [
+    { text: 'index', value: 'i' },
+    { text: 'element', value: 'x' },
+    { text: 'count', value: 'n' },
+    { text: 'frequency', value: 'p' },
+    { text: 'empirical distribution function', value: 'F' }
+  ];
+  let items = [];
+
   let uplodedFiles = [];
   let immutableData = [];
 
@@ -13,6 +22,22 @@
   immutableDataStore.subscribe((value) => {
     immutableData = value;
   });
+
+  $: series = new Series(immutableData);
+
+  $: {
+    items = [];
+    for (let i = 0; i < series.data.length; i++) {
+      items.push({
+        i: i.toString(),
+        x: series.data[i],
+        n: series.count.get(i),
+        p: series.frequency.get(i).toPrecision(4),
+        F: series.empDistrFunc.get(i).toPrecision(4)
+      });
+    }
+    console.log(items);
+  }
 </script>
 
 <div class="text-xl font-bold">
@@ -34,7 +59,6 @@
             data.push(Number.parseFloat(value));
           });
           immutableDataStore.set(data);
-          console.log(new Series(data));
         };
       } else {
         immutableDataStore.set([]);
@@ -44,6 +68,15 @@
 </div>
 
 {#if immutableData.length != 0}
-  <!-- TODO: Reimplement display of the data -->
-  <p>{immutableData.toString()}</p>
+  {#if series.length !== 0}
+  <div class="flex flex-row justify-center overflow-auto">
+    <Table {headers} {items} />
+  </div>
+  {/if}
 {/if}
+
+<style>
+  div {
+    max-height: 640px;
+  }
+</style>
