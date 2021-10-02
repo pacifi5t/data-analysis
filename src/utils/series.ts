@@ -1,3 +1,5 @@
+import { pretty } from './helpers';
+
 export class Series {
   length: number;
   data: number[];
@@ -30,17 +32,18 @@ export class Series {
       });
 
     this.data.forEach((_elem, index) =>
-      this.frequency.set(index, this.count.get(index) / this.length)
+      this.frequency.set(index, pretty(this.count.get(index) / this.length))
     );
     this.data.forEach((_elem, index) => {
       if (index == 0) {
-        this.empDistrFunc.set(index, this.frequency.get(index));
+        this.empDistrFunc.set(index, pretty(this.frequency.get(index)));
       } else {
         this.empDistrFunc.set(
           index,
-          this.empDistrFunc.get(index - 1) + this.frequency.get(index)
+          pretty(this.empDistrFunc.get(index - 1) + this.frequency.get(index))
         );
       }
     });
+    this.empDistrFunc.set(this.length - 1, 1);
   }
 }

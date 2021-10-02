@@ -29,8 +29,8 @@
         i: i.toString(),
         x: immutableData.data[i],
         n: immutableData.count.get(i),
-        p: immutableData.frequency.get(i).toPrecision(4),
-        F: immutableData.empDistrFunc.get(i).toPrecision(4)
+        p: immutableData.frequency.get(i),
+        F: immutableData.empDistrFunc.get(i)
       });
     }
     console.log(items);
