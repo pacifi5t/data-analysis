@@ -38,7 +38,9 @@
       <line x1="8" y1="12" x2="16" y2="12" />
     </svg>
   </Button>
-  <span class="py-4 text-2xl font-medium">{classifiedData.classCount}</span>
+  {#if classifiedData.classCount >= 0}
+    <span class="py-4 text-2xl font-medium">{classifiedData.classCount}</span>
+  {/if}
   <Button
     on:click={() => {
       classifiedDataStore.update((old) =>
