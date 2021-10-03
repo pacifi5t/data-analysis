@@ -1,14 +1,8 @@
 <script lang="ts">
-  import ApexCharts from 'apexcharts';
   import { onMount } from 'svelte';
   import { edfOptions } from '../utils/chart-options';
   import { mutableDataStore } from '../utils/stores';
-
-  function createChart(node: any, options: any) {
-    let chart = new ApexCharts(node, options);
-    chart.render();
-    return chart;
-  }
+  import {createChart} from '../utils/helpers';
 
   let chart: ApexCharts;
 

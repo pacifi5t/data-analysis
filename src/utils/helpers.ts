@@ -1,4 +1,5 @@
 import { ClassifiedSeries, Series } from './series';
+import ApexCharts from 'apexcharts';
 
 export function pretty(num: number): number {
   return parseFloat(num.toPrecision(4));
@@ -34,4 +35,10 @@ export function updateClassifiedSeries(
   });
 
   return new ClassifiedSeries(classCount, limits, classifiedArray);
+}
+
+export function createChart(node: HTMLElement, options: unknown): ApexCharts {
+  const chart = new ApexCharts(node, options);
+  chart.render();
+  return chart;
 }
