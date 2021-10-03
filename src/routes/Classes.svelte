@@ -1,14 +1,12 @@
 <script lang="ts">
-  import { Series } from '../utils/series';
-  import { onMount } from 'svelte';
-  import { mutableDataStore } from '../utils/stores';
+  import { ClassifiedSeries, Series } from '../utils/series';
+  import { mutableDataStore, classifiedDataStore } from '../utils/stores';
   import { Button } from 'attractions';
 
-    //TODO: Save data in store
-  function updateSeries(series: Series) {
-    limits = [];
-    let limitFirst = series.data[0];
-    let limitLast = series.data[series.data.length - 1];
+  function updateSeries(classCount: number) {
+    let limits = [];
+    let limitFirst = mutableSeries.data[0];
+    let limitLast = mutableSeries.data[mutableSeries.data.length - 1];
 
     const width = (limitLast - limitFirst) / classCount;
     limits.push(limitFirst);
@@ -17,11 +15,8 @@
     }
     limits.push(limitLast);
 
-    console.log(limits);
-    console.log(classCount);
-
-    let classifiedData = [];
-    series.data.forEach((elem, index) => {
+    let classifiedArray = [];
+    mutableSeries.data.forEach((elem, index) => {
       let classNum = 1;
       for (let i = 1; i < limits.length - 1; i++) {
         if (elem < limits[i]) {
@@ -29,29 +24,38 @@
         }
         classNum++;
       }
-      for (let i = 0; i < series.count.get(index); i++) {
-        classifiedData.push(classNum);
+      for (let i = 0; i < mutableSeries.count.get(index); i++) {
+        classifiedArray.push(classNum);
       }
     });
-    console.log(new Series(classifiedData));
+
+    return new ClassifiedSeries(classCount, limits, classifiedArray);
   }
 
-  let limits = [];
-  let classCount = 3;
-  
-  onMount(() => {
-    //FIXME: This will make restoring data from store impossible
-    mutableDataStore.subscribe((value) => {
-      classCount = Math.round(Math.log2(value.length));
-      updateSeries(value);
-    });
+  let mutableSeries: Series;
+  let classifiedData: ClassifiedSeries;
+
+  classifiedDataStore.subscribe((value) => {
+    classifiedData = value;
   });
-  
+
+  mutableDataStore.subscribe((value) => {
+    mutableSeries = value;
+    if (classifiedData.length === 0) {
+      classifiedDataStore.set(
+        updateSeries(Math.round(Math.log2(value.length)))
+      );
+    }
+  });
 </script>
 
 <div class="flex space-x-4">
   <span class="py-4 text-2xl font-medium">Class count:</span>
-  <Button on:click={() => classCount--}>
+  <Button
+    on:click={() => {
+      classifiedDataStore.update((old) => updateSeries(old.classCount - 1));
+    }}
+  >
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="24"
@@ -68,8 +72,12 @@
       <line x1="8" y1="12" x2="16" y2="12" />
     </svg>
   </Button>
-  <span class="py-4 text-2xl font-medium">{classCount}</span>
-  <Button on:click={() => classCount++}>
+  <span class="py-4 text-2xl font-medium">{classifiedData.classCount}</span>
+  <Button
+    on:click={() => {
+      classifiedDataStore.update((old) => updateSeries(old.classCount + 1));
+    }}
+  >
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="24"

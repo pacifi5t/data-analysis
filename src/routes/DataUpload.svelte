@@ -1,7 +1,11 @@
 <script lang="ts">
   import { FileDropzone, Table } from 'attractions';
-  import { Series } from '../utils/series';
-  import { immutableDataStore, fileStore } from '../utils/stores';
+  import { ClassifiedSeries, Series } from '../utils/series';
+  import {
+    immutableDataStore,
+    classifiedDataStore,
+    fileStore
+  } from '../utils/stores';
 
   const reader = new FileReader();
   const headers = [
@@ -20,8 +24,10 @@
   });
   immutableDataStore.subscribe((value) => {
     immutableData = value;
-    if(immutableData.length !== 0) {
+    if (immutableData.length !== 0) {
       console.log(immutableData);
+    } else {
+      classifiedDataStore.set(new ClassifiedSeries());
     }
   });
 
