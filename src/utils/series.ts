@@ -7,7 +7,7 @@ export class Series {
   frequency: Map<number, number>;
   empDistrFunc: Map<number, number>;
 
-  constructor(array?: Array<number>) {
+  constructor(array?: number[]) {
     this.length = 0;
     this.data = [];
     this.count = new Map();
@@ -45,5 +45,25 @@ export class Series {
       }
     });
     this.empDistrFunc.set(this.data.length - 1, 1);
+  }
+}
+
+export class ClassifiedSeries extends Series {
+  classCount: number;
+  limits: number[];
+
+  constructor(classCount?: number, limits?: number[], array?: number[]) {
+    super(array);
+
+    if(typeof classCount === 'undefined') {
+      this.classCount = 0;
+    } else {
+      this.classCount = classCount;
+    }
+    if(typeof limits === 'undefined') {
+      this.limits = [];
+    } else {
+      this.limits = limits;
+    }
   }
 }
