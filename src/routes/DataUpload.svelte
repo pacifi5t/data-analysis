@@ -24,11 +24,6 @@
   });
   immutableDataStore.subscribe((value) => {
     immutableData = value;
-    if (immutableData.length !== 0) {
-      console.log(immutableData);
-    } else {
-      classifiedDataStore.set(new ClassifiedSeries());
-    }
   });
 
   $: {
@@ -52,7 +47,6 @@
     files={uplodedFiles}
     on:change={(event) => {
       fileStore.set(event.detail.files);
-      console.log(uplodedFiles);
 
       if (uplodedFiles.length != 0) {
         reader.readAsText(uplodedFiles[0]);

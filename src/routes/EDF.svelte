@@ -15,13 +15,12 @@
   onMount(() => {
     chart = createChart(document.getElementById('edf'), edfOptions);
 
-    mutableDataStore.subscribe((value) => {
-      let parsedSeries: [number, number][] = [];
-      for (let i = 0; i < value.length; i++) {
-        parsedSeries.push([value.data[i], value.empDistrFunc.get(i)]);
-      }
-      chart.updateSeries([{ name: 'Value', data: parsedSeries }], true);
-    });
+    let mutableData = $mutableDataStore;
+    let parsedSeries: [number, number][] = [];
+    for (let i = 0; i < mutableData.length; i++) {
+      parsedSeries.push([mutableData.data[i], mutableData.empDistrFunc.get(i)]);
+    }
+    chart.updateSeries([{ name: 'Value', data: parsedSeries }], true);
   });
 </script>
 
