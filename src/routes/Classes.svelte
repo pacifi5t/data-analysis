@@ -2,22 +2,28 @@
   import type { ClassifiedSeries } from '../utils/series';
   import { mutableDataStore, classifiedDataStore } from '../utils/stores';
   import { Button, Table } from 'attractions';
-  import { pretty, updateClassifiedSeries } from '../utils/helpers';
+  import {
+    createChart,
+    pretty,
+    updateClassifiedSeries
+  } from '../utils/helpers';
+  import { onMount } from 'svelte';
+  import { mixedChartOptions } from '../utils/chart-options';
 
   const headers = [
     { text: 'class num', value: 'c' },
     { text: 'limits', value: 'l' },
     { text: 'count', value: 'n' },
     { text: 'frequency', value: 'p' },
-    { text: 'empirical distribution function', value: 'F' }
+    { text: 'edf', value: 'F' }
   ];
   let items = [];
   let mutableSeries = $mutableDataStore;
   let classifiedData: ClassifiedSeries;
+  let chart: ApexCharts;
 
   classifiedDataStore.subscribe((value) => {
     classifiedData = value;
-    //console.log(value);
   });
 
   $: {
@@ -33,8 +39,21 @@
         F: classifiedData.empDistrFunc.get(i)
       });
     }
-    console.log(items);
+
+    if (typeof chart !== 'undefined') {
+      let classFreqs = [];
+      classifiedData.frequency.forEach((value) => classFreqs.push(value));
+      //TODO: Use KDE function
+      chart.updateSeries([{ data: classFreqs }, { data: classFreqs }]);
+    }
   }
+
+  onMount(() => {
+    chart = createChart(
+      document.getElementById('mixed-chart'),
+      mixedChartOptions
+    );
+  });
 </script>
 
 <div>
@@ -91,7 +110,14 @@
       </svg>
     </Button>
   </div>
-  {#if classifiedData.length !== 0}
-    <Table {headers} {items} />
-  {/if}
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      {#if classifiedData.length !== 0}
+        <Table {headers} {items} />
+      {/if}
+    </div>
+    <div>
+      <div id="mixed-chart" />
+    </div>
+  </div>
 </div>

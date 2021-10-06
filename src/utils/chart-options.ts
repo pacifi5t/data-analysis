@@ -23,3 +23,29 @@ export const edfOptions = {
     max: 1
   }
 };
+
+export const mixedChartOptions = {
+  series: [
+    {
+      type: 'column',
+      data: []
+    },
+    {
+      type: 'line',
+      data: []
+    }
+  ],
+  chart: {
+    type: 'line'
+  },
+  stroke: {
+    curve: 'smooth',
+    width: [0, 4]
+  },
+  xaxis: {
+    type: 'category'
+  },
+  legend: {
+    show: false
+  }
+};
