@@ -1,11 +1,7 @@
 <script lang="ts">
   import { FileDropzone, Table } from 'attractions';
-  import { ClassifiedSeries, Series } from '../utils/series';
-  import {
-    immutableDataStore,
-    classifiedDataStore,
-    fileStore
-  } from '../utils/stores';
+  import { Series } from '../utils/series';
+  import { immutableDataStore, fileStore } from '../utils/stores';
 
   const reader = new FileReader();
   const headers = [
@@ -66,12 +62,10 @@
   />
 </div>
 
-{#if immutableData.length != 0}
-  {#if immutableData.length !== 0}
-    <div class="flex flex-row justify-center overflow-auto">
-      <Table {headers} {items} />
-    </div>
-  {/if}
+{#if immutableData.length !== 0}
+  <div class="flex flex-row justify-center overflow-auto">
+    <Table {headers} {items} />
+  </div>
 {/if}
 
 <style>
