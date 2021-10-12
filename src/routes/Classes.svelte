@@ -29,10 +29,12 @@
   $: {
     items = [];
     for (let i = 0; i < classifiedData.data.length; i++) {
+      const elem = classifiedData.data[i];
+      const diff = elem - i - 1;
       items.push({
-        c: classifiedData.data[i],
-        l: `${pretty(classifiedData.limits[i])} - ${pretty(
-          classifiedData.limits[i + 1]
+        c: elem,
+        l: `${pretty(classifiedData.limits[i + diff])} - ${pretty(
+          classifiedData.limits[i + 1 + diff]
         )}`,
         n: classifiedData.count.get(i),
         p: classifiedData.frequency.get(i),
