@@ -64,7 +64,9 @@
     <Button
       on:click={() => {
         classifiedDataStore.update((old) =>
-          updateClassifiedSeries(old.classCount - 1, mutableSeries)
+          old.classCount > 1
+            ? updateClassifiedSeries(old.classCount - 1, mutableSeries)
+            : old
         );
       }}
     >
