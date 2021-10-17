@@ -1,20 +1,27 @@
 import { pretty } from './helpers';
 
-export class Series {
-  length: number;
+class Series {
   data: number[];
   count: Map<number, number>;
   frequency: Map<number, number>;
   empDistrFunc: Map<number, number>;
 
-  constructor(array?: number[]) {
-    this.length = 0;
+  constructor() {
     this.data = [];
     this.count = new Map();
     this.frequency = new Map();
     this.empDistrFunc = new Map();
+  }
+}
+
+export class VarSeries extends Series {
+  length: number;
+
+  constructor(array?: number[]) {
+    super();
 
     if (typeof array === 'undefined') {
+      this.length = 0;
       return;
     }
 
@@ -53,17 +60,44 @@ export class ClassifiedSeries extends Series {
   limits: number[];
 
   constructor(classCount?: number, limits?: number[], array?: number[]) {
-    super(array);
+    super();
 
-    if(typeof classCount === 'undefined') {
+    if (
+      typeof classCount === 'undefined' ||
+      typeof limits === 'undefined' ||
+      typeof array === 'undefined'
+    ) {
       this.classCount = 0;
+      this.limits = [];
+      return;
     } else {
       this.classCount = classCount;
-    }
-    if(typeof limits === 'undefined') {
-      this.limits = [];
-    } else {
       this.limits = limits;
     }
+
+    for (let i = 0; i < classCount; i++) {
+      this.data.push(i + 1);
+      this.count.set(i, 0);
+    }
+
+    array.forEach((elem) => {
+      const index = this.data.indexOf(elem);
+      this.count.set(index, this.count.get(index) + 1);
+    });
+
+    this.data.forEach((_elem, index) =>
+      this.frequency.set(index, pretty(this.count.get(index) / this.classCount))
+    );
+    this.data.forEach((_elem, index) => {
+      if (index == 0) {
+        this.empDistrFunc.set(index, pretty(this.frequency.get(index)));
+      } else {
+        this.empDistrFunc.set(
+          index,
+          pretty(this.empDistrFunc.get(index - 1) + this.frequency.get(index))
+        );
+      }
+    });
+    this.empDistrFunc.set(this.data.length - 1, 1);
   }
 }

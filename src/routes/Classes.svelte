@@ -24,6 +24,8 @@
 
   classifiedDataStore.subscribe((value) => {
     classifiedData = value;
+    console.log(value);
+    
   });
 
   $: {
@@ -114,7 +116,7 @@
   </div>
   <div class="grid grid-cols-2 gap-4">
     <div>
-      {#if classifiedData.length !== 0}
+      {#if classifiedData.classCount !== 0}
         <Table {headers} {items} />
       {/if}
     </div>

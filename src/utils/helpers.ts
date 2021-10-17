@@ -1,4 +1,4 @@
-import { ClassifiedSeries, Series } from './series';
+import { ClassifiedSeries, VarSeries } from './series';
 import ApexCharts from 'apexcharts';
 
 export function pretty(num: number): number {
@@ -7,11 +7,11 @@ export function pretty(num: number): number {
 
 export function updateClassifiedSeries(
   classCount: number,
-  series: Series
+  varSeries: VarSeries
 ): ClassifiedSeries {
   const limits = [];
-  const limitFirst = series.data[0];
-  const limitLast = series.data[series.data.length - 1];
+  const limitFirst = varSeries.data[0];
+  const limitLast = varSeries.data[varSeries.data.length - 1];
 
   const width = (limitLast - limitFirst) / classCount;
   limits.push(limitFirst);
@@ -21,7 +21,7 @@ export function updateClassifiedSeries(
   limits.push(limitLast);
 
   const classifiedArray = [];
-  series.data.forEach((elem, index) => {
+  varSeries.data.forEach((elem, index) => {
     let classNum = 1;
     for (let i = 1; i < limits.length - 1; i++) {
       if (elem < limits[i]) {
@@ -29,7 +29,7 @@ export function updateClassifiedSeries(
       }
       classNum++;
     }
-    for (let i = 0; i < series.count.get(index); i++) {
+    for (let i = 0; i < varSeries.count.get(index); i++) {
       classifiedArray.push(classNum);
     }
   });
