@@ -3,7 +3,7 @@
   import { mutableDataStore, classifiedDataStore } from '../utils/stores';
   import { Button, Table } from 'attractions';
   import {
-    createChart,
+    // createChart,
     pretty,
     updateClassifiedSeries
   } from '../utils/helpers';
@@ -20,7 +20,6 @@
   let items = [];
   let mutableSeries = $mutableDataStore;
   let classifiedData: ClassifiedSeries;
-  let chart: ApexCharts;
 
   classifiedDataStore.subscribe((value) => {
     classifiedData = value;
@@ -44,19 +43,19 @@
       });
     }
 
-    if (typeof chart !== 'undefined') {
-      let classFreqs = [];
-      classifiedData.frequency.forEach((value) => classFreqs.push(value));
-      //TODO: Use KDE function
-      chart.updateSeries([{ data: classFreqs }, { data: classFreqs }]);
-    }
+    // if (typeof chart !== 'undefined') {
+    //   let classFreqs = [];
+    //   classifiedData.frequency.forEach((value) => classFreqs.push(value));
+    //   //TODO: Use KDE function
+    //   chart.updateSeries([{ data: classFreqs }, { data: classFreqs }]);
+    // }
   }
 
   onMount(() => {
-    chart = createChart(
-      document.getElementById('mixed-chart'),
-      mixedChartOptions
-    );
+  //   chart = createChart(
+  //     document.getElementById('mixed-chart'),
+  //     mixedChartOptions
+  //   );
   });
 </script>
 
