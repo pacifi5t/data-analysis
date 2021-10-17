@@ -16,6 +16,9 @@ immutableDataStore.subscribe((value) => {
 
 mutableDataStore.subscribe((value) => {
   classifiedDataStore.set(
-    updateClassifiedSeries(Math.round(Math.log2(value.length)), value)
+    updateClassifiedSeries(
+      Math.floor(1 + 3.32 * Math.log10(value.length)),
+      value
+    )
   );
 });
