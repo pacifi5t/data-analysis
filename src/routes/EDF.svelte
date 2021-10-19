@@ -1,20 +1,26 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { edfOptions } from '../utils/chart-options';
+  import { createEDFChart } from '../utils/charts';
   import { mutableDataStore } from '../utils/stores';
-  // import {createChart} from '../utils/helpers';
-
-  // let chart: ApexCharts;
 
   onMount(() => {
-    // chart = createChart(document.getElementById('edf'), edfOptions);
-
     let mutableData = $mutableDataStore;
-    let parsedSeries: [number, number][] = [];
-    for (let i = 0; i < mutableData.length; i++) {
-      parsedSeries.push([mutableData.data[i], mutableData.empDistrFunc.get(i)]);
+    let parsedSeries: { x1: number; x2: number; y: number }[] = [];
+    for (let i = 0; i < mutableData.data.length - 1; i++) {
+      let temp = {
+        x1: mutableData.data[i],
+        x2: mutableData.data[i + 1],
+        y: mutableData.empDistrFunc.get(i)
+      };
+      if (temp.x2 === undefined) {
+        temp.x2 = temp.x1;
+      }
+      parsedSeries.push(temp);
     }
-    // chart.updateSeries([{ name: 'Value', data: parsedSeries }], true);
+
+    if (parsedSeries.length != 0) {
+      createEDFChart(parsedSeries);
+    }
   });
 </script>
 

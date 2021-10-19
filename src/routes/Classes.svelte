@@ -2,13 +2,9 @@
   import type { ClassifiedSeries } from '../utils/series';
   import { mutableDataStore, classifiedDataStore } from '../utils/stores';
   import { Button, Table } from 'attractions';
-  import {
-    // createChart,
-    pretty,
-    updateClassifiedSeries
-  } from '../utils/helpers';
+  import { pretty, updateClassifiedSeries } from '../utils/helpers';
   import { onMount } from 'svelte';
-  import { mixedChartOptions } from '../utils/chart-options';
+  import {} from '../utils/charts';
 
   const headers = [
     { text: 'class num', value: 'c' },
@@ -24,7 +20,6 @@
   classifiedDataStore.subscribe((value) => {
     classifiedData = value;
     console.log(value);
-    
   });
 
   $: {
@@ -52,10 +47,10 @@
   }
 
   onMount(() => {
-  //   chart = createChart(
-  //     document.getElementById('mixed-chart'),
-  //     mixedChartOptions
-  //   );
+    //   chart = createChart(
+    //     document.getElementById('mixed-chart'),
+    //     mixedChartOptions
+    //   );
   });
 </script>
 

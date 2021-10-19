@@ -35,9 +35,3 @@ export function updateClassifiedSeries(
 
   return new ClassifiedSeries(classCount, limits, classifiedArray);
 }
-
-// export function createChart(node: HTMLElement, options: unknown): ApexCharts {
-//   const chart = new ApexCharts(node, options);
-//   chart.render();
-//   return chart;
-// }
