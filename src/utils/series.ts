@@ -86,7 +86,7 @@ export class ClassifiedSeries extends Series {
     });
 
     this.data.forEach((_elem, index) =>
-      this.frequency.set(index, pretty(this.count.get(index) / this.classCount))
+      this.frequency.set(index, pretty(this.count.get(index) / array.length))
     );
     this.data.forEach((_elem, index) => {
       if (index == 0) {
