@@ -4,7 +4,7 @@
   import { Button, Table } from 'attractions';
   import { pretty, updateClassifiedSeries } from '../utils/helpers';
   import { onMount } from 'svelte';
-  import {} from '../utils/charts';
+  import { createKDEchart } from '../utils/charts';
 
   const headers = [
     { text: 'class num', value: 'c' },
@@ -37,20 +37,12 @@
         F: classifiedData.empDistrFunc.get(i)
       });
     }
-
-    // if (typeof chart !== 'undefined') {
-    //   let classFreqs = [];
-    //   classifiedData.frequency.forEach((value) => classFreqs.push(value));
-    //   //TODO: Use KDE function
-    //   chart.updateSeries([{ data: classFreqs }, { data: classFreqs }]);
-    // }
+    
+    //createKDEchart(classifiedData);
   }
 
   onMount(() => {
-    //   chart = createChart(
-    //     document.getElementById('mixed-chart'),
-    //     mixedChartOptions
-    //   );
+    //createKDEchart(classifiedData);
   });
 </script>
 
@@ -117,7 +109,7 @@
       {/if}
     </div>
     <div>
-      <div id="mixed-chart" />
+      <div id="kde" />
     </div>
   </div>
 </div>
