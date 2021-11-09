@@ -38,7 +38,7 @@
 
 <div class="text-xl font-bold">
   <FileDropzone
-    accept="text/*"
+    accept=".txt,.dat"
     max={1}
     files={uplodedFiles}
     on:change={(event) => {
@@ -50,7 +50,7 @@
         reader.onload = () => {
           let str = '' + reader.result;
           let data = [];
-          str.split('\n').forEach((value) => {
+          str.split(/\n| /).forEach((value) => {
             data.push(Number.parseFloat(value));
           });
           immutableDataStore.set(new VarSeries(data));
