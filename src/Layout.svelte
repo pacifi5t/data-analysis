@@ -1,8 +1,8 @@
 <script lang="ts">
   export let currentRoute;
 
-  import { Route } from 'svelte-router-spa';
-  import NavItem from './components/NavItem.svelte';
+  import { Route } from "svelte-router-spa";
+  import NavItem from "./components/NavItem.svelte";
 </script>
 
 <nav class="bg-gray-800">

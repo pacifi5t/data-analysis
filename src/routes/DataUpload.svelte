@@ -1,15 +1,15 @@
 <script lang="ts">
-  import { FileDropzone, Table } from 'attractions';
-  import { VarSeries } from '../utils/series';
-  import { immutableDataStore, fileStore } from '../utils/stores';
+  import { FileDropzone, Table } from "attractions";
+  import { VarSeries } from "../utils/series";
+  import { immutableDataStore, fileStore } from "../utils/stores";
 
   const reader = new FileReader();
   const headers = [
-    { text: 'index', value: 'i' },
-    { text: 'element', value: 'x' },
-    { text: 'count', value: 'n' },
-    { text: 'frequency', value: 'p' },
-    { text: 'empirical cumulative distribution function', value: 'F' }
+    { text: "index", value: "i" },
+    { text: "element", value: "x" },
+    { text: "count", value: "n" },
+    { text: "frequency", value: "p" },
+    { text: "empirical cumulative distribution function", value: "F" }
   ];
   let items = [];
   let uplodedFiles = [];
@@ -48,7 +48,7 @@
         reader.readAsText(uplodedFiles[0]);
 
         reader.onload = () => {
-          let str = '' + reader.result;
+          let str = "" + reader.result;
           let data = [];
           str.split(/\n| /).forEach((value) => {
             data.push(Number.parseFloat(value));

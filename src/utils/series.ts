@@ -1,4 +1,4 @@
-import { pretty } from './helpers';
+import { pretty } from "./helpers";
 
 class Series {
   data: number[];
@@ -20,7 +20,7 @@ export class VarSeries extends Series {
   constructor(array?: number[]) {
     super();
 
-    if (typeof array === 'undefined') {
+    if (typeof array === "undefined") {
       this.length = 0;
       return;
     }
@@ -63,9 +63,9 @@ export class ClassifiedSeries extends Series {
     super();
 
     if (
-      typeof classCount === 'undefined' ||
-      typeof limits === 'undefined' ||
-      typeof array === 'undefined'
+      typeof classCount === "undefined" ||
+      typeof limits === "undefined" ||
+      typeof array === "undefined"
     ) {
       this.classCount = 0;
       this.limits = [];

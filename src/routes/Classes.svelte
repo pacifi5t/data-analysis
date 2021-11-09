@@ -1,17 +1,17 @@
 <script lang="ts">
-  import type { ClassifiedSeries } from '../utils/series';
-  import { mutableDataStore, classifiedDataStore } from '../utils/stores';
-  import { Button, Table } from 'attractions';
-  import { pretty, updateClassifiedSeries } from '../utils/helpers';
-  import { onMount } from 'svelte';
-  import { createKDEchart } from '../utils/charts';
+  import type { ClassifiedSeries } from "../utils/series";
+  import { mutableDataStore, classifiedDataStore } from "../utils/stores";
+  import { Button, Table } from "attractions";
+  import { pretty, updateClassifiedSeries } from "../utils/helpers";
+  import { onMount } from "svelte";
+  import { createKDEchart } from "../utils/charts";
 
   const headers = [
-    { text: 'class num', value: 'c' },
-    { text: 'limits', value: 'l' },
-    { text: 'count', value: 'n' },
-    { text: 'frequency', value: 'p' },
-    { text: 'ecdf', value: 'F' }
+    { text: "class num", value: "c" },
+    { text: "limits", value: "l" },
+    { text: "count", value: "n" },
+    { text: "frequency", value: "p" },
+    { text: "ecdf", value: "F" }
   ];
   let items = [];
   let mutableSeries = $mutableDataStore;
@@ -37,7 +37,7 @@
         F: classifiedData.empDistrFunc.get(i)
       });
     }
-    
+
     //createKDEchart(classifiedData);
   }
 

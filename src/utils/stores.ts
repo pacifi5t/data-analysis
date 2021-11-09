@@ -1,6 +1,6 @@
-import { writable } from 'svelte/store';
-import { ClassifiedSeries, VarSeries } from './series';
-import { updateClassifiedSeries } from './helpers';
+import { writable } from "svelte/store";
+import { ClassifiedSeries, VarSeries } from "./series";
+import { updateClassifiedSeries } from "./helpers";
 
 export const fileStore = writable([]);
 

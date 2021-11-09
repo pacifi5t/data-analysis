@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import { createECDFChart as createECDFChart } from '../utils/charts';
-  import { mutableDataStore } from '../utils/stores';
+  import { onMount } from "svelte";
+  import { createECDFChart as createECDFChart } from "../utils/charts";
+  import { mutableDataStore } from "../utils/stores";
 
   onMount(() => {
     let mutableData = $mutableDataStore;

@@ -1,4 +1,4 @@
-import { ClassifiedSeries, VarSeries } from './series';
+import { ClassifiedSeries, VarSeries } from "./series";
 
 export function pretty(num: number): number {
   return parseFloat(num.toPrecision(4));
