@@ -11,7 +11,7 @@
     { text: 'limits', value: 'l' },
     { text: 'count', value: 'n' },
     { text: 'frequency', value: 'p' },
-    { text: 'edf', value: 'F' }
+    { text: 'ecdf', value: 'F' }
   ];
   let items = [];
   let mutableSeries = $mutableDataStore;

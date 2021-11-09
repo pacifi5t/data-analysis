@@ -9,7 +9,7 @@
     { text: 'element', value: 'x' },
     { text: 'count', value: 'n' },
     { text: 'frequency', value: 'p' },
-    { text: 'empirical distribution function', value: 'F' }
+    { text: 'empirical cumulative distribution function', value: 'F' }
   ];
   let items = [];
   let uplodedFiles = [];

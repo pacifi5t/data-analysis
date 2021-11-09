@@ -1,6 +1,6 @@
 import Layout from './Layout.svelte';
 import DataUpload from './routes/DataUpload.svelte';
-import EDF from './routes/EDF.svelte';
+import ECDF from './routes/ECDF.svelte';
 import Classes from './routes/Classes.svelte';
 import Metrics from './routes/Metrics.svelte';
 import Anomalies from './routes/Anomalies.svelte';
@@ -19,7 +19,7 @@ class Route {
 
 export const routes = [
   new Route('/', DataUpload),
-  new Route('/edf', EDF),
+  new Route('/ecdf', ECDF),
   new Route('/classes', Classes),
   new Route('/metrics', Metrics),
   new Route('/anomalies', Anomalies)

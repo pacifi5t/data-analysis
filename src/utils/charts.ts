@@ -1,15 +1,15 @@
 import * as d3 from 'd3';
 import type { ClassifiedSeries } from './series';
 
-export function createEDFChart(data: { x1: number; x2: number; y: number }[]) {
+export function createECDFChart(data: { x1: number; x2: number; y: number }[]) {
   const margin = { top: 10, right: 30, bottom: 30, left: 60 },
     width = 1200 - margin.left - margin.right,
     height = 800 - margin.top - margin.bottom;
 
-  d3.select('#edf').selectChild('svg').remove();
+  d3.select('#ecdf').selectChild('svg').remove();
 
   const svg = d3
-    .select('#edf')
+    .select('#ecdf')
     .append('svg')
     .attr('class', 'chart')
     .attr('width', width + margin.left + margin.right)
