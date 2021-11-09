@@ -97,12 +97,29 @@ export function createKDEchart(series: ClassifiedSeries) {
     .attr("transform", `translate(0, ${height})`)
     .call(d3.axisBottom(x).ticks(series.limits.length));
 
-  const y = d3.scaleLinear().domain([0, 1]).range([height, 0]);
-  svg.append("g").call(d3.axisLeft(y));
-
   const histogram = d3
     .bin()
     .value((d) => d)
     .domain([series.limits[0], series.limits[series.limits.length - 1]])
-    .thresholds(x.ticks(5));
+    .thresholds(x.ticks(series.classCount));
+
+  const data = Array.from(series.frequency.values());
+  console.log(data);
+  
+  const y = d3
+    .scaleLinear()
+    .range([height, 0])
+    .domain([0, Math.max(...data)]);
+  svg.append("g").call(d3.axisLeft(y));
+
+  let counter = - width / series.classCount + 1;
+  svg
+    .selectAll("rect")
+    .data(Array.from(series.frequency.values()))
+    .join("rect")
+    .attr("x", (d) => {counter += width / series.classCount; return counter})
+    .attr("y", (d) => y(d))
+    .attr("width", (d) => width / series.classCount)
+    .attr("height", (d) => height - y(d))
+    .style("fill", "#69b3a2");
 }

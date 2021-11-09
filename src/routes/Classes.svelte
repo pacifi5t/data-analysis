@@ -38,11 +38,11 @@
       });
     }
 
-    //createKDEchart(classifiedData);
+    createKDEchart(classifiedData);
   }
 
   onMount(() => {
-    //createKDEchart(classifiedData);
+    createKDEchart(classifiedData);
   });
 </script>
 
