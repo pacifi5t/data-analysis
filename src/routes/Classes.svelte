@@ -1,10 +1,10 @@
 <script lang="ts">
   import type { ClassifiedSeries } from "../utils/series";
   import { mutableDataStore, classifiedDataStore } from "../utils/stores";
-  import { Button, Table } from "attractions";
-  import { pretty, updateClassifiedSeries } from "../utils/helpers";
+  import { Button, Slider, Table } from "attractions";
+  import { kde, pretty, updateClassifiedSeries } from "../utils/helpers";
   import { onMount } from "svelte";
-  import { createKDEchart } from "../utils/charts";
+  import { createHistogram } from "../utils/charts";
 
   const headers = [
     { text: "class num", value: "c" },
@@ -13,6 +13,7 @@
     { text: "frequency", value: "p" },
     { text: "ecdf", value: "F" }
   ];
+  let sliderValue = 0.5;
   let items = [];
   let mutableSeries = $mutableDataStore;
   let classifiedData: ClassifiedSeries;
@@ -38,69 +39,89 @@
       });
     }
 
-    createKDEchart(classifiedData);
+    createHistogram(
+      classifiedData,
+      kde(sliderValue, mutableSeries, classifiedData.limits)
+    );
   }
 
   onMount(() => {
-    createKDEchart(classifiedData);
+    createHistogram(
+      classifiedData,
+      kde(sliderValue, mutableSeries, classifiedData.limits)
+    );
   });
 </script>
 
 <div>
   <div class="flex space-x-4">
-    <span class="py-4 text-2xl font-medium">Class count:</span>
-    <Button
-      on:click={() => {
-        classifiedDataStore.update((old) =>
-          old.classCount > 1
-            ? updateClassifiedSeries(old.classCount - 1, mutableSeries)
-            : old
-        );
-      }}
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="feather feather-minus-circle"
+    <div class="flex space-x-4 flex-grow">
+      <span class="py-4 text-2xl font-medium">Class count:</span>
+      <Button
+        on:click={() => {
+          classifiedDataStore.update((old) =>
+            old.classCount > 1
+              ? updateClassifiedSeries(old.classCount - 1, mutableSeries)
+              : old
+          );
+        }}
       >
-        <circle cx="12" cy="12" r="10" />
-        <line x1="8" y1="12" x2="16" y2="12" />
-      </svg>
-    </Button>
-    {#if classifiedData.classCount >= 0}
-      <span class="py-4 text-2xl font-medium">{classifiedData.classCount}</span>
-    {/if}
-    <Button
-      on:click={() => {
-        classifiedDataStore.update((old) =>
-          updateClassifiedSeries(old.classCount + 1, mutableSeries)
-        );
-      }}
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="feather feather-plus-circle"
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="feather feather-minus-circle"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <line x1="8" y1="12" x2="16" y2="12" />
+        </svg>
+      </Button>
+      {#if classifiedData.classCount >= 0}
+        <span class="py-4 text-2xl font-medium"
+          >{classifiedData.classCount}</span
+        >
+      {/if}
+      <Button
+        on:click={() => {
+          classifiedDataStore.update((old) =>
+            updateClassifiedSeries(old.classCount + 1, mutableSeries)
+          );
+        }}
       >
-        <circle cx="12" cy="12" r="10" />
-        <line x1="12" y1="8" x2="12" y2="16" />
-        <line x1="8" y1="12" x2="16" y2="12" />
-      </svg>
-    </Button>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="feather feather-plus-circle"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="8" x2="12" y2="16" />
+          <line x1="8" y1="12" x2="16" y2="12" />
+        </svg>
+      </Button>
+    </div>
+    <div class="flex-grow">
+      <Slider
+        bind:value={sliderValue}
+        min={0.1}
+        max={10.0}
+        step={0.1}
+        tooltips="always"
+      />
+      <span class="py-4 text-2xl font-medium">Bandwidth</span>
+    </div>
   </div>
   <div class="grid grid-cols-2 gap-4">
     <div>

@@ -1,7 +1,7 @@
 import * as d3 from "d3";
-import type { ClassifiedSeries } from "./series";
+//import type { ClassifiedSeries } from "./series";
 
-export function createECDFChart(data: { x1: number; x2: number; y: number }[]) {
+export function createECDFChart(data) {
   const margin = { top: 10, right: 30, bottom: 30, left: 60 },
     width = 1200 - margin.left - margin.right,
     height = 800 - margin.top - margin.bottom;
@@ -69,7 +69,7 @@ export function createECDFChart(data: { x1: number; x2: number; y: number }[]) {
     .text("Fn(x)");
 }
 
-export function createKDEchart(series: ClassifiedSeries) {
+export function createHistogram(series, density) {
   try {
     document.getElementById("kde").replaceChildren("");
   } catch (e) {
@@ -110,15 +110,34 @@ export function createKDEchart(series: ClassifiedSeries) {
     .domain([0, Math.max(...data)]);
   svg.append("g").call(d3.axisLeft(y));
 
-  let counter = - width / series.classCount + 1;
+  let counter = -width / series.classCount + 1;
   svg
     .selectAll("rect")
     .data(data)
     .join("rect")
-    .attr("x", (d) => {counter += width / series.classCount; return counter})
+    .attr("x", (d) => {
+      counter += width / series.classCount;
+      return counter;
+    })
     .attr("y", (d) => y(d))
     .attr("width", (d) => width / series.classCount)
     .attr("height", (d) => height - y(d))
     .attr("stroke", "white")
     .style("fill", "#ff3e00");
+
+  const line = d3
+    .line()
+    .curve(d3.curveBasis)
+    .x((d) => x(d[0]))
+    .y((d) => y(d[1]));
+  console.log(line);
+
+  svg
+    .append("path")
+    .datum(density)
+    .attr("fill", "none")
+    .attr("stroke", "rgba(31, 41, 55, 100)")
+    .attr("stroke-width", 1.5)
+    .attr("stroke-linejoin", "round")
+    .attr("d", line);
 }

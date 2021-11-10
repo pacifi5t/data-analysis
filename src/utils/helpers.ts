@@ -1,17 +1,19 @@
 import { ClassifiedSeries, VarSeries } from "./series";
+import * as d3 from "d3";
 
 export function pretty(num: number): number {
   return parseFloat(num.toPrecision(4));
 }
 
-export function kde(x: number, bandwidth: number, series: VarSeries) {
+export function kde(bandwidth: number, series: VarSeries, limits: number[]) {
   //Epanechnikov's Kernel
-  const kernel = (total: number, u: number) =>
-    total +
-    (3 / (4 * Math.sqrt(5))) *
-      (1 - (u * u) / 5) *
-      +(Math.abs(u) <= Math.sqrt(5));
-  return series.initialArray.reduce(kernel) / (bandwidth * series.length);
+  const kernel = (u: number) =>
+    Math.abs((u /= bandwidth)) <= 1 ? 0.75 * (1 - u * u) / bandwidth : 0;
+
+  return limits.map((t) => [
+    t,
+    d3.mean(series.initialArray, (d) => kernel(t - d))
+  ]);
 }
 
 export function updateClassifiedSeries(
