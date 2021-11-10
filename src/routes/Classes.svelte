@@ -38,14 +38,25 @@
         F: classifiedData.empDistrFunc.get(i)
       });
     }
-
+    
     const density = kde(sliderValue, mutableSeries, classifiedData.limits);
     createKDEchart(classifiedData, density);
   }
 
   onMount(() => {
-    const density = kde(sliderValue, mutableSeries, classifiedData.limits);
-    createKDEchart(classifiedData, density);
+    if (mutableSeries.length != 0) {
+      const mean =
+        mutableSeries.initialArray.reduce((total, x) => total + x) /
+        mutableSeries.length;
+      const stdDeviation = Math.sqrt(
+        mutableSeries.initialArray.reduce(
+          (total, x) => total + Math.pow(x - mean, 2)
+        ) / mutableSeries.length
+      );
+      sliderValue = pretty(stdDeviation * Math.pow(mutableSeries.length, -0.2));
+      const density = kde(sliderValue, mutableSeries, classifiedData.limits);
+      createKDEchart(classifiedData, density);
+    }
   });
 </script>
 
@@ -112,12 +123,13 @@
       <span class="py-4 text-2xl font-medium">Bandwidth</span>
       <div class="mt-8 flex-grow">
         <Slider
-        bind:value={sliderValue}
-        min={0.05}
-        max={5}
-        step={0.05}
-        tooltips="always"
-      />
+          bind:value={sliderValue}
+          min={0.05}
+          max={5}
+          step={0.05}
+          tooltips="always"
+          disabled={mutableSeries.length == 0}
+        />
       </div>
     </div>
   </div>
