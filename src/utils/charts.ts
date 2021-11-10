@@ -73,7 +73,7 @@ export function createKDEchart(series: ClassifiedSeries) {
   try {
     document.getElementById("kde").replaceChildren("");
   } catch (e) {
-    //console.log(e);
+    //console.error(e);
   }
 
   const margin = { top: 10, right: 30, bottom: 30, left: 60 },
@@ -104,8 +104,6 @@ export function createKDEchart(series: ClassifiedSeries) {
     .thresholds(x.ticks(series.classCount));
 
   const data = Array.from(series.frequency.values());
-  console.log(data);
-  
   const y = d3
     .scaleLinear()
     .range([height, 0])
@@ -115,11 +113,12 @@ export function createKDEchart(series: ClassifiedSeries) {
   let counter = - width / series.classCount + 1;
   svg
     .selectAll("rect")
-    .data(Array.from(series.frequency.values()))
+    .data(data)
     .join("rect")
     .attr("x", (d) => {counter += width / series.classCount; return counter})
     .attr("y", (d) => y(d))
     .attr("width", (d) => width / series.classCount)
     .attr("height", (d) => height - y(d))
-    .style("fill", "#69b3a2");
+    .attr("stroke", "white")
+    .style("fill", "#ff3e00");
 }
