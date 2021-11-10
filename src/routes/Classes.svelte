@@ -108,15 +108,17 @@
         </svg>
       </Button>
     </div>
-    <div class="flex-grow">
-      <Slider
+    <div class="flex space-x-4 flex-row flex-grow">
+      <span class="py-4 text-2xl font-medium">Bandwidth</span>
+      <div class="mt-8 flex-grow">
+        <Slider
         bind:value={sliderValue}
-        min={0.1}
-        max={10.0}
-        step={0.1}
+        min={0.05}
+        max={5}
+        step={0.05}
         tooltips="always"
       />
-      <span class="py-4 text-2xl font-medium">Bandwidth</span>
+      </div>
     </div>
   </div>
   <div class="grid grid-cols-2 gap-4">
