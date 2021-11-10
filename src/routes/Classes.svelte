@@ -20,7 +20,7 @@
 
   classifiedDataStore.subscribe((value) => {
     classifiedData = value;
-    console.log(value);
+    //console.log(value);
   });
 
   $: {
@@ -48,6 +48,8 @@
       const mean =
         mutableSeries.initialArray.reduce((total, x) => total + x) /
         mutableSeries.length;
+      
+      //FIXME: Wrong calculation, use sum
       const stdDeviation = Math.sqrt(
         mutableSeries.initialArray.reduce(
           (total, x) => total + Math.pow(x - mean, 2)
@@ -125,7 +127,7 @@
         <Slider
           bind:value={sliderValue}
           min={0.05}
-          max={5}
+          max={10}
           step={0.05}
           tooltips="always"
           disabled={mutableSeries.length == 0}

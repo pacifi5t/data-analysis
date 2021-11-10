@@ -15,13 +15,16 @@ export function kde(bandwidth: number, series: VarSeries, limits: number[]) {
     Math.abs(u) <= Math.sqrt(5) ? (0.75 / Math.sqrt(5)) * (1 - (u * u) / 5) : 0;
 
   const density = [];
+
   limits.forEach((lim) => {
+    let sum = 0;
+    series.initialArray.forEach((elem) => {
+      sum += kernel((lim - elem) / bandwidth);
+    });
+
     density.push([
       lim,
-      series.initialArray.reduce(
-        (total, elem) => total + kernel((lim - elem) / bandwidth)
-      ) /
-        (series.length * bandwidth) * (limits[1] - limits[0])
+      (sum / (series.length * bandwidth)) * (limits[1] - limits[0])
     ]);
   });
 
