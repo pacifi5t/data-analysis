@@ -15,9 +15,10 @@ immutableDataStore.subscribe((value) => {
 });
 
 mutableDataStore.subscribe((value) => {
+  const classCount = Math.floor(1 + 3.32 * Math.log10(value.length));
   classifiedDataStore.set(
     updateClassifiedSeries(
-      Math.floor(1 + 3.32 * Math.log10(value.length)),
+      classCount % 2 == 0 ? classCount - 1 : classCount,
       value
     )
   );
