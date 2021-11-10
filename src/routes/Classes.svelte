@@ -4,7 +4,7 @@
   import { Button, Slider, Table } from "attractions";
   import { kde, pretty, updateClassifiedSeries } from "../utils/helpers";
   import { onMount } from "svelte";
-  import { createHistogram } from "../utils/charts";
+  import { createKDEchart } from "../utils/charts";
 
   const headers = [
     { text: "class num", value: "c" },
@@ -39,17 +39,13 @@
       });
     }
 
-    createHistogram(
-      classifiedData,
-      kde(sliderValue, mutableSeries, classifiedData.limits)
-    );
+    const density = kde(sliderValue, mutableSeries, classifiedData.limits);
+    createKDEchart(classifiedData, density);
   }
 
   onMount(() => {
-    createHistogram(
-      classifiedData,
-      kde(sliderValue, mutableSeries, classifiedData.limits)
-    );
+    const density = kde(sliderValue, mutableSeries, classifiedData.limits);
+    createKDEchart(classifiedData, density);
   });
 </script>
 

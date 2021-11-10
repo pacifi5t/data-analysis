@@ -6,14 +6,26 @@ export function pretty(num: number): number {
 }
 
 export function kde(bandwidth: number, series: VarSeries, limits: number[]) {
+  if (series.length == 0) {
+    return [];
+  }
+
   //Epanechnikov's Kernel
   const kernel = (u: number) =>
-    Math.abs((u /= bandwidth)) <= 1 ? 0.75 * (1 - u * u) / bandwidth : 0;
+    Math.abs(u) <= Math.sqrt(5) ? (0.75 / Math.sqrt(5)) * (1 - (u * u) / 5) : 0;
 
-  return limits.map((t) => [
-    t,
-    d3.mean(series.initialArray, (d) => kernel(t - d))
-  ]);
+  const density = [];
+  limits.forEach((lim) => {
+    density.push([
+      lim,
+      series.initialArray.reduce(
+        (total, elem) => total + kernel((lim - elem) / bandwidth)
+      ) /
+        (series.length * bandwidth) * (limits[1] - limits[0])
+    ]);
+  });
+
+  return density;
 }
 
 export function updateClassifiedSeries(

@@ -69,7 +69,7 @@ export function createECDFChart(data) {
     .text("Fn(x)");
 }
 
-export function createHistogram(series, density) {
+export function createKDEchart(series, density) {
   try {
     document.getElementById("kde").replaceChildren("");
   } catch (e) {
@@ -130,7 +130,6 @@ export function createHistogram(series, density) {
     .curve(d3.curveBasis)
     .x((d) => x(d[0]))
     .y((d) => y(d[1]));
-  console.log(line);
 
   svg
     .append("path")
