@@ -15,6 +15,7 @@ class Series {
 }
 
 export class VarSeries extends Series {
+  readonly initialArray: number[];
   length: number;
 
   constructor(array?: number[]) {
@@ -22,10 +23,12 @@ export class VarSeries extends Series {
 
     if (typeof array === "undefined") {
       this.length = 0;
+      this.initialArray = [];
       return;
     }
 
     this.length = array.length;
+    this.initialArray = array;
     array
       .sort((a, b) => a - b)
       .forEach((elem) => {

@@ -4,6 +4,16 @@ export function pretty(num: number): number {
   return parseFloat(num.toPrecision(4));
 }
 
+export function kde(x: number, bandwidth: number, series: VarSeries) {
+  //Epanechnikov's Kernel
+  const kernel = (total: number, u: number) =>
+    total +
+    (3 / (4 * Math.sqrt(5))) *
+      (1 - (u * u) / 5) *
+      +(Math.abs(u) <= Math.sqrt(5));
+  return series.initialArray.reduce(kernel) / (bandwidth * series.length);
+}
+
 export function updateClassifiedSeries(
   classCount: number,
   varSeries: VarSeries
