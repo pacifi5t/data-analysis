@@ -17,10 +17,10 @@ export function kde(bandwidth: number, series: VarSeries, limits: number[]) {
   const density = [];
 
   limits.forEach((lim) => {
-    let sum = 0;
-    series.initialArray.forEach((elem) => {
-      sum += kernel((lim - elem) / bandwidth);
-    });
+    const sum = series.initialArray.reduce(
+      (total, elem) => total + kernel((lim - elem) / bandwidth),
+      0
+    );
 
     density.push([
       lim,

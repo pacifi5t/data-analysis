@@ -38,7 +38,7 @@
         F: classifiedData.empDistrFunc.get(i)
       });
     }
-    
+
     const density = kde(sliderValue, mutableSeries, classifiedData.limits);
     createKDEchart(classifiedData, density);
   }
@@ -48,11 +48,11 @@
       const mean =
         mutableSeries.initialArray.reduce((total, x) => total + x) /
         mutableSeries.length;
-      
-      //FIXME: Wrong calculation, use sum
+
       const stdDeviation = Math.sqrt(
         mutableSeries.initialArray.reduce(
-          (total, x) => total + Math.pow(x - mean, 2)
+          (total, x) => total + Math.pow(x - mean, 2),
+          0
         ) / mutableSeries.length
       );
       sliderValue = pretty(stdDeviation * Math.pow(mutableSeries.length, -0.2));
