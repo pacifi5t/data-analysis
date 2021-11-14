@@ -5,7 +5,7 @@
   import { kde, pretty, updateClassifiedSeries } from "../utils/helpers";
   import { onMount } from "svelte";
   import { createKDEchart } from "../utils/charts";
-  import { mean, stdDev } from "../math";
+  import { mean, stdDev } from "../math/characteristics";
 
   const headers = [
     { text: "class num", value: "c" },
