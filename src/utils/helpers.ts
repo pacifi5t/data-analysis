@@ -1,8 +1,18 @@
 import { ClassifiedSeries, VarSeries } from "./series";
-import * as d3 from "d3";
 
 export function pretty(num: number): number {
   return parseFloat(num.toPrecision(4));
+}
+
+export function mean(series: VarSeries) {
+  return series.initialArray.reduce((total, x) => total + x) / series.length;
+}
+
+export function stdDev(series: VarSeries, mean: number) {
+  return Math.sqrt(
+    series.initialArray.reduce((total, x) => total + Math.pow(x - mean, 2), 0) /
+      series.length
+  );
 }
 
 export function kde(bandwidth: number, series: VarSeries, limits: number[]) {
@@ -15,13 +25,11 @@ export function kde(bandwidth: number, series: VarSeries, limits: number[]) {
     Math.abs(u) <= Math.sqrt(5) ? (0.75 / Math.sqrt(5)) * (1 - (u * u) / 5) : 0;
 
   const density = [];
-
   limits.forEach((lim) => {
     const sum = series.initialArray.reduce(
       (total, elem) => total + kernel((lim - elem) / bandwidth),
       0
     );
-
     density.push([
       lim,
       (sum / (series.length * bandwidth)) * (limits[1] - limits[0])

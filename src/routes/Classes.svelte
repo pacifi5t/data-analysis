@@ -2,7 +2,7 @@
   import type { ClassifiedSeries } from "../utils/series";
   import { mutableDataStore, classifiedDataStore } from "../utils/stores";
   import { Button, Slider, Table } from "attractions";
-  import { kde, pretty, updateClassifiedSeries } from "../utils/helpers";
+  import { kde, pretty, mean, stdDev, updateClassifiedSeries } from "../utils/helpers";
   import { onMount } from "svelte";
   import { createKDEchart } from "../utils/charts";
 
@@ -20,7 +20,6 @@
 
   classifiedDataStore.subscribe((value) => {
     classifiedData = value;
-    //console.log(value);
   });
 
   $: {
@@ -45,16 +44,7 @@
 
   onMount(() => {
     if (mutableSeries.length != 0) {
-      const mean =
-        mutableSeries.initialArray.reduce((total, x) => total + x) /
-        mutableSeries.length;
-
-      const stdDeviation = Math.sqrt(
-        mutableSeries.initialArray.reduce(
-          (total, x) => total + Math.pow(x - mean, 2),
-          0
-        ) / mutableSeries.length
-      );
+      const stdDeviation = stdDev(mutableSeries, mean(mutableSeries));
       sliderValue = pretty(stdDeviation * Math.pow(mutableSeries.length, -0.2));
       const density = kde(sliderValue, mutableSeries, classifiedData.limits);
       createKDEchart(classifiedData, density);
