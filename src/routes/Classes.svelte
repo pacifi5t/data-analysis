@@ -2,9 +2,10 @@
   import type { ClassifiedSeries } from "../utils/series";
   import { mutableDataStore, classifiedDataStore } from "../utils/stores";
   import { Button, Slider, Table } from "attractions";
-  import { kde, pretty, mean, stdDev, updateClassifiedSeries } from "../utils/helpers";
+  import { kde, pretty, updateClassifiedSeries } from "../utils/helpers";
   import { onMount } from "svelte";
   import { createKDEchart } from "../utils/charts";
+  import { mean, stdDev } from "../math";
 
   const headers = [
     { text: "class num", value: "c" },
