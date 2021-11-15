@@ -1,3 +1,4 @@
+import { min, max } from "../math/other";
 import {
   antikurtosisCoef,
   kurtosisCoef1,
@@ -154,18 +155,16 @@ export function updateMetricsTable(series: VarSeries) {
     i: "-"
   });
 
-  const min = series.initialArray.reduce((m, x) => (x < m ? x : m));
   items.push({
     t: "Minimum",
-    v: min,
+    v: min(series),
     d: "-",
     i: "-"
   });
 
-  const max = series.initialArray.reduce((m, x) => (x > m ? x : m));
   items.push({
     t: "Maximum",
-    v: max,
+    v: max(series),
     d: "-",
     i: "-"
   });
