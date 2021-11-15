@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { min, max } from "../math/other";
+import { min, max, quartile1, quartile3 } from "../math/other";
 
 export function createECDFChart(data) {
   const margin = { top: 10, right: 30, bottom: 30, left: 60 },
@@ -143,14 +143,26 @@ export function createKDEchart(series, density) {
 
 export function createAnomaliesChart(series) {
   try {
-    document.getElementById("kde").replaceChildren("");
+    document.getElementById("anomalies").replaceChildren("");
   } catch (e) {
     //console.error(e);
   }
 
+  const k = 1.5;
+  const q1 = quartile1(series);
+  const q3 = quartile3(series);
+  const a = q1 - k * (q3 - q1);
+  const b = q3 + k * (q3 - q1);
+
+  const sMin = min(series);
+  const sMax = max(series);
+  const padding = (sMax - sMin) / 40;
+
   const data = [];
   for (let i = 0; i < series.length; i++) {
-    data.push({ x: i, y: series.initialArray[i] });
+    const y = series.initialArray[i];
+    const isAnomaly = y >= a && y <= b ? false : true;
+    data.push({ x: i, y: y, isAnomaly: isAnomaly });
   }
 
   const margin = { x: 40, y: 40 },
@@ -172,7 +184,7 @@ export function createAnomaliesChart(series) {
 
   const y = d3
     .scaleLinear()
-    .domain([min(series), max(series)])
+    .domain([d3.min([sMin, a]) - padding, d3.max([sMax, b]) + padding])
     .range([height, 0]);
 
   svg
@@ -182,6 +194,24 @@ export function createAnomaliesChart(series) {
 
   svg.append("g").call(d3.axisLeft(y));
 
+  const lines = svg.append("g");
+
+  lines
+    .append("line")
+    .attr("x1", x(0))
+    .attr("x2", width)
+    .attr("y1", y(a))
+    .attr("y2", y(a))
+    .attr("stroke", "red");
+
+  lines
+    .append("line")
+    .attr("x1", x(0))
+    .attr("x2", width)
+    .attr("y1", y(b))
+    .attr("y2", y(b))
+    .attr("stroke", "red");
+
   svg
     .selectAll("whatever")
     .data(data)
@@ -189,5 +219,6 @@ export function createAnomaliesChart(series) {
     .append("circle")
     .attr("cx", (d) => x(d.x))
     .attr("cy", (d) => y(d.y))
+    .attr("fill", (d) => (d.isAnomaly ? "red" : "rgba(31, 41, 55, 100)"))
     .attr("r", 4);
 }
