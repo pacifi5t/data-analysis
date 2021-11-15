@@ -15,8 +15,8 @@ export function medianConfInterval(series: VarSeries) {
   const len = series.length;
   const q = studentDistribQuan(0.95 / 2, len - 1);
   return [
-    array[len / 2 - (q * Math.sqrt(len)) / 2],
-    array[len / 2 + 1 + (q * Math.sqrt(len)) / 2]
+    array[Math.round(len / 2 - (q * Math.sqrt(len)) / 2)],
+    array[Math.round(len / 2 + 1 + (q * Math.sqrt(len)) / 2)]
   ];
 }
 

@@ -1,3 +1,26 @@
+import {
+  antikurtosisCoef,
+  kurtosisCoef1,
+  kurtosisCoef2,
+  mean,
+  median,
+  shiftedStdDev,
+  skewnessCoef1,
+  skewnessCoef2,
+  stdDev
+} from "../math/characteristics";
+import {
+  coefConfInterval,
+  meanConfInterval,
+  medianConfInterval,
+  stdDevConfInterval
+} from "../math/confidence-intervals";
+import {
+  kurtosisDeviation2,
+  meanDeviation,
+  skewnessDeviation2,
+  stdDevDeviation
+} from "../math/deviations";
 import { ClassifiedSeries, VarSeries } from "./series";
 
 export function pretty(num: number): number {
@@ -58,4 +81,93 @@ export function updateClassifiedSeries(
   });
 
   return new ClassifiedSeries(classCount, limits, classifiedArray);
+}
+
+export function updateMetricsTable(series: VarSeries) {
+  const items = [];
+  const meanValue = mean(series);
+  const stdDeviation = stdDev(series, meanValue);
+  const meanStdDev = meanDeviation(series, stdDeviation);
+  const meanInterval = meanConfInterval(series, meanStdDev, meanValue);
+  items.push({
+    t: "Mean",
+    v: meanValue,
+    d: meanStdDev,
+    i: `${meanInterval[0]} ; ${meanInterval[1]}`
+  });
+
+  const medianValue = median(series);
+  const medianInterval = medianConfInterval(series);
+  items.push({
+    t: "Median",
+    v: medianValue,
+    d: "-",
+    i: `${medianInterval[0]} ; ${medianInterval[1]}`
+  });
+
+  const stdDevStdDev = stdDevDeviation(series, stdDeviation);
+  const stdDevInterval = stdDevConfInterval(series, stdDeviation, stdDevStdDev);
+  items.push({
+    t: "Standard Deviation",
+    v: stdDeviation,
+    d: stdDevStdDev,
+    i: `${stdDevInterval[0]} ; ${stdDevInterval[1]}`
+  });
+
+  const skewnessCoef = skewnessCoef2(
+    series,
+    skewnessCoef1(series, shiftedStdDev(series, meanValue), meanValue)
+  );
+  const skewnessStdDev = skewnessDeviation2(series);
+  const skewnessInterval = coefConfInterval(
+    series,
+    skewnessCoef,
+    skewnessStdDev
+  );
+  items.push({
+    t: "Skewness Coefficient",
+    v: skewnessCoef,
+    d: skewnessStdDev,
+    i: `${skewnessInterval[0]} ; ${skewnessInterval[1]}`
+  });
+
+  const kurtosis1 = kurtosisCoef1(
+    series,
+    shiftedStdDev(series, meanValue),
+    meanValue
+  );
+  const kurtosis2 = kurtosisCoef2(series, kurtosis1);
+  const kurtosisStdDev = kurtosisDeviation2(series);
+  const kurtosisInterval = coefConfInterval(series, kurtosis2, kurtosisStdDev);
+  items.push({
+    t: "Kurtosis Coefficient",
+    v: kurtosis2,
+    d: kurtosisStdDev,
+    i: `${kurtosisInterval[0]} ; ${kurtosisInterval[1]}`
+  });
+
+  const antikurtosis = antikurtosisCoef(kurtosis1);
+  items.push({
+    t: "Antikurtosis Coefficient",
+    v: antikurtosis,
+    d: "-",
+    i: "-"
+  });
+
+  const min = series.initialArray.reduce((m, x) => (x < m ? x : m));
+  items.push({
+    t: "Minimum",
+    v: min,
+    d: "-",
+    i: "-"
+  });
+
+  const max = series.initialArray.reduce((m, x) => (x > m ? x : m));
+  items.push({
+    t: "Maximum",
+    v: max,
+    d: "-",
+    i: "-"
+  });
+  return items;
 }
