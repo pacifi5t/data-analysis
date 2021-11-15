@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-//import type { ClassifiedSeries } from "./series";
+import { min, max } from "../math/other";
 
 export function createECDFChart(data) {
   const margin = { top: 10, right: 30, bottom: 30, left: 60 },
@@ -139,4 +139,55 @@ export function createKDEchart(series, density) {
     .attr("stroke-width", 1.5)
     .attr("stroke-linejoin", "round")
     .attr("d", line);
+}
+
+export function createAnomaliesChart(series) {
+  try {
+    document.getElementById("kde").replaceChildren("");
+  } catch (e) {
+    //console.error(e);
+  }
+
+  const data = [];
+  for (let i = 0; i < series.length; i++) {
+    data.push({ x: i, y: series.initialArray[i] });
+  }
+
+  const margin = { x: 40, y: 40 },
+    width = 800 - margin.x * 2,
+    height = 600 - margin.y * 2;
+
+  const svg = d3
+    .select("#anomalies")
+    .append("svg")
+    .attr("width", width + margin.x * 2)
+    .attr("height", height + margin.y * 2)
+    .append("g")
+    .attr("transform", `translate(${margin.x}, ${margin.y})`);
+
+  const x = d3
+    .scaleLinear()
+    .domain([0, series.length - 1])
+    .range([0, width]);
+
+  const y = d3
+    .scaleLinear()
+    .domain([min(series), max(series)])
+    .range([height, 0]);
+
+  svg
+    .append("g")
+    .attr("transform", `translate(0, ${height})`)
+    .call(d3.axisBottom(x));
+
+  svg.append("g").call(d3.axisLeft(y));
+
+  svg
+    .selectAll("whatever")
+    .data(data)
+    .enter()
+    .append("circle")
+    .attr("cx", (d) => x(d.x))
+    .attr("cy", (d) => y(d.y))
+    .attr("r", 4);
 }
