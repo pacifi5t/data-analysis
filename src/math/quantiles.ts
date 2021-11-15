@@ -28,17 +28,22 @@ export function studentDistribQuan(p: number, v: number) {
 
   function g3(u: number) {
     return (
-      3 * Math.pow(u, 7) + 19 * Math.pow(u, 5) + 17 * Math.pow(u, 3) - 15 * u
+      (3 * Math.pow(u, 7) +
+        19 * Math.pow(u, 5) +
+        17 * Math.pow(u, 3) -
+        15 * u) /
+      384
     );
   }
 
   function g4(u: number) {
     return (
-      79 * Math.pow(u, 9) +
-      779 * Math.pow(u, 7) +
-      1482 * Math.pow(u, 5) -
-      1920 * Math.pow(u, 3) -
-      945 * u
+      (79 * Math.pow(u, 9) +
+        779 * Math.pow(u, 7) +
+        1482 * Math.pow(u, 5) -
+        1920 * Math.pow(u, 3) -
+        945 * u) /
+      92160
     );
   }
 
