@@ -30,7 +30,7 @@
       const diff = elem - i - 1;
       items.push({
         c: elem,
-        l: `${pretty(classifiedData.limits[i + diff])} - ${pretty(
+        l: `${pretty(classifiedData.limits[i + diff])} ; ${pretty(
           classifiedData.limits[i + 1 + diff]
         )}`,
         n: classifiedData.count.get(i),
