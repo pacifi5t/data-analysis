@@ -92,27 +92,27 @@ export function updateMetricsTable(series: VarSeries) {
   const meanInterval = meanConfInterval(series, meanStdDev, meanValue);
   items.push({
     t: "Mean",
-    v: meanValue,
-    d: meanStdDev,
-    i: `${meanInterval[0]} ; ${meanInterval[1]}`
+    v: pretty(meanValue),
+    d: pretty(meanStdDev),
+    i: `${pretty(meanInterval[0])} ; ${pretty(meanInterval[1])}`
   });
 
   const medianValue = median(series);
   const medianInterval = medianConfInterval(series);
   items.push({
     t: "Median",
-    v: medianValue,
+    v: pretty(medianValue),
     d: "-",
-    i: `${medianInterval[0]} ; ${medianInterval[1]}`
+    i: `${pretty(medianInterval[0])} ; ${pretty(medianInterval[1])}`
   });
 
   const stdDevStdDev = stdDevDeviation(series, stdDeviation);
   const stdDevInterval = stdDevConfInterval(series, stdDeviation, stdDevStdDev);
   items.push({
     t: "Standard Deviation",
-    v: stdDeviation,
-    d: stdDevStdDev,
-    i: `${stdDevInterval[0]} ; ${stdDevInterval[1]}`
+    v: pretty(stdDeviation),
+    d: pretty(stdDevStdDev),
+    i: `${pretty(stdDevInterval[0])} ; ${pretty(stdDevInterval[1])}`
   });
 
   const skewnessCoef = skewnessCoef2(
@@ -127,9 +127,9 @@ export function updateMetricsTable(series: VarSeries) {
   );
   items.push({
     t: "Skewness Coefficient",
-    v: skewnessCoef,
-    d: skewnessStdDev,
-    i: `${skewnessInterval[0]} ; ${skewnessInterval[1]}`
+    v: pretty(skewnessCoef),
+    d: pretty(skewnessStdDev),
+    i: `${pretty(skewnessInterval[0])} ; ${pretty(skewnessInterval[1])}`
   });
 
   const kurtosis1 = kurtosisCoef1(
@@ -142,15 +142,15 @@ export function updateMetricsTable(series: VarSeries) {
   const kurtosisInterval = coefConfInterval(series, kurtosis2, kurtosisStdDev);
   items.push({
     t: "Kurtosis Coefficient",
-    v: kurtosis2,
-    d: kurtosisStdDev,
-    i: `${kurtosisInterval[0]} ; ${kurtosisInterval[1]}`
+    v: pretty(kurtosis2),
+    d: pretty(kurtosisStdDev),
+    i: `${pretty(kurtosisInterval[0])} ; ${pretty(kurtosisInterval[1])}`
   });
 
   const antikurtosis = antikurtosisCoef(kurtosis1);
   items.push({
     t: "Antikurtosis Coefficient",
-    v: antikurtosis,
+    v: pretty(antikurtosis),
     d: "-",
     i: "-"
   });
