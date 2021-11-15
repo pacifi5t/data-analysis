@@ -20,6 +20,7 @@
   });
   immutableDataStore.subscribe((value) => {
     immutableData = value;
+    //console.log(immutableData);
   });
 
   $: {
@@ -51,8 +52,13 @@
           let str = "" + reader.result;
           let data = [];
           str.split(/\n| /).forEach((value) => {
-            data.push(Number.parseFloat(value));
+            const num = Number.parseFloat(value);
+            if (!isNaN(num)) {
+              data.push(num);
+            }
           });
+          console.log(data);
+
           immutableDataStore.set(new VarSeries(data));
         };
       } else {
