@@ -28,6 +28,17 @@ export function pretty(num: number): number {
   return parseFloat(num.toPrecision(4));
 }
 
+export function purgeAnomalies(series: VarSeries, a: number, b: number) {
+  const array = [];
+  series.initialArray.forEach((elem) => {
+    if (elem >= a && elem <= b) {
+      array.push(elem);
+    }
+  });
+  
+  return new VarSeries(array);
+}
+
 export function kde(bandwidth: number, series: VarSeries, limits: number[]) {
   if (series.length == 0) {
     return [];
