@@ -21,7 +21,9 @@ export function shiftedStdDev(series: VarSeries, mean: number) {
 export function median(series: VarSeries) {
   const array = [...series.initialArray].sort((a, b) => a - b);
   const len = array.length;
-  return len % 2 != 0 ? array[(len + 1) / 2] : array[len / 2 + len / 2 + 1] / 2;
+  return len % 2 != 0
+    ? array[Math.round((len + 1) / 2)]
+    : (array[len / 2] + array[len / 2 + 1]) / 2;
 }
 
 export function skewnessCoef1(
