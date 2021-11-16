@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { min, max, quartile1, quartile3 } from "../math/other";
+import { min, max } from "../math/other";
 
 export function createECDFChart(data) {
   const margin = { top: 10, right: 30, bottom: 30, left: 60 },
@@ -63,7 +63,6 @@ export function createECDFChart(data) {
   svg
     .append("text")
     .attr("text-anchor", "end")
-    // .attr('transform', 'rotate(-90)')
     .attr("y", margin.top + 20)
     .attr("x", -margin.top - 10)
     .text("Fn(x)");
@@ -139,21 +138,29 @@ export function createKDEchart(series, density) {
     .attr("stroke-width", 1.5)
     .attr("stroke-linejoin", "round")
     .attr("d", line);
+
+  svg
+    .append("text")
+    .attr("text-anchor", "end")
+    .attr("x", width)
+    .attr("y", height + margin.top + 20)
+    .text("x");
+
+  svg
+    .append("text")
+    .attr("text-anchor", "end")
+    .attr("y", margin.top + 20)
+    .attr("x", -margin.top * 4)
+    .text("p");
 }
 
-export function createAnomaliesChart(series) {
+export function createAnomaliesChart(series, a, b) {
   try {
     document.getElementById("anomalies").replaceChildren("");
   } catch (e) {
     //console.error(e);
   }
-
-  const k = 1.5;
-  const q1 = quartile1(series);
-  const q3 = quartile3(series);
-  const a = q1 - k * (q3 - q1);
-  const b = q3 + k * (q3 - q1);
-
+  
   const sMin = min(series);
   const sMax = max(series);
   const padding = (sMax - sMin) / 40;
@@ -221,4 +228,18 @@ export function createAnomaliesChart(series) {
     .attr("cy", (d) => y(d.y))
     .attr("fill", (d) => (d.isAnomaly ? "red" : "rgba(31, 41, 55, 100)"))
     .attr("r", 4);
+
+  svg
+    .append("text")
+    .attr("text-anchor", "end")
+    .attr("x", width)
+    .attr("y", height + margin.y)
+    .text("№");
+
+  svg
+    .append("text")
+    .attr("text-anchor", "end")
+    .attr("y", 0)
+    .attr("x", -margin.x / 2)
+    .text("x");
 }
