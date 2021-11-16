@@ -174,8 +174,8 @@ export function createAnomaliesChart(series, a, b) {
   }
 
   const margin = { x: 40, y: 40 },
-    width = 800 - margin.x * 2,
-    height = 600 - margin.y * 2;
+    width = 1280 - margin.x * 2,
+    height = 800 - margin.y * 2;
 
   const svg = d3
     .select("#anomalies")
@@ -253,7 +253,7 @@ export function createPGPchart(series) {
   }
 
   const data = [];
-  for (let i = 0; i < series.length - 1; i++) {
+  for (let i = 0; i < series.data.length - 1; i++) {
     data.push({
       x: series.data[i],
       y: normDistribQuan(series.empDistrFunc.get(i))
@@ -263,8 +263,8 @@ export function createPGPchart(series) {
   console.log(data);
 
   const margin = { x: 40, y: 40 },
-    width = 800 - margin.x * 2,
-    height = 600 - margin.y * 2;
+    width = 1200 - margin.x * 2,
+    height = 800 - margin.y * 2;
 
   const svg = d3
     .select("#pgp")
@@ -315,12 +315,13 @@ export function createPGPchart(series) {
     .attr("text-anchor", "end")
     .attr("x", width)
     .attr("y", height + margin.y)
-    .text("№");
+    .text("t = x");
 
   svg
     .append("text")
     .attr("text-anchor", "end")
-    .attr("y", 0)
-    .attr("x", -margin.x / 2)
-    .text("x");
+    .attr("y", -25)
+    .attr("x", 0)
+    .attr("transform", "rotate(-90)")
+    .text("z = u(F(x))");
 }
