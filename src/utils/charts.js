@@ -1,4 +1,5 @@
 import * as d3 from "d3";
+import { normDistribQuan } from "../math/quantiles";
 import { min, max } from "../math/other";
 
 export function createECDFChart(data) {
@@ -160,7 +161,7 @@ export function createAnomaliesChart(series, a, b) {
   } catch (e) {
     //console.error(e);
   }
-  
+
   const sMin = min(series);
   const sMax = max(series);
   const padding = (sMax - sMin) / 40;
@@ -227,6 +228,86 @@ export function createAnomaliesChart(series, a, b) {
     .attr("cx", (d) => x(d.x))
     .attr("cy", (d) => y(d.y))
     .attr("fill", (d) => (d.isAnomaly ? "red" : "rgba(31, 41, 55, 100)"))
+    .attr("r", 4);
+
+  svg
+    .append("text")
+    .attr("text-anchor", "end")
+    .attr("x", width)
+    .attr("y", height + margin.y)
+    .text("№");
+
+  svg
+    .append("text")
+    .attr("text-anchor", "end")
+    .attr("y", 0)
+    .attr("x", -margin.x / 2)
+    .text("x");
+}
+
+export function createPGPchart(series) {
+  try {
+    document.getElementById("pgp").replaceChildren("");
+  } catch (e) {
+    //console.error(e);
+  }
+
+  const data = [];
+  for (let i = 0; i < series.length - 1; i++) {
+    data.push({
+      x: series.data[i],
+      y: normDistribQuan(series.empDistrFunc.get(i))
+    });
+  }
+  console.log(series);
+  console.log(data);
+
+  const margin = { x: 40, y: 40 },
+    width = 800 - margin.x * 2,
+    height = 600 - margin.y * 2;
+
+  const svg = d3
+    .select("#pgp")
+    .append("svg")
+    .attr("width", width + margin.x * 2)
+    .attr("height", height + margin.y * 2)
+    .append("g")
+    .attr("transform", `translate(${margin.x}, ${margin.y})`);
+
+  const x = d3
+    .scaleLinear()
+    .domain([data[0].x, data[data.length - 1].x])
+    .range([0, width]);
+
+  const y = d3
+    .scaleLinear()
+    .domain([data[0].y, data[data.length - 1].y])
+    .range([height, 0]);
+
+  svg
+    .append("g")
+    .attr("transform", `translate(0, ${height})`)
+    .call(d3.axisBottom(x));
+
+  svg.append("g").call(d3.axisLeft(y));
+
+  const lines = svg
+    .append("g")
+    .append("line")
+    .attr("x1", x(data[0].x))
+    .attr("x2", x(data[data.length - 1].x))
+    .attr("y1", y(data[0].y))
+    .attr("y2", y(data[data.length - 1].y))
+    .attr("stroke", "red");
+
+  svg
+    .selectAll("whatever")
+    .data(data)
+    .enter()
+    .append("circle")
+    .attr("cx", (d) => x(d.x))
+    .attr("cy", (d) => y(d.y))
+    .attr("fill", "rgba(31, 41, 55, 100)")
     .attr("r", 4);
 
   svg

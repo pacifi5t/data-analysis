@@ -4,6 +4,7 @@ import ECDF from "./routes/ECDF.svelte";
 import Classes from "./routes/Classes.svelte";
 import Characteristics from "./routes/Characteristics.svelte";
 import Anomalies from "./routes/Anomalies.svelte";
+import PGP from "./routes/PGP.svelte";
 
 class Route {
   name: string;
@@ -22,5 +23,6 @@ export const routes = [
   new Route("/ecdf", ECDF),
   new Route("/classes", Classes),
   new Route("/characteristics", Characteristics),
-  new Route("/anomalies", Anomalies)
+  new Route("/anomalies", Anomalies),
+  new Route("/pgp", PGP)
 ];

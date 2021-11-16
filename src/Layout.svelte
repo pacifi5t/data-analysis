@@ -19,6 +19,7 @@
             <NavItem label="Classes" href="/classes" {currentRoute} />
             <NavItem label="Characteristics" href="/characteristics" {currentRoute} />
             <NavItem label="Anomalies" href="/anomalies" {currentRoute} />
+            <NavItem label="PGP" href="/pgp" {currentRoute} />
           </div>
         </div>
       </div>
