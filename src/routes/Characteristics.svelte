@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Table } from "attractions";
-  import { updateMetricsTable } from "../utils/helpers";
+  import { updateCharacteristicsTable } from "../utils/helpers";
   import { onMount } from "svelte";
   import { mutableDataStore } from "../utils/stores";
 
@@ -16,7 +16,7 @@
 
   onMount(() => {
     if (mutableSeries.length !== 0) {
-      items = updateMetricsTable(mutableSeries);
+      items = updateCharacteristicsTable(mutableSeries);
     }
   });
 </script>

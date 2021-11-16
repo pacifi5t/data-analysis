@@ -84,7 +84,7 @@ export function updateClassifiedSeries(
   return new ClassifiedSeries(classCount, limits, classifiedArray);
 }
 
-export function updateMetricsTable(series: VarSeries) {
+export function updateCharacteristicsTable(series: VarSeries) {
   const items = [];
   const meanValue = mean(series);
   const stdDeviation = stdDev(series, meanValue);

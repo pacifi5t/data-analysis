@@ -17,7 +17,7 @@
             <NavItem label="Data upload" href="/" {currentRoute} />
             <NavItem label="ECDF" href="/ecdf" {currentRoute} />
             <NavItem label="Classes" href="/classes" {currentRoute} />
-            <NavItem label="Metrics" href="/metrics" {currentRoute} />
+            <NavItem label="Characteristics" href="/characteristics" {currentRoute} />
             <NavItem label="Anomalies" href="/anomalies" {currentRoute} />
           </div>
         </div>
