@@ -291,15 +291,6 @@ export function createPGPchart(series) {
 
   svg.append("g").call(d3.axisLeft(y));
 
-  const lines = svg
-    .append("g")
-    .append("line")
-    .attr("x1", x(data[0].x))
-    .attr("x2", x(data[data.length - 1].x))
-    .attr("y1", y(data[0].y))
-    .attr("y2", y(data[data.length - 1].y))
-    .attr("stroke", "red");
-
   svg
     .selectAll("whatever")
     .data(data)
