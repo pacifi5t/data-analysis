@@ -1,8 +1,14 @@
 <script lang="ts">
   import { Table } from "attractions";
-  import { updateCharacteristicsTable } from "../utils/helpers";
+  import {
+    updateCharacteristicsTable,
+    updateParamsTable
+  } from "../utils/helpers";
   import { onMount } from "svelte";
-  import { mutableDataStore } from "../utils/stores";
+  import {
+    mutableDataStore,
+    normalDistributionFlagStore
+  } from "../utils/stores";
 
   const headers = [
     { text: "", value: "t" },
@@ -23,6 +29,21 @@
 
 <div>
   {#if mutableSeries.length !== 0}
-    <Table {headers} {items} />
+    <div class="flex">
+      <Table {headers} {items} class="mx-4" />
+      {#if $normalDistributionFlagStore}
+        <Table
+          {headers}
+          items={updateParamsTable(mutableSeries)}
+          class="mx-4"
+        />
+      {:else}
+        <div class="px-10 py-20">
+          <span class="text-gray-400 text-xl"
+            >No parameters. Distribution isn't normal</span
+          >
+        </div>
+      {/if}
+    </div>
   {/if}
 </div>

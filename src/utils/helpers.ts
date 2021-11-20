@@ -23,6 +23,14 @@ import {
   stdDevDeviation
 } from "../math/deviations";
 import { normDistribQuan } from "../math/quantiles";
+import {
+  mu,
+  muConfInterval,
+  muDispersion,
+  sigma,
+  sigmaConfInterval,
+  sigmaDispersion
+} from "../math/parameters";
 import { ClassifiedSeries, VarSeries } from "./series";
 
 export function pretty(num: number): number {
@@ -114,6 +122,35 @@ export function updateClassifiedSeries(
   });
 
   return new ClassifiedSeries(classCount, limits, classifiedArray);
+}
+
+export function updateParamsTable(series: VarSeries) {
+  const items = [];
+  const meanValue = mean(series);
+  const muValue = mu(meanValue);
+  const sigmaValue = sigma(meanValue, series);
+  const muDisp = muDispersion(sigmaValue, series);
+  const muInterval = muConfInterval(muValue, muDisp);
+  items.push(
+    {
+      t: "Mu",
+      v: pretty(muValue),
+      d: pretty(Math.sqrt(muDisp)),
+      i: `${pretty(muInterval[0])} ; ${pretty(muInterval[1])}`
+    }
+  );
+
+  const sigmaDisp = sigmaDispersion(muDisp);
+  const sigmaInterval = sigmaConfInterval(muValue, sigmaDisp);
+  items.push(
+    {
+      t: "Sigma",
+      v: pretty(sigmaValue),
+      d: pretty(Math.sqrt(sigmaDisp)),
+      i: `${pretty(sigmaInterval[0])} ; ${pretty(sigmaInterval[1])}`
+    }
+  );
+  return items;
 }
 
 export function updateCharacteristicsTable(series: VarSeries) {
