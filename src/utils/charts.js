@@ -259,8 +259,8 @@ export function createPGPchart(series) {
       y: normDistribQuan(series.empDistrFunc.get(i))
     });
   }
-  console.log(series);
-  console.log(data);
+  // console.log(series);
+  // console.log(data);
 
   const margin = { x: 40, y: 40 },
     width = 1200 - margin.x * 2,

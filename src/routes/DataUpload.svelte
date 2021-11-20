@@ -20,7 +20,7 @@
   });
   immutableDataStore.subscribe((value) => {
     immutableData = value;
-    //console.log(immutableData);
+    // console.log(immutableData);
   });
 
   $: {
@@ -57,7 +57,7 @@
               data.push(num);
             }
           });
-          console.log(data);
+          // console.log(data);
 
           immutableDataStore.set(new VarSeries(data));
         };
