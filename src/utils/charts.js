@@ -1,8 +1,13 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
 import * as d3 from "d3";
 import { normDistribQuan } from "../math/quantiles";
-import { min, max } from "../math/other";
+import { min, max, aproxLaplace } from "../math/other";
+import { mu, sigma } from "../math/parameters";
+import { mean } from "../math/characteristics";
+import { normDistribDensity } from "./helpers";
 
-export function createECDFChart(data) {
+export function createECDFChart(data, varseries) {
   const margin = { top: 10, right: 30, bottom: 30, left: 60 },
     width = 1200 - margin.left - margin.right,
     height = 800 - margin.top - margin.bottom;
@@ -67,9 +72,33 @@ export function createECDFChart(data) {
     .attr("y", margin.top + 20)
     .attr("x", -margin.top - 10)
     .text("Fn(x)");
+
+  const meanValue = mean(varseries);
+  const m = mu(meanValue);
+  const s = sigma(meanValue, varseries);
+  const data2 = [];
+
+  for (const elem of varseries.initialArray) {
+    data2.push([elem, aproxLaplace((elem - m) / s)]);
+  }
+  svg
+    .append("path")
+    .datum(data2)
+    .attr("fill", "none")
+    .attr("stroke", "green")
+    .attr("stroke-width", 1.5)
+    .attr("stroke-linejoin", "round")
+    .attr(
+      "d",
+      d3
+        .line()
+        .curve(d3.curveBasis)
+        .x((d) => x(d[0]))
+        .y((d) => y(d[1]))
+    );
 }
 
-export function createKDEchart(series, density) {
+export function createKDEchart(series, density, varseries) {
   try {
     document.getElementById("kde").replaceChildren("");
   } catch (e) {
@@ -153,6 +182,24 @@ export function createKDEchart(series, density) {
     .attr("y", margin.top + 20)
     .attr("x", -margin.top * 4)
     .text("p");
+
+  const meanValue = mean(varseries);
+  const m = mu(meanValue);
+  const s = sigma(meanValue, varseries);
+  const data2 = [];
+  const w = series.limits[1] - series.limits[0];
+
+  for (const elem of series.limits) {
+    data2.push([elem, normDistribDensity(elem, m, s) * w]);
+  }
+  svg
+    .append("path")
+    .datum(data2)
+    .attr("fill", "none")
+    .attr("stroke", "green")
+    .attr("stroke-width", 1.5)
+    .attr("stroke-linejoin", "round")
+    .attr("d", line);
 }
 
 export function createAnomaliesChart(series, a, b) {

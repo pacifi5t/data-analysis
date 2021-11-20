@@ -19,7 +19,7 @@
     }
 
     if (parsedSeries.length != 0) {
-      createECDFChart(parsedSeries);
+      createECDFChart(parsedSeries, mutableData);
     }
   });
 </script>

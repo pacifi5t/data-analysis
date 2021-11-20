@@ -48,6 +48,12 @@ export function purgeAnomalies(series: VarSeries, a: number, b: number) {
   return new VarSeries(array);
 }
 
+export function normDistribDensity(x: number, m: number, s: number) {
+  return (
+    Math.exp(-Math.pow(x - m, 2) / (2 * s * s)) / (Math.sqrt(2 * Math.PI) * s)
+  );
+}
+
 export function kde(bandwidth: number, series: VarSeries, limits: number[]) {
   if (series.length == 0) {
     return [];
@@ -131,25 +137,21 @@ export function updateParamsTable(series: VarSeries) {
   const sigmaValue = sigma(meanValue, series);
   const muDisp = muDispersion(sigmaValue, series);
   const muInterval = muConfInterval(muValue, muDisp);
-  items.push(
-    {
-      t: "Mu",
-      v: pretty(muValue),
-      d: pretty(Math.sqrt(muDisp)),
-      i: `${pretty(muInterval[0])} ; ${pretty(muInterval[1])}`
-    }
-  );
+  items.push({
+    t: "Mu",
+    v: pretty(muValue),
+    d: pretty(Math.sqrt(muDisp)),
+    i: `${pretty(muInterval[0])} ; ${pretty(muInterval[1])}`
+  });
 
   const sigmaDisp = sigmaDispersion(muDisp);
   const sigmaInterval = sigmaConfInterval(muValue, sigmaDisp);
-  items.push(
-    {
-      t: "Sigma",
-      v: pretty(sigmaValue),
-      d: pretty(Math.sqrt(sigmaDisp)),
-      i: `${pretty(sigmaInterval[0])} ; ${pretty(sigmaInterval[1])}`
-    }
-  );
+  items.push({
+    t: "Sigma",
+    v: pretty(sigmaValue),
+    d: pretty(Math.sqrt(sigmaDisp)),
+    i: `${pretty(sigmaInterval[0])} ; ${pretty(sigmaInterval[1])}`
+  });
   return items;
 }
 

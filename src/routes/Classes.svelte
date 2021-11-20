@@ -39,8 +39,10 @@
       });
     }
 
-    const density = kde(sliderValue, mutableSeries, classifiedData.limits);
-    createKDEchart(classifiedData, density);
+    if (mutableSeries.length != 0) {
+      const density = kde(sliderValue, mutableSeries, classifiedData.limits);
+      createKDEchart(classifiedData, density, mutableSeries);
+    }
   }
 
   onMount(() => {
@@ -48,7 +50,7 @@
       const stdDeviation = stdDev(mutableSeries, mean(mutableSeries));
       sliderValue = pretty(stdDeviation * Math.pow(mutableSeries.length, -0.2));
       const density = kde(sliderValue, mutableSeries, classifiedData.limits);
-      createKDEchart(classifiedData, density);
+      createKDEchart(classifiedData, density, mutableSeries);
     }
   });
 </script>

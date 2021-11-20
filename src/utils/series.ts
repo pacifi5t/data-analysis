@@ -59,6 +59,7 @@ export class VarSeries extends Series {
 }
 
 export class ClassifiedSeries extends Series {
+  readonly initialArray: number[];
   classCount: number;
   limits: number[];
 
@@ -72,8 +73,10 @@ export class ClassifiedSeries extends Series {
     ) {
       this.classCount = 0;
       this.limits = [];
+      this.initialArray = [];
       return;
     } else {
+      this.initialArray = array;
       this.classCount = classCount;
       this.limits = limits;
     }
