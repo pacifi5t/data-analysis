@@ -22,6 +22,7 @@ import {
   skewnessDeviation2,
   stdDevDeviation
 } from "../math/deviations";
+import { normDistribQuan } from "../math/quantiles";
 import { ClassifiedSeries, VarSeries } from "./series";
 
 export function pretty(num: number): number {
@@ -35,7 +36,7 @@ export function purgeAnomalies(series: VarSeries, a: number, b: number) {
       array.push(elem);
     }
   });
-  
+
   return new VarSeries(array);
 }
 
@@ -61,6 +62,26 @@ export function kde(bandwidth: number, series: VarSeries, limits: number[]) {
   });
 
   return density;
+}
+
+export function identifyNormalDistrib(series: VarSeries) {
+  const meanValue = mean(series);
+  const skewness = skewnessCoef2(
+    series,
+    skewnessCoef1(series, shiftedStdDev(series, meanValue), meanValue)
+  );
+  const skewnessStdDev = skewnessDeviation2(series);
+  const kurtosis2 = kurtosisCoef2(
+    series,
+    kurtosisCoef1(series, shiftedStdDev(series, meanValue), meanValue)
+  );
+  const kurtosisStdDev = kurtosisDeviation2(series);
+
+  const quantile = normDistribQuan(1 - 0.05 / 2);
+  const uA = Math.abs(skewness / skewnessStdDev);
+  const uE = Math.abs(kurtosis2 / kurtosisStdDev);
+
+  return uA <= quantile && uE <= quantile ? true : false;
 }
 
 export function updateClassifiedSeries(

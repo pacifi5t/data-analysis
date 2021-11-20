@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
 import { ClassifiedSeries, VarSeries } from "./series";
-import { updateClassifiedSeries } from "./helpers";
+import { identifyNormalDistrib, updateClassifiedSeries } from "./helpers";
 
 export const fileStore = writable([]);
 
@@ -10,8 +10,19 @@ export const mutableDataStore = writable(new VarSeries());
 
 export const classifiedDataStore = writable(new ClassifiedSeries());
 
+export const normalDistributionFlagStore = writable(false);
+
 immutableDataStore.subscribe((value) => {
   mutableDataStore.set(value);
+  if (value.length !== 0) {
+    const isNormal = identifyNormalDistrib(value);
+    normalDistributionFlagStore.set(isNormal);
+    if(isNormal) {
+      console.log("This is a normal distribution");
+    } else {
+      console.log("This is not a normal distribution");
+    }
+  }
 });
 
 mutableDataStore.subscribe((value) => {
