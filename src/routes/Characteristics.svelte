@@ -4,7 +4,6 @@
     updateCharacteristicsTable,
     updateParamsTable
   } from "../utils/helpers";
-  import { onMount } from "svelte";
   import {
     mutableDataStore,
     normalDistributionFlagStore
@@ -17,20 +16,17 @@
     { text: "Confidence Interval", value: "i" }
   ];
 
-  let items = [];
   let mutableSeries = $mutableDataStore;
-
-  onMount(() => {
-    if (mutableSeries.length !== 0) {
-      items = updateCharacteristicsTable(mutableSeries);
-    }
-  });
 </script>
 
 <div>
   {#if mutableSeries.length !== 0}
     <div class="flex">
-      <Table {headers} {items} class="mx-4" />
+      <Table
+        {headers}
+        items={updateCharacteristicsTable(mutableSeries)}
+        class="mx-4"
+      />
       {#if $normalDistributionFlagStore}
         <Table
           {headers}
