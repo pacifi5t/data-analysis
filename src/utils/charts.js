@@ -86,7 +86,7 @@ export function createECDFChart(data, varseries) {
     .datum(data2)
     .attr("fill", "none")
     .attr("stroke", "green")
-    .attr("stroke-width", 1.5)
+    .attr("stroke-width", 3)
     .attr("stroke-linejoin", "round")
     .attr(
       "d",
@@ -126,12 +126,6 @@ export function createKDEchart(series, density, varseries) {
     .attr("transform", `translate(0, ${height})`)
     .call(d3.axisBottom(x).ticks(series.limits.length));
 
-  const histogram = d3
-    .bin()
-    .value((d) => d)
-    .domain([series.limits[0], series.limits[series.limits.length - 1]])
-    .thresholds(x.ticks(series.classCount));
-
   const data = Array.from(series.frequency.values());
   const y = d3
     .scaleLinear()
@@ -165,7 +159,7 @@ export function createKDEchart(series, density, varseries) {
     .datum(density)
     .attr("fill", "none")
     .attr("stroke", "rgba(31, 41, 55, 100)")
-    .attr("stroke-width", 1.5)
+    .attr("stroke-width", 3)
     .attr("stroke-linejoin", "round")
     .attr("d", line);
 
@@ -197,7 +191,7 @@ export function createKDEchart(series, density, varseries) {
     .datum(data2)
     .attr("fill", "none")
     .attr("stroke", "green")
-    .attr("stroke-width", 1.5)
+    .attr("stroke-width", 3)
     .attr("stroke-linejoin", "round")
     .attr("d", line);
 }
@@ -257,7 +251,8 @@ export function createAnomaliesChart(series, a, b) {
     .attr("x2", width)
     .attr("y1", y(a))
     .attr("y2", y(a))
-    .attr("stroke", "red");
+    .attr("stroke", "red")
+    .attr("stroke-width", 3);
 
   lines
     .append("line")
@@ -265,7 +260,8 @@ export function createAnomaliesChart(series, a, b) {
     .attr("x2", width)
     .attr("y1", y(b))
     .attr("y2", y(b))
-    .attr("stroke", "red");
+    .attr("stroke", "red")
+    .attr("stroke-width", 3);
 
   svg
     .selectAll("whatever")
@@ -299,11 +295,21 @@ export function createPGPchart(series) {
     //console.error(e);
   }
 
+  const meanValue = mean(series);
+  const m = mu(meanValue);
+  const s = sigma(meanValue, series);
+
   const data = [];
+  const data2 = [];
   for (let i = 0; i < series.data.length - 1; i++) {
+    const elem = series.data[i];
     data.push({
-      x: series.data[i],
+      x: elem,
       y: normDistribQuan(series.empDistrFunc.get(i))
+    });
+    data2.push({
+      x: elem,
+      y: normDistribQuan(aproxLaplace((elem - m) / s))
     });
   }
   // console.log(series);
@@ -323,12 +329,18 @@ export function createPGPchart(series) {
 
   const x = d3
     .scaleLinear()
-    .domain([data[0].x, data[data.length - 1].x])
+    .domain([
+      d3.min([data[0].x, data2[0].x]),
+      d3.max([data[data.length - 1].x, data2[data2.length - 1].x])
+    ])
     .range([0, width]);
 
   const y = d3
     .scaleLinear()
-    .domain([data[0].y, data[data.length - 1].y])
+    .domain([
+      d3.min([data[0].y, data2[0].y]),
+      d3.max([data[data.length - 1].y, data2[data2.length - 1].y])
+    ])
     .range([height, 0]);
 
   svg
@@ -362,4 +374,20 @@ export function createPGPchart(series) {
     .attr("x", 0)
     .attr("transform", "rotate(-90)")
     .text("z = u(F(x))");
+
+  svg
+    .append("path")
+    .datum(data2)
+    .attr("fill", "none")
+    .attr("stroke", "green")
+    .attr("stroke-width", 3)
+    .attr("stroke-linejoin", "round")
+    .attr(
+      "d",
+      d3
+        .line()
+        .curve(d3.curveBasis)
+        .x((d) => x(d.x))
+        .y((d) => y(d.y))
+    );
 }

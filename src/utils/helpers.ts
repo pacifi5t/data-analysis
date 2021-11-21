@@ -95,6 +95,7 @@ export function identifyNormalDistrib(series: VarSeries) {
   const uA = Math.abs(skewness / skewnessStdDev);
   const uE = Math.abs(kurtosis2 / kurtosisStdDev);
 
+  console.log(quantile, uA, uE);
   return uA <= quantile && uE <= quantile ? true : false;
 }
 
