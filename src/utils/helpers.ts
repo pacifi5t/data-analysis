@@ -50,10 +50,10 @@ export function updateClassifiedSeries(
 
 export function updateParamsTable(series: VarSeries) {
   const items = [];
-  const meanValue = mymath.mean(series);
-  const muValue = mymath.mu(meanValue);
-  const sigmaValue = mymath.sigma(meanValue, series);
-  const muDisp = mymath.muDispersion(sigmaValue, series);
+  const meanValue = mymath.mean(series.initialArray);
+  const muValue = mymath.muFunc(meanValue);
+  const sigmaValue = mymath.sigmaFunc(meanValue, series.initialArray);
+  const muDisp = mymath.muDispersion(series.length, sigmaValue);
   const muInterval = mymath.muConfInterval(muValue, muDisp);
   items.push({
     t: "Mu",
@@ -75,10 +75,14 @@ export function updateParamsTable(series: VarSeries) {
 
 export function updateCharacteristicsTable(series: VarSeries) {
   const items = [];
-  const meanValue = mymath.mean(series);
-  const stdDeviation = mymath.stdDev(series, meanValue);
-  const meanStdDev = mymath.meanDeviation(series, stdDeviation);
-  const meanInterval = mymath.meanConfInterval(series, meanStdDev, meanValue);
+  const meanValue = mymath.mean(series.initialArray);
+  const stdDeviation = mymath.stdDev(series.initialArray, meanValue);
+  const meanStdDev = mymath.meanDeviation(series.length, stdDeviation);
+  const meanInterval = mymath.meanConfInterval(
+    series.length,
+    meanStdDev,
+    meanValue
+  );
   items.push({
     t: "Mean",
     v: pretty(meanValue),
@@ -86,8 +90,8 @@ export function updateCharacteristicsTable(series: VarSeries) {
     i: `${pretty(meanInterval[0])} ; ${pretty(meanInterval[1])}`
   });
 
-  const medianValue = mymath.median(series);
-  const medianInterval = mymath.medianConfInterval(series);
+  const medianValue = mymath.median(series.initialArray);
+  const medianInterval = mymath.medianConfInterval(series.initialArray);
   items.push({
     t: "Median",
     v: pretty(medianValue),
@@ -95,9 +99,9 @@ export function updateCharacteristicsTable(series: VarSeries) {
     i: `${pretty(medianInterval[0])} ; ${pretty(medianInterval[1])}`
   });
 
-  const stdDevStdDev = mymath.stdDevDeviation(series, stdDeviation);
+  const stdDevStdDev = mymath.stdDevDeviation(series.length, stdDeviation);
   const stdDevInterval = mymath.stdDevConfInterval(
-    series,
+    series.length,
     stdDeviation,
     stdDevStdDev
   );
@@ -108,17 +112,15 @@ export function updateCharacteristicsTable(series: VarSeries) {
     i: `${pretty(stdDevInterval[0])} ; ${pretty(stdDevInterval[1])}`
   });
 
-  const skewnessCoef = mymath.skewnessCoef2(
-    series,
-    mymath.skewnessCoef1(
-      series,
-      mymath.shiftedStdDev(series, meanValue),
-      meanValue
-    )
+  const shiftedDev = mymath.shiftedDeviation(series.initialArray, meanValue);
+  const skewnessCoef = mymath.skewnessCoef(
+    series.initialArray,
+    shiftedDev,
+    meanValue
   );
-  const skewnessStdDev = mymath.skewnessDeviation2(series);
+  const skewnessStdDev = mymath.skewnessDeviation2(series.length);
   const skewnessInterval = mymath.coefConfInterval(
-    series,
+    series.length,
     skewnessCoef,
     skewnessStdDev
   );
@@ -129,15 +131,14 @@ export function updateCharacteristicsTable(series: VarSeries) {
     i: `${pretty(skewnessInterval[0])} ; ${pretty(skewnessInterval[1])}`
   });
 
-  const kurtosis1 = mymath.kurtosisCoef1(
-    series,
-    mymath.shiftedStdDev(series, meanValue),
+  const kurtosis2 = mymath.kurtosisCoef(
+    series.initialArray,
+    shiftedDev,
     meanValue
   );
-  const kurtosis2 = mymath.kurtosisCoef2(series, kurtosis1);
-  const kurtosisStdDev = mymath.kurtosisDeviation2(series);
+  const kurtosisStdDev = mymath.kurtosisDeviation2(series.length);
   const kurtosisInterval = mymath.coefConfInterval(
-    series,
+    series.length,
     kurtosis2,
     kurtosisStdDev
   );
@@ -148,7 +149,9 @@ export function updateCharacteristicsTable(series: VarSeries) {
     i: `${pretty(kurtosisInterval[0])} ; ${pretty(kurtosisInterval[1])}`
   });
 
-  const antikurtosis = mymath.antikurtosisCoef(kurtosis1);
+  const antikurtosis = mymath.antikurtosisCoef(
+    mymath.kurtosisCoef1(series.initialArray, shiftedDev, meanValue)
+  );
   items.push({
     t: "Antikurtosis Coefficient",
     v: pretty(antikurtosis),
@@ -158,14 +161,14 @@ export function updateCharacteristicsTable(series: VarSeries) {
 
   items.push({
     t: "Minimum",
-    v: mymath.min(series),
+    v: mymath.min(series.initialArray),
     d: "-",
     i: "-"
   });
 
   items.push({
     t: "Maximum",
-    v: mymath.max(series),
+    v: mymath.max(series.initialArray),
     d: "-",
     i: "-"
   });

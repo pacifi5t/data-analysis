@@ -69,13 +69,13 @@ export function createECDFChart(data, varseries) {
     .attr("x", -margin.top - 10)
     .text("Fn(x)");
 
-  const meanValue = mymath.mean(varseries);
-  const m = mymath.mu(meanValue);
-  const s = mymath.sigma(meanValue, varseries);
+  const meanValue = mymath.mean(varseries.initialArray);
+  const m = mymath.muFunc(meanValue);
+  const s = mymath.sigmaFunc(meanValue, varseries.initialArray);
   const data2 = [];
 
   for (const elem of varseries.initialArray) {
-    data2.push([elem, mymath.aproxLaplace((elem - m) / s)]);
+    data2.push([elem, mymath.normDistrib(elem, m, s)]);
   }
   svg
     .append("path")
@@ -173,9 +173,9 @@ export function createKDEchart(series, density, varseries) {
     .attr("x", -margin.top * 4)
     .text("p");
 
-  const meanValue = mymath.mean(varseries);
-  const m = mymath.mu(meanValue);
-  const s = mymath.sigma(meanValue, varseries);
+  const meanValue = mymath.mean(varseries.initialArray);
+  const m = mymath.muFunc(meanValue);
+  const s = mymath.sigmaFunc(meanValue, varseries.initialArray);
   const data2 = [];
   const w = series.limits[1] - series.limits[0];
 
@@ -199,8 +199,8 @@ export function createAnomaliesChart(series, a, b) {
     //console.error(e);
   }
 
-  const sMin = mymath.min(series);
-  const sMax = mymath.max(series);
+  const sMin = mymath.min(series.initialArray);
+  const sMax = mymath.max(series.initialArray);
   const padding = (sMax - sMin) / 40;
 
   const data = [];
@@ -291,9 +291,9 @@ export function createPGPchart(series) {
     //console.error(e);
   }
 
-  const meanValue = mymath.mean(series);
-  const m = mymath.mu(meanValue);
-  const s = mymath.sigma(meanValue, series);
+  const meanValue = mymath.mean(series.initialArray);
+  const m = mymath.muFunc(meanValue);
+  const s = mymath.sigmaFunc(meanValue, series.initialArray);
 
   const data = [];
   const data2 = [];
@@ -305,7 +305,7 @@ export function createPGPchart(series) {
     });
     data2.push({
       x: elem,
-      y: mymath.normDistribQuan(mymath.aproxLaplace((elem - m) / s))
+      y: mymath.normDistribQuan(mymath.normDistrib(elem, m, s))
     });
   }
   // console.log(series);

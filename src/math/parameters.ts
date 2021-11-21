@@ -1,21 +1,21 @@
-import type { VarSeries } from "./series";
 import { normDistribQuan } from "./quantiles";
+import { alpha } from ".";
 
-const normQuan = normDistribQuan(1 - 0.05 / 2);
+const normQuan = normDistribQuan(1 - alpha / 2);
 
-export function mu(mean: number) {
+export function muFunc(mean: number) {
   return mean;
 }
 
-export function sigma(mean: number, series: VarSeries) {
+export function sigmaFunc(mean: number, array: number[]) {
   return Math.sqrt(
-    series.initialArray.reduce((total, x) => total + x * x, 0) / series.length -
+    array.reduce((total, x) => total + x * x, 0) / array.length -
       Math.pow(mean, 2)
   );
 }
 
-export function muDispersion(sigma: number, series: VarSeries) {
-  return (sigma * sigma) / series.length;
+export function muDispersion(len: number, sigma: number) {
+  return (sigma * sigma) / len;
 }
 
 export function sigmaDispersion(muDisp: number) {

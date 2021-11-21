@@ -15,7 +15,7 @@ export const normalDistributionFlagStore = writable(false);
 immutableDataStore.subscribe((value) => {
   mutableDataStore.set(value);
   if (value.length !== 0) {
-    const isNormal = identifyNormalDistrib(value);
+    const isNormal = identifyNormalDistrib(value.initialArray);
     normalDistributionFlagStore.set(isNormal);
     if (isNormal) {
       console.log("This is a normal distribution");

@@ -13,8 +13,8 @@
   onMount(() => {
     if (mutableSeries.length !== 0) {
       const k = 2.5;
-      const q1 = mymath.quartile1(mutableSeries);
-      const q3 = mymath.quartile3(mutableSeries);
+      const q1 = mymath.quartile1(mutableSeries.initialArray);
+      const q3 = mymath.quartile3(mutableSeries.initialArray);
       a = q1 - k * (q3 - q1);
       b = q3 + k * (q3 - q1);
       createAnomaliesChart(mutableSeries, a, b);

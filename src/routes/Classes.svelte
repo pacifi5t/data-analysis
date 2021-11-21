@@ -67,7 +67,10 @@
 
   onMount(() => {
     if (mutableSeries.length != 0) {
-      const stdDeviation = stdDev(mutableSeries, mean(mutableSeries));
+      const stdDeviation = stdDev(
+        mutableSeries.initialArray,
+        mean(mutableSeries.initialArray)
+      );
       sliderValue = pretty(stdDeviation * Math.pow(mutableSeries.length, -0.2));
       const density = mymath.kde(
         sliderValue,
