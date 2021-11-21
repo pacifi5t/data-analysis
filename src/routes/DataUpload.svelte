@@ -1,6 +1,7 @@
 <script lang="ts">
   import { FileDropzone, Table } from "attractions";
   import { immutableDataStore, fileStore } from "../utils/stores";
+  import { pretty } from "../utils/helpers";
   import { VarSeries } from "../math";
 
   const reader = new FileReader();
@@ -29,9 +30,9 @@
       items.push({
         i: i.toString(),
         x: immutableData.data[i],
-        n: immutableData.count.get(i),
-        p: immutableData.frequency.get(i),
-        F: immutableData.empDistrFunc.get(i)
+        n: pretty(immutableData.count.get(i)),
+        p: pretty(immutableData.frequency.get(i)),
+        F: pretty(immutableData.empDistrFunc.get(i))
       });
     }
   }

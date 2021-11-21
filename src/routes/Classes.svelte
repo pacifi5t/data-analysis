@@ -40,8 +40,8 @@
           classifiedData.limits[i + 1 + diff]
         )}`,
         n: classifiedData.count.get(i),
-        p: classifiedData.frequency.get(i),
-        F: classifiedData.empDistrFunc.get(i)
+        p: pretty(classifiedData.frequency.get(i)),
+        F: pretty(classifiedData.empDistrFunc.get(i))
       });
     }
 
