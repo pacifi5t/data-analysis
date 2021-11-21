@@ -1,6 +1,7 @@
 import { writable } from "svelte/store";
 import { ClassifiedSeries, VarSeries } from "./series";
 import { identifyNormalDistrib, updateClassifiedSeries } from "./helpers";
+import { pearsonFunction } from "../math/other";
 
 export const fileStore = writable([]);
 

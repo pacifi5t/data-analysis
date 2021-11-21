@@ -1,11 +1,16 @@
 <script lang="ts">
   import type { ClassifiedSeries } from "../utils/series";
-  import { mutableDataStore, classifiedDataStore } from "../utils/stores";
+  import {
+    mutableDataStore,
+    classifiedDataStore,
+    normalDistributionFlagStore
+  } from "../utils/stores";
   import { Button, Slider, Table } from "attractions";
   import { kde, pretty, updateClassifiedSeries } from "../utils/helpers";
   import { onMount } from "svelte";
   import { createKDEchart } from "../utils/charts";
   import { mean, stdDev } from "../math/characteristics";
+  import { hiSquare, pearsonCriteria, pearsonFunction } from "../math/other";
 
   const headers = [
     { text: "class num", value: "c" },
@@ -18,6 +23,7 @@
   let items = [];
   let mutableSeries = $mutableDataStore;
   let classifiedData: ClassifiedSeries;
+  let isNormal = $normalDistributionFlagStore;
 
   classifiedDataStore.subscribe((value) => {
     classifiedData = value;
@@ -42,6 +48,16 @@
     if (mutableSeries.length != 0) {
       const density = kde(sliderValue, mutableSeries, classifiedData.limits);
       createKDEchart(classifiedData, density, mutableSeries);
+
+      if (isNormal) {
+        const p = pearsonCriteria(
+          pearsonFunction(
+            hiSquare(classifiedData, mutableSeries),
+            classifiedData.classCount - 1
+          )
+        );
+        console.log(`p=${p}`, p <= 0.05);
+      }
     }
   }
 
