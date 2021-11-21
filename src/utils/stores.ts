@@ -1,7 +1,6 @@
 import { writable } from "svelte/store";
 import { ClassifiedSeries, VarSeries } from "./series";
 import { identifyNormalDistrib, updateClassifiedSeries } from "./helpers";
-import { pearsonFunction } from "../math/other";
 
 export const fileStore = writable([]);
 
@@ -18,7 +17,7 @@ immutableDataStore.subscribe((value) => {
   if (value.length !== 0) {
     const isNormal = identifyNormalDistrib(value);
     normalDistributionFlagStore.set(isNormal);
-    if(isNormal) {
+    if (isNormal) {
       console.log("This is a normal distribution");
     } else {
       console.log("This is not a normal distribution");

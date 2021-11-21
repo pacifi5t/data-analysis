@@ -1,36 +1,4 @@
-import { min, max } from "../math/other";
-import {
-  antikurtosisCoef,
-  kurtosisCoef1,
-  kurtosisCoef2,
-  mean,
-  median,
-  shiftedStdDev,
-  skewnessCoef1,
-  skewnessCoef2,
-  stdDev
-} from "../math/characteristics";
-import {
-  coefConfInterval,
-  meanConfInterval,
-  medianConfInterval,
-  stdDevConfInterval
-} from "../math/confidence-intervals";
-import {
-  kurtosisDeviation2,
-  meanDeviation,
-  skewnessDeviation2,
-  stdDevDeviation
-} from "../math/deviations";
-import { normDistribQuan } from "../math/quantiles";
-import {
-  mu,
-  muConfInterval,
-  muDispersion,
-  sigma,
-  sigmaConfInterval,
-  sigmaDispersion
-} from "../math/parameters";
+import * as mymath from "../math";
 import { ClassifiedSeries, VarSeries } from "./series";
 
 export function pretty(num: number): number {
@@ -79,19 +47,27 @@ export function kde(bandwidth: number, series: VarSeries, limits: number[]) {
 }
 
 export function identifyNormalDistrib(series: VarSeries) {
-  const meanValue = mean(series);
-  const skewness = skewnessCoef2(
+  const meanValue = mymath.mean(series);
+  const skewness = mymath.skewnessCoef2(
     series,
-    skewnessCoef1(series, shiftedStdDev(series, meanValue), meanValue)
+    mymath.skewnessCoef1(
+      series,
+      mymath.shiftedStdDev(series, meanValue),
+      meanValue
+    )
   );
-  const skewnessStdDev = skewnessDeviation2(series);
-  const kurtosis2 = kurtosisCoef2(
+  const skewnessStdDev = mymath.skewnessDeviation2(series);
+  const kurtosis2 = mymath.kurtosisCoef2(
     series,
-    kurtosisCoef1(series, shiftedStdDev(series, meanValue), meanValue)
+    mymath.kurtosisCoef1(
+      series,
+      mymath.shiftedStdDev(series, meanValue),
+      meanValue
+    )
   );
-  const kurtosisStdDev = kurtosisDeviation2(series);
+  const kurtosisStdDev = mymath.kurtosisDeviation2(series);
 
-  const quantile = normDistribQuan(1 - 0.05 / 2);
+  const quantile = mymath.normDistribQuan(1 - 0.05 / 2);
   const uA = Math.abs(skewness / skewnessStdDev);
   const uE = Math.abs(kurtosis2 / kurtosisStdDev);
 
@@ -133,11 +109,11 @@ export function updateClassifiedSeries(
 
 export function updateParamsTable(series: VarSeries) {
   const items = [];
-  const meanValue = mean(series);
-  const muValue = mu(meanValue);
-  const sigmaValue = sigma(meanValue, series);
-  const muDisp = muDispersion(sigmaValue, series);
-  const muInterval = muConfInterval(muValue, muDisp);
+  const meanValue = mymath.mean(series);
+  const muValue = mymath.mu(meanValue);
+  const sigmaValue = mymath.sigma(meanValue, series);
+  const muDisp = mymath.muDispersion(sigmaValue, series);
+  const muInterval = mymath.muConfInterval(muValue, muDisp);
   items.push({
     t: "Mu",
     v: pretty(muValue),
@@ -145,8 +121,8 @@ export function updateParamsTable(series: VarSeries) {
     i: `${pretty(muInterval[0])} ; ${pretty(muInterval[1])}`
   });
 
-  const sigmaDisp = sigmaDispersion(muDisp);
-  const sigmaInterval = sigmaConfInterval(muValue, sigmaDisp);
+  const sigmaDisp = mymath.sigmaDispersion(muDisp);
+  const sigmaInterval = mymath.sigmaConfInterval(muValue, sigmaDisp);
   items.push({
     t: "Sigma",
     v: pretty(sigmaValue),
@@ -158,10 +134,10 @@ export function updateParamsTable(series: VarSeries) {
 
 export function updateCharacteristicsTable(series: VarSeries) {
   const items = [];
-  const meanValue = mean(series);
-  const stdDeviation = stdDev(series, meanValue);
-  const meanStdDev = meanDeviation(series, stdDeviation);
-  const meanInterval = meanConfInterval(series, meanStdDev, meanValue);
+  const meanValue = mymath.mean(series);
+  const stdDeviation = mymath.stdDev(series, meanValue);
+  const meanStdDev = mymath.meanDeviation(series, stdDeviation);
+  const meanInterval = mymath.meanConfInterval(series, meanStdDev, meanValue);
   items.push({
     t: "Mean",
     v: pretty(meanValue),
@@ -169,8 +145,8 @@ export function updateCharacteristicsTable(series: VarSeries) {
     i: `${pretty(meanInterval[0])} ; ${pretty(meanInterval[1])}`
   });
 
-  const medianValue = median(series);
-  const medianInterval = medianConfInterval(series);
+  const medianValue = mymath.median(series);
+  const medianInterval = mymath.medianConfInterval(series);
   items.push({
     t: "Median",
     v: pretty(medianValue),
@@ -178,8 +154,12 @@ export function updateCharacteristicsTable(series: VarSeries) {
     i: `${pretty(medianInterval[0])} ; ${pretty(medianInterval[1])}`
   });
 
-  const stdDevStdDev = stdDevDeviation(series, stdDeviation);
-  const stdDevInterval = stdDevConfInterval(series, stdDeviation, stdDevStdDev);
+  const stdDevStdDev = mymath.stdDevDeviation(series, stdDeviation);
+  const stdDevInterval = mymath.stdDevConfInterval(
+    series,
+    stdDeviation,
+    stdDevStdDev
+  );
   items.push({
     t: "Standard Deviation",
     v: pretty(stdDeviation),
@@ -187,12 +167,16 @@ export function updateCharacteristicsTable(series: VarSeries) {
     i: `${pretty(stdDevInterval[0])} ; ${pretty(stdDevInterval[1])}`
   });
 
-  const skewnessCoef = skewnessCoef2(
+  const skewnessCoef = mymath.skewnessCoef2(
     series,
-    skewnessCoef1(series, shiftedStdDev(series, meanValue), meanValue)
+    mymath.skewnessCoef1(
+      series,
+      mymath.shiftedStdDev(series, meanValue),
+      meanValue
+    )
   );
-  const skewnessStdDev = skewnessDeviation2(series);
-  const skewnessInterval = coefConfInterval(
+  const skewnessStdDev = mymath.skewnessDeviation2(series);
+  const skewnessInterval = mymath.coefConfInterval(
     series,
     skewnessCoef,
     skewnessStdDev
@@ -204,14 +188,18 @@ export function updateCharacteristicsTable(series: VarSeries) {
     i: `${pretty(skewnessInterval[0])} ; ${pretty(skewnessInterval[1])}`
   });
 
-  const kurtosis1 = kurtosisCoef1(
+  const kurtosis1 = mymath.kurtosisCoef1(
     series,
-    shiftedStdDev(series, meanValue),
+    mymath.shiftedStdDev(series, meanValue),
     meanValue
   );
-  const kurtosis2 = kurtosisCoef2(series, kurtosis1);
-  const kurtosisStdDev = kurtosisDeviation2(series);
-  const kurtosisInterval = coefConfInterval(series, kurtosis2, kurtosisStdDev);
+  const kurtosis2 = mymath.kurtosisCoef2(series, kurtosis1);
+  const kurtosisStdDev = mymath.kurtosisDeviation2(series);
+  const kurtosisInterval = mymath.coefConfInterval(
+    series,
+    kurtosis2,
+    kurtosisStdDev
+  );
   items.push({
     t: "Kurtosis Coefficient",
     v: pretty(kurtosis2),
@@ -219,7 +207,7 @@ export function updateCharacteristicsTable(series: VarSeries) {
     i: `${pretty(kurtosisInterval[0])} ; ${pretty(kurtosisInterval[1])}`
   });
 
-  const antikurtosis = antikurtosisCoef(kurtosis1);
+  const antikurtosis = mymath.antikurtosisCoef(kurtosis1);
   items.push({
     t: "Antikurtosis Coefficient",
     v: pretty(antikurtosis),
@@ -229,14 +217,14 @@ export function updateCharacteristicsTable(series: VarSeries) {
 
   items.push({
     t: "Minimum",
-    v: min(series),
+    v: mymath.min(series),
     d: "-",
     i: "-"
   });
 
   items.push({
     t: "Maximum",
-    v: max(series),
+    v: mymath.max(series),
     d: "-",
     i: "-"
   });

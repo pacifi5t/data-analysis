@@ -1,4 +1,4 @@
-import type { VarSeries } from "src/utils/series";
+import type { VarSeries } from "../utils/series";
 
 export function mean(series: VarSeries) {
   return series.initialArray.reduce((total, x) => total + x) / series.length;

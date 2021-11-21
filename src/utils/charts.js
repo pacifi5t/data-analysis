@@ -1,11 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 import * as d3 from "d3";
-import { normDistribQuan } from "../math/quantiles";
-import { min, max, aproxLaplace } from "../math/other";
-import { mu, sigma } from "../math/parameters";
-import { mean } from "../math/characteristics";
-import { normDistribDensity } from "./helpers";
+import * as mymath from "../math";
 
 export function createECDFChart(data, varseries) {
   const margin = { top: 10, right: 30, bottom: 30, left: 60 },
@@ -73,13 +69,13 @@ export function createECDFChart(data, varseries) {
     .attr("x", -margin.top - 10)
     .text("Fn(x)");
 
-  const meanValue = mean(varseries);
-  const m = mu(meanValue);
-  const s = sigma(meanValue, varseries);
+  const meanValue = mymath.mean(varseries);
+  const m = mymath.mu(meanValue);
+  const s = mymath.sigma(meanValue, varseries);
   const data2 = [];
 
   for (const elem of varseries.initialArray) {
-    data2.push([elem, aproxLaplace((elem - m) / s)]);
+    data2.push([elem, mymath.aproxLaplace((elem - m) / s)]);
   }
   svg
     .append("path")
@@ -177,14 +173,14 @@ export function createKDEchart(series, density, varseries) {
     .attr("x", -margin.top * 4)
     .text("p");
 
-  const meanValue = mean(varseries);
-  const m = mu(meanValue);
-  const s = sigma(meanValue, varseries);
+  const meanValue = mymath.mean(varseries);
+  const m = mymath.mu(meanValue);
+  const s = mymath.sigma(meanValue, varseries);
   const data2 = [];
   const w = series.limits[1] - series.limits[0];
 
   for (const elem of series.limits) {
-    data2.push([elem, normDistribDensity(elem, m, s) * w]);
+    data2.push([elem, mymath.normDistribDensity(elem, m, s) * w]);
   }
   svg
     .append("path")
@@ -203,8 +199,8 @@ export function createAnomaliesChart(series, a, b) {
     //console.error(e);
   }
 
-  const sMin = min(series);
-  const sMax = max(series);
+  const sMin = mymath.min(series);
+  const sMax = mymath.max(series);
   const padding = (sMax - sMin) / 40;
 
   const data = [];
@@ -295,9 +291,9 @@ export function createPGPchart(series) {
     //console.error(e);
   }
 
-  const meanValue = mean(series);
-  const m = mu(meanValue);
-  const s = sigma(meanValue, series);
+  const meanValue = mymath.mean(series);
+  const m = mymath.mu(meanValue);
+  const s = mymath.sigma(meanValue, series);
 
   const data = [];
   const data2 = [];
@@ -305,11 +301,11 @@ export function createPGPchart(series) {
     const elem = series.data[i];
     data.push({
       x: elem,
-      y: normDistribQuan(series.empDistrFunc.get(i))
+      y: mymath.normDistribQuan(series.empDistrFunc.get(i))
     });
     data2.push({
       x: elem,
-      y: normDistribQuan(aproxLaplace((elem - m) / s))
+      y: mymath.normDistribQuan(mymath.aproxLaplace((elem - m) / s))
     });
   }
   // console.log(series);

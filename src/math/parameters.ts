@@ -1,4 +1,4 @@
-import type { VarSeries } from "src/utils/series";
+import type { VarSeries } from "../utils/series";
 import { normDistribQuan } from "./quantiles";
 
 const normQuan = normDistribQuan(1 - 0.05 / 2);

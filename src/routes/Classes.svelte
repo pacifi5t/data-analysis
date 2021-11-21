@@ -10,7 +10,7 @@
   import { onMount } from "svelte";
   import { createKDEchart } from "../utils/charts";
   import { mean, stdDev } from "../math/characteristics";
-  import { hiSquare, pearsonCriteria, pearsonFunction } from "../math/other";
+  import * as mymath from "../math";
 
   const headers = [
     { text: "class num", value: "c" },
@@ -50,9 +50,9 @@
       createKDEchart(classifiedData, density, mutableSeries);
 
       if (isNormal) {
-        const p = pearsonCriteria(
-          pearsonFunction(
-            hiSquare(classifiedData, mutableSeries),
+        const p = mymath.pearsonCriteria(
+          mymath.pearsonFunction(
+            mymath.hiSquare(classifiedData, mutableSeries),
             classifiedData.classCount - 1
           )
         );

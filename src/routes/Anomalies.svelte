@@ -2,7 +2,7 @@
   import { createAnomaliesChart } from "../utils/charts";
   import { onMount } from "svelte";
   import { immutableDataStore, mutableDataStore } from "../utils/stores";
-  import { quartile1, quartile3 } from "../math/other";
+  import * as mymath from "../math";
   import { Button } from "attractions";
   import { purgeAnomalies } from "../utils/helpers";
 
@@ -13,8 +13,8 @@
   onMount(() => {
     if (mutableSeries.length !== 0) {
       const k = 2.5;
-      const q1 = quartile1(mutableSeries);
-      const q3 = quartile3(mutableSeries);
+      const q1 = mymath.quartile1(mutableSeries);
+      const q3 = mymath.quartile3(mutableSeries);
       a = q1 - k * (q3 - q1);
       b = q3 + k * (q3 - q1);
       createAnomaliesChart(mutableSeries, a, b);

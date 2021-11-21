@@ -1,4 +1,4 @@
-import type { VarSeries } from "src/utils/series";
+import type { VarSeries } from "../utils/series";
 
 export function meanDeviation(series: VarSeries, stdDeviation: number) {
   return stdDeviation / Math.sqrt(series.length);
