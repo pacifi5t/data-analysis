@@ -7,12 +7,12 @@ export function meanConfInterval(
   meanStdDev: number,
   mean: number
 ) {
-  const q = studentDistribQuan(1 - alpha / 2, len - 1);
+  const q = studentDistribQuan(1 - alpha / 2, len);
   return [mean - q * meanStdDev, mean + q * meanStdDev];
 }
 
 export function medianConfInterval(array: number[]) {
-  const q = studentDistribQuan(1 - alpha / 2, array.length - 1);
+  const q = studentDistribQuan(1 - alpha / 2, array.length);
   return [
     array[Math.round(array.length / 2 - (q * Math.sqrt(array.length)) / 2)],
     array[Math.round(array.length / 2 + 1 + (q * Math.sqrt(array.length)) / 2)]
@@ -24,7 +24,7 @@ export function stdDevConfInterval(
   stdDev: number,
   stdDevDeviation: number
 ) {
-  const q = studentDistribQuan(1 - alpha / 2, len - 1);
+  const q = studentDistribQuan(1 - alpha / 2, len);
   return [stdDev - q * stdDevDeviation, stdDev + q * stdDevDeviation];
 }
 
@@ -33,6 +33,6 @@ export function coefConfInterval(
   coefficient: number,
   coefStdDev: number
 ) {
-  const q = studentDistribQuan(1 - alpha / 2, len - 1);
+  const q = studentDistribQuan(1 - alpha / 2, len);
   return [coefficient - q * coefStdDev, coefficient + q * coefStdDev];
 }
