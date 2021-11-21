@@ -16,65 +16,6 @@ export function purgeAnomalies(series: VarSeries, a: number, b: number) {
   return new VarSeries(array);
 }
 
-export function normDistribDensity(x: number, m: number, s: number) {
-  return (
-    Math.exp(-Math.pow(x - m, 2) / (2 * s * s)) / (Math.sqrt(2 * Math.PI) * s)
-  );
-}
-
-export function kde(bandwidth: number, series: VarSeries, limits: number[]) {
-  if (series.length == 0) {
-    return [];
-  }
-
-  //Epanechnikov's Kernel
-  const kernel = (u: number) =>
-    Math.abs(u) <= Math.sqrt(5) ? (0.75 / Math.sqrt(5)) * (1 - (u * u) / 5) : 0;
-
-  const density = [];
-  limits.forEach((lim) => {
-    const sum = series.initialArray.reduce(
-      (total, elem) => total + kernel((lim - elem) / bandwidth),
-      0
-    );
-    density.push([
-      lim,
-      (sum / (series.length * bandwidth)) * (limits[1] - limits[0])
-    ]);
-  });
-
-  return density;
-}
-
-export function identifyNormalDistrib(series: VarSeries) {
-  const meanValue = mymath.mean(series);
-  const skewness = mymath.skewnessCoef2(
-    series,
-    mymath.skewnessCoef1(
-      series,
-      mymath.shiftedStdDev(series, meanValue),
-      meanValue
-    )
-  );
-  const skewnessStdDev = mymath.skewnessDeviation2(series);
-  const kurtosis2 = mymath.kurtosisCoef2(
-    series,
-    mymath.kurtosisCoef1(
-      series,
-      mymath.shiftedStdDev(series, meanValue),
-      meanValue
-    )
-  );
-  const kurtosisStdDev = mymath.kurtosisDeviation2(series);
-
-  const quantile = mymath.normDistribQuan(1 - 0.05 / 2);
-  const uA = Math.abs(skewness / skewnessStdDev);
-  const uE = Math.abs(kurtosis2 / kurtosisStdDev);
-
-  console.log(quantile, uA, uE);
-  return uA <= quantile && uE <= quantile ? true : false;
-}
-
 export function updateClassifiedSeries(
   classCount: number,
   varSeries: VarSeries

@@ -6,7 +6,7 @@
     normalDistributionFlagStore
   } from "../utils/stores";
   import { Button, Slider, Table } from "attractions";
-  import { kde, pretty, updateClassifiedSeries } from "../utils/helpers";
+  import { pretty, updateClassifiedSeries } from "../utils/helpers";
   import { onMount } from "svelte";
   import { createKDEchart } from "../utils/charts";
   import { mean, stdDev } from "../math/characteristics";
@@ -46,7 +46,11 @@
     }
 
     if (mutableSeries.length != 0) {
-      const density = kde(sliderValue, mutableSeries, classifiedData.limits);
+      const density = mymath.kde(
+        sliderValue,
+        mutableSeries,
+        classifiedData.limits
+      );
       createKDEchart(classifiedData, density, mutableSeries);
 
       if (isNormal) {
@@ -65,7 +69,11 @@
     if (mutableSeries.length != 0) {
       const stdDeviation = stdDev(mutableSeries, mean(mutableSeries));
       sliderValue = pretty(stdDeviation * Math.pow(mutableSeries.length, -0.2));
-      const density = kde(sliderValue, mutableSeries, classifiedData.limits);
+      const density = mymath.kde(
+        sliderValue,
+        mutableSeries,
+        classifiedData.limits
+      );
       createKDEchart(classifiedData, density, mutableSeries);
     }
   });
