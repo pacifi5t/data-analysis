@@ -1,6 +1,6 @@
 {
   "name": "data-analysis",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "scripts": {
     "start": "node server",
     "dev": "vite",
