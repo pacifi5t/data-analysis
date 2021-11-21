@@ -1,22 +1,5 @@
 import { jStat } from "jstat";
-import type { ClassifiedSeries, VarSeries } from "./series";
-import * as chars from "./characteristics";
-import { muFunc, sigmaFunc } from "./parameters";
-import {
-  kurtosisDeviation2,
-  skewnessDeviation2,
-  shiftedDeviation
-} from "./deviations";
-import { normDistribQuan } from "./quantiles";
-import { alpha } from ".";
-
-export function min(array: number[]) {
-  return array.reduce((m, x) => (x < m ? x : m));
-}
-
-export function max(array: number[]) {
-  return array.reduce((m, x) => (x > m ? x : m));
-}
+import * as mymath from ".";
 
 export function normDistrib(x: number, m: number, s: number) {
   function aproxLaplace(u: number) {
@@ -66,11 +49,14 @@ export function pearsonFunction(hiSqr: number, v: number) {
   return jStat.gammap(v / 2, hiSqr / 2) / jStat.gammafn(v / 2);
 }
 
-export function hiSquare(series: ClassifiedSeries, varseries: VarSeries) {
+export function hiSquare(
+  series: mymath.ClassifiedSeries,
+  varseries: mymath.VarSeries
+) {
   const theoriticalFreqs = [];
-  const meanValue = chars.mean(varseries.initialArray);
-  const mu = muFunc(meanValue);
-  const sigma = sigmaFunc(meanValue, varseries.initialArray);
+  const meanValue = mymath.mean(varseries.initialArray);
+  const mu = mymath.muFunc(meanValue);
+  const sigma = mymath.sigmaFunc(meanValue, varseries.initialArray);
   for (let i = 0; i < series.classCount; i++) {
     const p =
       normDistrib(series.limits[i + 1], mu, sigma) -
@@ -91,7 +77,11 @@ export function pearsonCriteria(pearsonFunc: number) {
   return 1 - pearsonFunc;
 }
 
-export function kde(bandwidth: number, series: VarSeries, limits: number[]) {
+export function kde(
+  bandwidth: number,
+  series: mymath.VarSeries,
+  limits: number[]
+) {
   if (series.length == 0) {
     return [];
   }
@@ -116,20 +106,15 @@ export function kde(bandwidth: number, series: VarSeries, limits: number[]) {
 }
 
 export function identifyNormalDistrib(array: number[]) {
-  const meanValue = chars.mean(array);
-  const shiftedDev = shiftedDeviation(array, meanValue);
-  const skewness = chars.skewnessCoef(array, shiftedDev, meanValue);
-  const skewnessStdDev = skewnessDeviation2(array.length);
-  const kurtosis = chars.kurtosisCoef(
-    array,
-    shiftedDev,
-    meanValue
-  );
-  const kurtosisStdDev = kurtosisDeviation2(array.length);
+  const meanValue = mymath.mean(array);
+  const shiftedDev = mymath.shiftedDeviation(array, meanValue);
+  const skewness = mymath.skewnessCoef(array, shiftedDev, meanValue);
+  const skewnessStdDev = mymath.skewnessDeviation2(array.length);
+  const kurtosis = mymath.kurtosisCoef(array, shiftedDev, meanValue);
+  const kurtosisStdDev = mymath.kurtosisDeviation2(array.length);
 
-  const quantile = normDistribQuan(1 - alpha / 2);
   const uA = Math.abs(skewness / skewnessStdDev);
   const uE = Math.abs(kurtosis / kurtosisStdDev);
 
-  return uA <= quantile && uE <= quantile ? true : false;
+  return uA <= mymath.normQuan && uE <= mymath.normQuan ? true : false;
 }

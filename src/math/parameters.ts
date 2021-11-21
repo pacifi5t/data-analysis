@@ -1,7 +1,7 @@
 import { normDistribQuan } from "./quantiles";
 import { alpha } from ".";
 
-const normQuan = normDistribQuan(1 - alpha / 2);
+export const normQuan = normDistribQuan(1 - alpha / 2);
 
 export function muFunc(mean: number) {
   return mean;

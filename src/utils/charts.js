@@ -199,8 +199,8 @@ export function createAnomaliesChart(series, a, b) {
     //console.error(e);
   }
 
-  const sMin = mymath.min(series.initialArray);
-  const sMax = mymath.max(series.initialArray);
+  const sMin = d3.min(series.initialArray);
+  const sMax = d3.max(series.initialArray);
   const padding = (sMax - sMin) / 40;
 
   const data = [];

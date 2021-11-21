@@ -1,4 +1,4 @@
-import { studentDistribQuan } from "./quantiles";
+import { studentDistribQuan } from ".";
 
 export const alpha = 0.05;
 

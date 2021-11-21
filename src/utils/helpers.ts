@@ -161,14 +161,14 @@ export function updateCharacteristicsTable(series: VarSeries) {
 
   items.push({
     t: "Minimum",
-    v: mymath.min(series.initialArray),
+    v: Math.min(...series.initialArray),
     d: "-",
     i: "-"
   });
 
   items.push({
     t: "Maximum",
-    v: mymath.max(series.initialArray),
+    v: Math.max(...series.initialArray),
     d: "-",
     i: "-"
   });

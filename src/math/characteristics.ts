@@ -42,13 +42,6 @@ export function antikurtosisCoef(kurtosisCoef1: number) {
   return 1 / Math.sqrt(kurtosisCoef1 + 3);
 }
 
-function skewnessCoef1(array: number[], shiftedStdDev: number, mean: number) {
-  return (
-    array.reduce((total, x) => total + Math.pow(x - mean, 3), 0) /
-    (array.length * Math.pow(shiftedStdDev, 3))
-  );
-}
-
 export function kurtosisCoef1(
   array: number[],
   shiftedStdDev: number,
@@ -58,5 +51,12 @@ export function kurtosisCoef1(
     array.reduce((total, x) => total + Math.pow(x - mean, 4), 0) /
       (array.length * Math.pow(shiftedStdDev, 4)) -
     3
+  );
+}
+
+function skewnessCoef1(array: number[], shiftedStdDev: number, mean: number) {
+  return (
+    array.reduce((total, x) => total + Math.pow(x - mean, 3), 0) /
+    (array.length * Math.pow(shiftedStdDev, 3))
   );
 }
