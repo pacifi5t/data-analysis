@@ -1,5 +1,5 @@
 import * as mymath from "../math";
-import { ClassifiedSeries, VarSeries } from "./series";
+import { ClassifiedSeries, VarSeries } from "../math/series";
 
 export function pretty(num: number): number {
   return parseFloat(num.toPrecision(4));

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { ClassifiedSeries } from "../utils/series";
+  import type { ClassifiedSeries } from "../math/series";
   import {
     mutableDataStore,
     classifiedDataStore,

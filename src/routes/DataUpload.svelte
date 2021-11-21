@@ -1,7 +1,7 @@
 <script lang="ts">
   import { FileDropzone, Table } from "attractions";
-  import { VarSeries } from "../utils/series";
   import { immutableDataStore, fileStore } from "../utils/stores";
+  import { VarSeries } from "../math";
 
   const reader = new FileReader();
   const headers = [

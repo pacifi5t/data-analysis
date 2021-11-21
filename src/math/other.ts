@@ -1,5 +1,5 @@
 import { jStat } from "jstat";
-import type { ClassifiedSeries, VarSeries } from "../utils/series";
+import type { ClassifiedSeries, VarSeries } from "./series";
 import { mean } from "./characteristics";
 import { mu, sigma } from "./parameters";
 

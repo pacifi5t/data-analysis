@@ -1,4 +1,4 @@
-import type { VarSeries } from "../utils/series";
+import type { VarSeries } from "./series";
 import { studentDistribQuan } from "./quantiles";
 
 const alpha = 0.05;
