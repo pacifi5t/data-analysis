@@ -118,7 +118,7 @@ export function updateCharacteristicsTable(series: VarSeries) {
     shiftedDev,
     meanValue
   );
-  const skewnessStdDev = mymath.skewnessDeviation2(series.length);
+  const skewnessStdDev = mymath.skewnessDeviation(series.length);
   const skewnessInterval = mymath.coefConfInterval(
     series.length,
     skewnessCoef,
@@ -136,7 +136,7 @@ export function updateCharacteristicsTable(series: VarSeries) {
     shiftedDev,
     meanValue
   );
-  const kurtosisStdDev = mymath.kurtosisDeviation2(series.length);
+  const kurtosisStdDev = mymath.kurtosisDeviation(series.length);
   const kurtosisInterval = mymath.coefConfInterval(
     series.length,
     kurtosis2,

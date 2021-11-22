@@ -109,9 +109,9 @@ export function identifyNormalDistrib(array: number[]) {
   const meanValue = mymath.mean(array);
   const shiftedDev = mymath.shiftedDeviation(array, meanValue);
   const skewness = mymath.skewnessCoef(array, shiftedDev, meanValue);
-  const skewnessStdDev = mymath.skewnessDeviation2(array.length);
+  const skewnessStdDev = mymath.skewnessDeviation(array.length);
   const kurtosis = mymath.kurtosisCoef(array, shiftedDev, meanValue);
-  const kurtosisStdDev = mymath.kurtosisDeviation2(array.length);
+  const kurtosisStdDev = mymath.kurtosisDeviation(array.length);
 
   const uA = Math.abs(skewness / skewnessStdDev);
   const uE = Math.abs(kurtosis / kurtosisStdDev);

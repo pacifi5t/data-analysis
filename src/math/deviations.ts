@@ -12,24 +12,24 @@ export function stdDevDeviation(len: number, stdDeviation: number) {
   return meanDeviation(len, stdDeviation) / Math.sqrt(2);
 }
 
-export function skewnessDeviation1(len: number) {
-  return Math.sqrt((6 * (len - 2)) / ((len + 1) * (len + 3)));
-}
-
-export function skewnessDeviation2(len: number) {
+export function skewnessDeviation(len: number) {
   return Math.sqrt((6 * len * (len - 1)) / ((len - 2) * (len + 1) * (len + 3)));
 }
 
-export function kurtosisDeviation1(len: number) {
-  return Math.sqrt(
-    (24 * len * (len - 2) * (len - 3)) /
-      (Math.pow(len + 1, 2) * (len + 3) * (len + 5))
-  );
-}
-
-export function kurtosisDeviation2(len: number) {
+export function kurtosisDeviation(len: number) {
   return Math.sqrt(
     (24 * len * Math.pow(len - 1, 2)) /
       ((len - 3) * (len - 2) * (len + 3) * (len + 5))
   );
 }
+
+// export function skewnessDeviation1(len: number) {
+//   return Math.sqrt((6 * (len - 2)) / ((len + 1) * (len + 3)));
+// }
+
+// export function kurtosisDeviation1(len: number) {
+//   return Math.sqrt(
+//     (24 * len * (len - 2) * (len - 3)) /
+//       (Math.pow(len + 1, 2) * (len + 3) * (len + 5))
+//   );
+// }
