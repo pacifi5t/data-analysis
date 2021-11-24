@@ -3,7 +3,7 @@
 import * as d3 from "d3";
 import * as mymath from "../math";
 
-export function createECDFChart(data, varseries) {
+export function createECDFChart(data, varseries, isNormal) {
   const margin = { top: 10, right: 30, bottom: 30, left: 60 },
     width = 1200 - margin.left - margin.right,
     height = 800 - margin.top - margin.bottom;
@@ -69,32 +69,34 @@ export function createECDFChart(data, varseries) {
     .attr("x", -margin.top - 10)
     .text("Fn(x)");
 
-  const meanValue = mymath.mean(varseries.initialArray);
-  const m = mymath.muFunc(meanValue);
-  const s = mymath.sigmaFunc(meanValue, varseries.initialArray);
-  const data2 = [];
+  if (isNormal) {
+    const meanValue = mymath.mean(varseries.initialArray);
+    const m = mymath.muFunc(meanValue);
+    const s = mymath.sigmaFunc(meanValue, varseries.initialArray);
+    const data2 = [];
 
-  for (const elem of varseries.initialArray) {
-    data2.push([elem, mymath.normDistrib(elem, m, s)]);
+    for (const elem of varseries.initialArray) {
+      data2.push([elem, mymath.normDistrib(elem, m, s)]);
+    }
+    svg
+      .append("path")
+      .datum(data2)
+      .attr("fill", "none")
+      .attr("stroke", "green")
+      .attr("stroke-width", 3)
+      .attr("stroke-linejoin", "round")
+      .attr(
+        "d",
+        d3
+          .line()
+          .curve(d3.curveBasis)
+          .x((d) => x(d[0]))
+          .y((d) => y(d[1]))
+      );
   }
-  svg
-    .append("path")
-    .datum(data2)
-    .attr("fill", "none")
-    .attr("stroke", "green")
-    .attr("stroke-width", 3)
-    .attr("stroke-linejoin", "round")
-    .attr(
-      "d",
-      d3
-        .line()
-        .curve(d3.curveBasis)
-        .x((d) => x(d[0]))
-        .y((d) => y(d[1]))
-    );
 }
 
-export function createKDEchart(series, density, varseries) {
+export function createKDEchart(series, density, varseries, isNormal) {
   try {
     document.getElementById("kde").replaceChildren("");
   } catch (e) {
@@ -173,23 +175,25 @@ export function createKDEchart(series, density, varseries) {
     .attr("x", -margin.top * 4)
     .text("p");
 
-  const meanValue = mymath.mean(varseries.initialArray);
-  const m = mymath.muFunc(meanValue);
-  const s = mymath.sigmaFunc(meanValue, varseries.initialArray);
-  const data2 = [];
-  const w = series.limits[1] - series.limits[0];
+  if (isNormal) {
+    const meanValue = mymath.mean(varseries.initialArray);
+    const m = mymath.muFunc(meanValue);
+    const s = mymath.sigmaFunc(meanValue, varseries.initialArray);
+    const data2 = [];
+    const w = series.limits[1] - series.limits[0];
 
-  for (const elem of series.limits) {
-    data2.push([elem, mymath.normDistribDensity(elem, m, s) * w]);
+    for (const elem of series.limits) {
+      data2.push([elem, mymath.normDistribDensity(elem, m, s) * w]);
+    }
+    svg
+      .append("path")
+      .datum(data2)
+      .attr("fill", "none")
+      .attr("stroke", "green")
+      .attr("stroke-width", 3)
+      .attr("stroke-linejoin", "round")
+      .attr("d", line);
   }
-  svg
-    .append("path")
-    .datum(data2)
-    .attr("fill", "none")
-    .attr("stroke", "green")
-    .attr("stroke-width", 3)
-    .attr("stroke-linejoin", "round")
-    .attr("d", line);
 }
 
 export function createAnomaliesChart(series, a, b) {
@@ -284,7 +288,7 @@ export function createAnomaliesChart(series, a, b) {
     .text("x");
 }
 
-export function createPGPchart(series) {
+export function createPGPchart(series, isNormal) {
   try {
     document.getElementById("pgp").replaceChildren("");
   } catch (e) {
@@ -371,19 +375,21 @@ export function createPGPchart(series) {
     .attr("transform", "rotate(-90)")
     .text("z = u(F(x))");
 
-  svg
-    .append("path")
-    .datum(data2)
-    .attr("fill", "none")
-    .attr("stroke", "green")
-    .attr("stroke-width", 3)
-    .attr("stroke-linejoin", "round")
-    .attr(
-      "d",
-      d3
-        .line()
-        .curve(d3.curveBasis)
-        .x((d) => x(d.x))
-        .y((d) => y(d.y))
-    );
+  if (isNormal) {
+    svg
+      .append("path")
+      .datum(data2)
+      .attr("fill", "none")
+      .attr("stroke", "green")
+      .attr("stroke-width", 3)
+      .attr("stroke-linejoin", "round")
+      .attr(
+        "d",
+        d3
+          .line()
+          .curve(d3.curveBasis)
+          .x((d) => x(d.x))
+          .y((d) => y(d.y))
+      );
+  }
 }

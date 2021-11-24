@@ -1,7 +1,10 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { createECDFChart as createECDFChart } from "../utils/charts";
-  import { mutableDataStore } from "../utils/stores";
+  import {
+    mutableDataStore,
+    normalDistributionFlagStore
+  } from "../utils/stores";
 
   let mutableData = $mutableDataStore;
 
@@ -20,7 +23,7 @@
     }
 
     if (parsedSeries.length != 0) {
-      createECDFChart(parsedSeries, mutableData);
+      createECDFChart(parsedSeries, mutableData, $normalDistributionFlagStore);
     }
   });
 </script>

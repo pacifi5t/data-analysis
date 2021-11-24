@@ -11,6 +11,7 @@
   import { createKDEchart } from "../utils/charts";
   import { mean, stdDev } from "../math/characteristics";
   import * as mymath from "../math";
+  import { hiSquare, pearsonDistribQuan } from "../math";
 
   const headers = [
     { text: "class num", value: "c" },
@@ -51,7 +52,7 @@
         mutableSeries,
         classifiedData.limits
       );
-      createKDEchart(classifiedData, density, mutableSeries);
+      createKDEchart(classifiedData, density, mutableSeries, isNormal);
 
       if (isNormal) {
         const p = mymath.pearsonCriteria(
@@ -61,6 +62,10 @@
           )
         );
         console.log(`p=${p}`, p <= 0.05);
+        console.log(
+            hiSquare(classifiedData, mutableSeries),
+            pearsonDistribQuan(0.95, classifiedData.classCount - 1)
+        );
       }
     }
   }
@@ -77,7 +82,7 @@
         mutableSeries,
         classifiedData.limits
       );
-      createKDEchart(classifiedData, density, mutableSeries);
+      createKDEchart(classifiedData, density, mutableSeries, isNormal);
     }
   });
 </script>
