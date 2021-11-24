@@ -163,6 +163,12 @@
     </div>
     <div>
       <div id="kde" />
+      {#if classifiedData.initialArray.length !== 0}
+        <div class="mx-20">
+          <p class="text-gray-800">- KDE</p>
+          <p class="text-green-800">- Restored density function</p>
+        </div>
+      {/if}
     </div>
   </div>
 </div>

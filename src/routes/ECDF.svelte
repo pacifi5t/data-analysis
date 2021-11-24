@@ -3,8 +3,9 @@
   import { createECDFChart as createECDFChart } from "../utils/charts";
   import { mutableDataStore } from "../utils/stores";
 
+  let mutableData = $mutableDataStore;
+
   onMount(() => {
-    let mutableData = $mutableDataStore;
     let parsedSeries: { x1: number; x2: number; y: number }[] = [];
     for (let i = 0; i < mutableData.data.length - 1; i++) {
       let temp = {
@@ -25,3 +26,9 @@
 </script>
 
 <div id="ecdf" />
+{#if mutableData.length}
+  <div class="mx-20">
+    <p class="text-yellow-700">- ECDF</p>
+    <p class="text-green-800">- Restored distributon function</p>
+  </div>
+{/if}
