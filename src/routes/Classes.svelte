@@ -25,6 +25,7 @@
   let mutableSeries = $mutableDataStore;
   let classifiedData: ClassifiedSeries;
   let isNormal = $normalDistributionFlagStore;
+  let p = 1;
 
   classifiedDataStore.subscribe((value) => {
     classifiedData = value;
@@ -55,16 +56,16 @@
       createKDEchart(classifiedData, density, mutableSeries, isNormal);
 
       if (isNormal) {
-        const p = mymath.pearsonCriteria(
-          mymath.pearsonFunction(
-            mymath.hiSquare(classifiedData, mutableSeries),
-            classifiedData.classCount - 1
-          )
+        const hi2 = mymath.hiSquare(classifiedData, mutableSeries);
+        p = mymath.pearsonCriteria(
+          mymath.pearsonFunction(hi2, classifiedData.classCount - 1)
         );
-        console.log(`p=${p}`, p <= 0.05);
+        console.log(`hi^2: ${hi2}`);
         console.log(
-            hiSquare(classifiedData, mutableSeries),
-            pearsonDistribQuan(0.95, classifiedData.classCount - 1)
+          `Pearson quantile: ${mymath.pearsonDistribQuan(
+            1 - mymath.alpha,
+            classifiedData.classCount - 1
+          )}`
         );
       }
     }
@@ -164,6 +165,14 @@
     <div>
       {#if classifiedData.classCount !== 0}
         <Table {headers} {items} />
+      {/if}
+      {#if isNormal}
+        {#if p >= mymath.alpha}
+          <p>Distribution is credible</p>
+        {:else}
+          <p>Distribution is not credible</p>
+        {/if}
+        <p>p = {p}</p>
       {/if}
     </div>
     <div>

@@ -57,11 +57,12 @@ export function hiSquare(
   const meanValue = mymath.mean(varseries.initialArray);
   const mu = mymath.muFunc(meanValue);
   const sigma = mymath.sigmaFunc(meanValue, varseries.initialArray);
+  // const w = series.limits[1] - series.limits[0];
   for (let i = 0; i < series.classCount; i++) {
     const p =
       normDistrib(series.limits[i + 1], mu, sigma) -
       normDistrib(series.limits[i], mu, sigma);
-    theoriticalFreqs.push(p * series.initialArray.length);
+    theoriticalFreqs.push(p * series.initialArray.length); // Replace length with w
   }
 
   let sum = 0;
