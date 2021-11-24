@@ -18,8 +18,8 @@ export function muDispersion(len: number, sigma: number) {
   return (sigma * sigma) / len;
 }
 
-export function sigmaDispersion(muDisp: number) {
-  return muDisp / 2;
+export function sigmaDispersion(len: number, sigma: number) {
+  return (sigma * sigma) / (len * 2);
 }
 
 export function muConfInterval(mu: number, muDisp: number) {

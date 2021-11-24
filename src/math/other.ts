@@ -116,6 +116,6 @@ export function identifyNormalDistrib(array: number[]) {
 
   const uA = Math.abs(skewness / skewnessStdDev);
   const uE = Math.abs(kurtosis / kurtosisStdDev);
-  console.log({uA: uA, uE: uE});
+  console.log({ uA: uA, uE: uE, normQuan: mymath.normQuan });
   return uA <= mymath.normQuan && uE <= mymath.normQuan ? true : false;
 }
