@@ -63,7 +63,7 @@ export function updateParamsTable(series: VarSeries) {
   });
 
   const sigmaDisp = mymath.sigmaDispersion(series.length, sigmaValue);
-  const sigmaInterval = mymath.sigmaConfInterval(muValue, sigmaDisp);
+  const sigmaInterval = mymath.sigmaConfInterval(sigmaValue, sigmaDisp);
   items.push({
     t: "Sigma",
     v: pretty(sigmaValue),

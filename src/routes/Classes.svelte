@@ -11,7 +11,6 @@
   import { createKDEchart } from "../utils/charts";
   import { mean, stdDev } from "../math/characteristics";
   import * as mymath from "../math";
-  import { hiSquare, pearsonDistribQuan } from "../math";
 
   const headers = [
     { text: "class num", value: "c" },

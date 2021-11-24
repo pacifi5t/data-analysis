@@ -27,7 +27,7 @@ export function muConfInterval(mu: number, muDisp: number) {
   return [mu - normQuan * stdDev, mu + normQuan * stdDev];
 }
 
-export function sigmaConfInterval(mu: number, sigmaDisp: number) {
+export function sigmaConfInterval(sigma: number, sigmaDisp: number) {
   const stdDev = Math.sqrt(sigmaDisp);
-  return [mu - normQuan * stdDev, mu + normQuan * stdDev];
+  return [sigma - normQuan * stdDev, sigma + normQuan * stdDev];
 }
