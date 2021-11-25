@@ -316,8 +316,8 @@ export function createPGPchart(series, isNormal) {
   // console.log(data);
 
   const margin = { x: 40, y: 40 },
-    width = 1200 - margin.x * 2,
-    height = 800 - margin.y * 2;
+    width = 800 - margin.x * 2,
+    height = 600 - margin.y * 2;
 
   const svg = d3
     .select("#pgp")
@@ -370,7 +370,7 @@ export function createPGPchart(series, isNormal) {
   svg
     .append("text")
     .attr("text-anchor", "end")
-    .attr("y", -25)
+    .attr("y", -27)
     .attr("x", 0)
     .attr("transform", "rotate(-90)")
     .text("z = u(F(x))");
