@@ -66,13 +66,13 @@
     {/if}
   </div>
   <div class="mx-20">
-    <p>u = {pretty(mymath.normQuan)}</p>
+    <p>Normal distrib. quantile = {pretty(mymath.normQuan)}</p>
     <p>uA = {pretty(uA)}</p>
     <p>uE = {pretty(uE)}</p>
     <p class="pt-10">p = {pretty(p)}</p>
-    <p>hi^2 = {pretty(hi2)}</p>
+    <p>Hi^2 = {pretty(hi2)}</p>
     <p>
-      Pearson quantile: {pretty(pearsonQuantile)}
+      Pearson quantile = {pretty(pearsonQuantile)}
     </p>
     <div class="pt-10">
       {#if isNormal && hi2 <= pearsonQuantile && p >= mymath.alpha}
