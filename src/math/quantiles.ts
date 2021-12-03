@@ -64,3 +64,26 @@ export function pearsonDistribQuan(p: number, v: number) {
     Math.pow(1 - 2 / (9 * v) + normDistribQuan(p) * Math.sqrt(2 / (9 * v)), 3)
   );
 }
+
+export function fisherDistribQuan(p: number, v1: number, v2: number) {
+  const s = 1 / v1 + 1 / v2;
+  const d = 1 / v1 - 1 / v2;
+  const u = normDistribQuan(p);
+
+  const a = Math.sqrt(s / 2);
+  const z =
+    u * a -
+    (1 / 6) * d * (u * u + 2) +
+    a *
+      ((s / 24) * (u * u + 3 * u) +
+        ((d * d) / (72 * s)) * (Math.pow(u, 3) + 11 * u)) -
+    ((d * s) / 120) * (Math.pow(u, 4) + 9 * Math.pow(u, 2) + 8) +
+    (Math.pow(d, 3) / (3240 * s)) * (3 * Math.pow(u, 4) + 7 * u * u - 16) +
+    a *
+      (((s * s) / 1920) * (Math.pow(u, 5) + 20 * Math.pow(u, 3) + 15 * u) +
+        (Math.pow(d, 4) / 2880) *
+          (Math.pow(u, 5) + 44 * Math.pow(u, 3) + 183 * u) +
+        (Math.pow(d, 4) / (155520 * s * s)) *
+          (9 * Math.pow(u, 5) - 284 * Math.pow(u, 3) - 1531 * u));
+  return Math.exp(2 * z);
+}
