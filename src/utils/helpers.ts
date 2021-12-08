@@ -174,3 +174,40 @@ export function updateCharacteristicsTable(series: VarSeries) {
   });
   return items;
 }
+
+export function updateSampleTable(sample: VarSeries) {
+  const items = [];
+  const meanValue = mymath.mean(sample.initialArray);
+  const stdDeviation = mymath.stdDev(sample.initialArray, meanValue);
+  const meanStdDev = mymath.meanDeviation(sample.length, stdDeviation);
+  const meanInterval = mymath.meanConfInterval(
+    sample.length,
+    meanStdDev,
+    meanValue
+  );
+  items.push({
+    t: "Mean",
+    v: pretty(meanValue),
+    d: pretty(meanStdDev),
+    i: `${pretty(meanInterval[0])} ; ${pretty(meanInterval[1])}`
+  });
+
+  const medianValue = mymath.median(sample.initialArray);
+  const medianInterval = mymath.medianConfInterval(sample.initialArray);
+  items.push({
+    t: "Median",
+    v: pretty(medianValue),
+    d: "-",
+    i: `${pretty(medianInterval[0])} ; ${pretty(medianInterval[1])}`
+  });
+
+  return items;
+}
+
+export function getDifferenceSample(sampleX: VarSeries, sampleY: VarSeries) {
+  const arrZ = [];
+  for (let i = 0; i < sampleX.length; i++) {
+    arrZ.push(sampleX.initialArray[i] - sampleY.initialArray[i]);
+  }
+  return new VarSeries(arrZ);
+}

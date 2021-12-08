@@ -82,7 +82,6 @@
           const second = temp[i + 1];
           data.push([first, second]);
         }
-        console.log(data);
 
         // Define how to parse file
         const set = new Set();
@@ -106,8 +105,6 @@
             }
           }
         }
-        console.log(`sample1 ${dataSample1}`);
-        console.log(`sample2 ${dataSample2}`);
 
         immutableSamplesStore.set([
           new VarSeries(dataSample1),
