@@ -1,9 +1,9 @@
 <script lang="ts">
   import type { ClassifiedSeries } from "../math/series";
   import {
-    mutableDataStore,
-    classifiedDataStore,
-    normalDistributionFlagStore
+    // mutableDataStore,
+    // classifiedDataStore,
+    // normalDistributionFlagStore
   } from "../utils/stores";
   import { Button, Slider, Table } from "attractions";
   import { pretty, updateClassifiedSeries } from "../utils/helpers";
@@ -21,13 +21,13 @@
   ];
   let sliderValue = 0.5;
   let items = [];
-  let mutableSeries = $mutableDataStore;
+  // let mutableSeries = $mutableDataStore;
   let classifiedData: ClassifiedSeries;
-  let isNormal = $normalDistributionFlagStore;
+  // let isNormal = $normalDistributionFlagStore;
 
-  classifiedDataStore.subscribe((value) => {
-    classifiedData = value;
-  });
+  // classifiedDataStore.subscribe((value) => {
+  //   classifiedData = value;
+  // });
 
   $: {
     items = [];
@@ -45,14 +45,14 @@
       });
     }
 
-    if (mutableSeries.length != 0) {
-      // const density = mymath.kde(
-      //   sliderValue,
-      //   mutableSeries,
-      //   classifiedData.limits
-      // );
-      // createKDEchart(classifiedData, density, mutableSeries, isNormal);
-    }
+    // if (mutableSeries.length != 0) {
+    //   const density = mymath.kde(
+    //     sliderValue,
+    //     mutableSeries,
+    //     classifiedData.limits
+    //   );
+    //   createKDEchart(classifiedData, density, mutableSeries, isNormal);
+    // }
   }
 
   onMount(() => {
@@ -78,11 +78,11 @@
       <span class="py-4 text-2xl font-medium">Class count:</span>
       <Button
         on:click={() => {
-          classifiedDataStore.update((old) => old
+          // classifiedDataStore.update((old) => old
             // old.classCount > 1
             //   ? updateClassifiedSeries(old.classCount - 1, mutableSeries)
             //   : old
-          );
+          // );
         }}
       >
         <svg
@@ -108,9 +108,9 @@
       {/if}
       <Button
         on:click={() => {
-          classifiedDataStore.update((old) => old
+          // classifiedDataStore.update((old) => old
             // updateClassifiedSeries(old.classCount + 1, mutableSeries)
-          );
+          // );
         }}
       >
         <svg
@@ -133,7 +133,7 @@
     </div>
     <div class="flex space-x-4 flex-row flex-grow">
       <span class="py-4 text-2xl font-medium">Bandwidth</span>
-      <div class="mt-8 flex-grow">
+      <!-- <div class="mt-8 flex-grow">
         <Slider
           bind:value={sliderValue}
           min={0.05}
@@ -142,7 +142,7 @@
           tooltips="always"
           disabled={mutableSeries.length == 0}
         />
-      </div>
+      </div> -->
     </div>
   </div>
   <div class="grid grid-cols-2 gap-4">

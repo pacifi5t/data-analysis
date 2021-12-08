@@ -5,8 +5,8 @@
     updateParamsTable
   } from "../utils/helpers";
   import {
-    mutableDataStore,
-    normalDistributionFlagStore
+    mutableSamplesStore,
+    // normalDistributionFlagStore
   } from "../utils/stores";
 
   const headers = [
@@ -16,13 +16,13 @@
     { text: "Confidence Interval", value: "i" }
   ];
 
-  let mutableSeries = $mutableDataStore;
+  let mutableSeries = $mutableSamplesStore;
 </script>
 
 <div>
   {#if mutableSeries.length !== 0}
     <div class="flex">
-      <Table
+      <!-- <Table
         {headers}
         items={updateCharacteristicsTable(mutableSeries)}
         class="mx-4"
@@ -39,7 +39,7 @@
             >No parameters. Distribution isn't normal</span
           >
         </div>
-      {/if}
+      {/if} -->
     </div>
   {/if}
 </div>

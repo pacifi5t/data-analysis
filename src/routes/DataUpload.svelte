@@ -1,6 +1,6 @@
 <script lang="ts">
   import { FileDropzone, Table } from "attractions";
-  import { immutableDataStore, fileStore } from "../utils/stores";
+  import { immutableSamplesStore, fileStore } from "../utils/stores";
   import { pretty } from "../utils/helpers";
   import { VarSeries } from "../math";
 
@@ -20,7 +20,7 @@
   fileStore.subscribe((value) => {
     uplodedFiles = value;
   });
-  immutableDataStore.subscribe((value) => {
+  immutableSamplesStore.subscribe((value) => {
     immutableSamples = value;
   });
 
@@ -60,7 +60,7 @@
       fileStore.set(event.detail.files);
 
       if (uplodedFiles.length == 0) {
-        immutableDataStore.set([]);
+        immutableSamplesStore.set([]);
         return;
       }
 
@@ -109,7 +109,7 @@
         console.log(`sample1 ${dataSample1}`);
         console.log(`sample2 ${dataSample2}`);
 
-        immutableDataStore.set([
+        immutableSamplesStore.set([
           new VarSeries(dataSample1),
           new VarSeries(dataSample2)
         ]);

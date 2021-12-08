@@ -1,6 +1,6 @@
 import Layout from "./Layout.svelte";
 import DataUpload from "./routes/DataUpload.svelte";
-import Classes from "./routes/Classes.svelte";
+import Samples from "./routes/Samples.svelte";
 import Characteristics from "./routes/Characteristics.svelte";
 import PGP from "./routes/PGP.svelte";
 
@@ -18,7 +18,7 @@ class Route {
 
 export const routes = [
   new Route("/", DataUpload),
-  new Route("/classes", Classes),
+  new Route("/samples", Samples),
   new Route("/characteristics", Characteristics),
   new Route("/pgp", PGP)
 ];
