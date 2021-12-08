@@ -4,9 +4,9 @@ import { updateClassifiedSeries } from "./helpers";
 
 export const fileStore = writable([]);
 
-export const immutableDataStore = writable(new VarSeries());
+export const immutableDataStore = writable([]);
 
-export const mutableDataStore = writable(new VarSeries());
+export const mutableDataStore = writable([]);
 
 export const classifiedDataStore = writable(new ClassifiedSeries());
 
@@ -15,7 +15,7 @@ export const normalDistributionFlagStore = writable(false);
 immutableDataStore.subscribe((value) => {
   mutableDataStore.set(value);
   if (value.length !== 0) {
-    const isNormal = identifyNormalDistrib(value.initialArray);
+    const isNormal = identifyNormalDistrib(value[0].initialArray);
     normalDistributionFlagStore.set(isNormal);
     if (isNormal) {
       console.log("This is a normal distribution");
@@ -26,11 +26,11 @@ immutableDataStore.subscribe((value) => {
 });
 
 mutableDataStore.subscribe((value) => {
-  const classCount = Math.floor(1 + 3.32 * Math.log10(value.length));
-  classifiedDataStore.set(
-    updateClassifiedSeries(
-      classCount % 2 == 0 ? classCount - 1 : classCount,
-      value
-    )
-  );
+  // const classCount = Math.floor(1 + 3.32 * Math.log10(value.length));
+  // classifiedDataStore.set(
+  //   updateClassifiedSeries(
+  //     classCount % 2 == 0 ? classCount - 1 : classCount,
+  //     value[0]
+  //   )
+  // );
 });

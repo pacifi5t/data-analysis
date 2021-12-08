@@ -19,40 +19,40 @@
   let pearsonQuantile = 0;
 
   onMount(() => {
-    if (mutableSeries.length !== 0) {
-      createPGPchart(mutableSeries, isNormal);
+    // if (mutableSeries.length !== 0) {
+    //   createPGPchart(mutableSeries, isNormal);
 
-      const meanValue = mymath.mean(mutableSeries.initialArray);
-      const shiftedDev = mymath.shiftedDeviation(
-        mutableSeries.initialArray,
-        meanValue
-      );
-      const skewness = mymath.skewnessCoef(
-        mutableSeries.initialArray,
-        shiftedDev,
-        meanValue
-      );
-      const skewnessStdDev = mymath.skewnessDeviation(mutableSeries.length);
-      const kurtosis = mymath.kurtosisCoef(
-        mutableSeries.initialArray,
-        shiftedDev,
-        meanValue
-      );
-      const kurtosisStdDev = mymath.kurtosisDeviation(mutableSeries.length);
+    //   const meanValue = mymath.mean(mutableSeries.initialArray);
+    //   const shiftedDev = mymath.shiftedDeviation(
+    //     mutableSeries.initialArray,
+    //     meanValue
+    //   );
+    //   const skewness = mymath.skewnessCoef(
+    //     mutableSeries.initialArray,
+    //     shiftedDev,
+    //     meanValue
+    //   );
+    //   const skewnessStdDev = mymath.skewnessDeviation(mutableSeries.length);
+    //   const kurtosis = mymath.kurtosisCoef(
+    //     mutableSeries.initialArray,
+    //     shiftedDev,
+    //     meanValue
+    //   );
+    //   const kurtosisStdDev = mymath.kurtosisDeviation(mutableSeries.length);
 
-      uA = Math.abs(skewness / skewnessStdDev);
-      uE = Math.abs(kurtosis / kurtosisStdDev);
+    //   uA = Math.abs(skewness / skewnessStdDev);
+    //   uE = Math.abs(kurtosis / kurtosisStdDev);
 
-      hi2 = mymath.hiSquare(classifiedData, mutableSeries);
-      p = mymath.pearsonCriteria(
-        mymath.pearsonFunction(hi2, classifiedData.classCount - 1)
-      );
+    //   hi2 = mymath.hiSquare(classifiedData, mutableSeries);
+    //   p = mymath.pearsonCriteria(
+    //     mymath.pearsonFunction(hi2, classifiedData.classCount - 1)
+    //   );
 
-      pearsonQuantile = mymath.pearsonDistribQuan(
-        1 - mymath.alpha,
-        classifiedData.classCount - 1
-      );
-    }
+    //   pearsonQuantile = mymath.pearsonDistribQuan(
+    //     1 - mymath.alpha,
+    //     classifiedData.classCount - 1
+    //   );
+    // }
   });
 </script>
 

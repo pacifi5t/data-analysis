@@ -10,30 +10,43 @@
     { text: "element", value: "x" },
     { text: "count", value: "n" },
     { text: "frequency", value: "p" },
-    { text: "empirical cumulative distribution function", value: "F" }
+    { text: "ecdf", value: "F" }
   ];
-  let items = [];
+  let items1 = [];
+  let items2 = [];
   let uplodedFiles = [];
-  let immutableData: VarSeries;
+  let immutableSamples: VarSeries[];
 
   fileStore.subscribe((value) => {
     uplodedFiles = value;
   });
   immutableDataStore.subscribe((value) => {
-    immutableData = value;
-    // console.log(immutableData);
+    immutableSamples = value;
   });
 
   $: {
-    items = [];
-    for (let i = 0; i < immutableData.data.length; i++) {
-      items.push({
-        i: i.toString(),
-        x: immutableData.data[i],
-        n: pretty(immutableData.count.get(i)),
-        p: pretty(immutableData.frequency.get(i)),
-        F: pretty(immutableData.empDistrFunc.get(i))
-      });
+    if (immutableSamples.length != 0) {
+      items1 = [];
+      for (let i = 0; i < immutableSamples[0].data.length; i++) {
+        items1.push({
+          i: i.toString(),
+          x: immutableSamples[0].data[i],
+          n: pretty(immutableSamples[0].count.get(i)),
+          p: pretty(immutableSamples[0].frequency.get(i)),
+          F: pretty(immutableSamples[0].empDistrFunc.get(i))
+        });
+      }
+
+      items2 = [];
+      for (let i = 0; i < immutableSamples[0].data.length; i++) {
+        items2.push({
+          i: i.toString(),
+          x: immutableSamples[0].data[i],
+          n: pretty(immutableSamples[0].count.get(i)),
+          p: pretty(immutableSamples[0].frequency.get(i)),
+          F: pretty(immutableSamples[0].empDistrFunc.get(i))
+        });
+      }
     }
   }
 </script>
@@ -46,32 +59,73 @@
     on:change={(event) => {
       fileStore.set(event.detail.files);
 
-      if (uplodedFiles.length != 0) {
-        reader.readAsText(uplodedFiles[0]);
-
-        reader.onload = () => {
-          let str = "" + reader.result;
-          let data = [];
-          str.split(/\n| /).forEach((value) => {
-            const num = Number.parseFloat(value);
-            if (!isNaN(num)) {
-              data.push(num);
-            }
-          });
-          // console.log(data);
-
-          immutableDataStore.set(new VarSeries(data));
-        };
-      } else {
-        immutableDataStore.set(new VarSeries());
+      if (uplodedFiles.length == 0) {
+        immutableDataStore.set([]);
+        return;
       }
+
+      reader.readAsText(uplodedFiles[0]);
+
+      reader.onload = () => {
+        let str = "" + reader.result;
+        const temp = [];
+        str.split(/\n| /).forEach((value) => {
+          const num = Number.parseFloat(value);
+          if (!isNaN(num)) {
+            temp.push(num);
+          }
+        });
+
+        const data = [];
+        for (let i = 0; i < temp.length; i += 2) {
+          const first = temp[i];
+          const second = temp[i + 1];
+          data.push([first, second]);
+        }
+        console.log(data);
+
+        // Define how to parse file
+        const set = new Set();
+        for (let i = 0; i < data.length; i++) {
+          set.add(data[i][1]);
+        }
+        const dataSample1 = [];
+        const dataSample2 = [];
+        if (set.size != 2) {
+          for (let i = 0; i < data.length; i++) {
+            dataSample1.push(data[i][0]);
+            dataSample2.push(data[i][1]);
+          }
+        } else {
+          for (let i = 0; i < data.length; i++) {
+            const elem = data[i];
+            if (elem[1] == 0) {
+              dataSample1.push(elem[0]);
+            } else {
+              dataSample2.push(elem[0]);
+            }
+          }
+        }
+        console.log(`sample1 ${dataSample1}`);
+        console.log(`sample2 ${dataSample2}`);
+
+        immutableDataStore.set([
+          new VarSeries(dataSample1),
+          new VarSeries(dataSample2)
+        ]);
+      };
     }}
   />
 </div>
 
-{#if immutableData.length !== 0}
-  <div class="flex flex-row justify-center overflow-auto">
-    <Table {headers} {items} />
+{#if immutableSamples.length !== 0}
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <Table {headers} items={items1} />
+    </div>
+    <div>
+      <Table {headers} items={items2} />
+    </div>
   </div>
 {/if}
 

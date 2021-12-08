@@ -46,29 +46,29 @@
     }
 
     if (mutableSeries.length != 0) {
-      const density = mymath.kde(
-        sliderValue,
-        mutableSeries,
-        classifiedData.limits
-      );
-      createKDEchart(classifiedData, density, mutableSeries, isNormal);
+      // const density = mymath.kde(
+      //   sliderValue,
+      //   mutableSeries,
+      //   classifiedData.limits
+      // );
+      // createKDEchart(classifiedData, density, mutableSeries, isNormal);
     }
   }
 
   onMount(() => {
-    if (mutableSeries.length != 0) {
-      const stdDeviation = stdDev(
-        mutableSeries.initialArray,
-        mean(mutableSeries.initialArray)
-      );
-      sliderValue = pretty(stdDeviation * Math.pow(mutableSeries.length, -0.2));
-      const density = mymath.kde(
-        sliderValue,
-        mutableSeries,
-        classifiedData.limits
-      );
-      createKDEchart(classifiedData, density, mutableSeries, isNormal);
-    }
+    // if (mutableSeries.length != 0) {
+    //   const stdDeviation = stdDev(
+    //     mutableSeries.initialArray,
+    //     mean(mutableSeries.initialArray)
+    //   );
+    //   sliderValue = pretty(stdDeviation * Math.pow(mutableSeries.length, -0.2));
+    //   const density = mymath.kde(
+    //     sliderValue,
+    //     mutableSeries,
+    //     classifiedData.limits
+    //   );
+    //   createKDEchart(classifiedData, density, mutableSeries, isNormal);
+    // }
   });
 </script>
 
@@ -78,10 +78,10 @@
       <span class="py-4 text-2xl font-medium">Class count:</span>
       <Button
         on:click={() => {
-          classifiedDataStore.update((old) =>
-            old.classCount > 1
-              ? updateClassifiedSeries(old.classCount - 1, mutableSeries)
-              : old
+          classifiedDataStore.update((old) => old
+            // old.classCount > 1
+            //   ? updateClassifiedSeries(old.classCount - 1, mutableSeries)
+            //   : old
           );
         }}
       >
@@ -108,8 +108,8 @@
       {/if}
       <Button
         on:click={() => {
-          classifiedDataStore.update((old) =>
-            updateClassifiedSeries(old.classCount + 1, mutableSeries)
+          classifiedDataStore.update((old) => old
+            // updateClassifiedSeries(old.classCount + 1, mutableSeries)
           );
         }}
       >
