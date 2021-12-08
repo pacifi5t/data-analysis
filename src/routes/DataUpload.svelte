@@ -38,13 +38,13 @@
       }
 
       items2 = [];
-      for (let i = 0; i < immutableSamples[0].data.length; i++) {
+      for (let i = 0; i < immutableSamples[1].data.length; i++) {
         items2.push({
           i: i.toString(),
-          x: immutableSamples[0].data[i],
-          n: pretty(immutableSamples[0].count.get(i)),
-          p: pretty(immutableSamples[0].frequency.get(i)),
-          F: pretty(immutableSamples[0].empDistrFunc.get(i))
+          x: immutableSamples[1].data[i],
+          n: pretty(immutableSamples[1].count.get(i)),
+          p: pretty(immutableSamples[1].frequency.get(i)),
+          F: pretty(immutableSamples[1].empDistrFunc.get(i))
         });
       }
     }

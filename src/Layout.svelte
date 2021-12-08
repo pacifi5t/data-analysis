@@ -15,10 +15,8 @@
         <div class="md:block">
           <div class="ml-10 flex items-baseline space-x-4">
             <NavItem label="Data upload" href="/" {currentRoute} />
-            <NavItem label="ECDF" href="/ecdf" {currentRoute} />
             <NavItem label="Classes" href="/classes" {currentRoute} />
             <NavItem label="Characteristics" href="/characteristics" {currentRoute} />
-            <NavItem label="Anomalies" href="/anomalies" {currentRoute} />
             <NavItem label="PGP" href="/pgp" {currentRoute} />
           </div>
         </div>
