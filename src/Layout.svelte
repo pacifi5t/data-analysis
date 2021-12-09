@@ -16,8 +16,6 @@
           <div class="ml-10 flex items-baseline space-x-4">
             <NavItem label="Data upload" href="/" {currentRoute} />
             <NavItem label="Samples" href="/samples" {currentRoute} />
-            <NavItem label="Characteristics" href="/characteristics" {currentRoute} />
-            <NavItem label="PGP" href="/pgp" {currentRoute} />
           </div>
         </div>
       </div>

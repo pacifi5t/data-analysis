@@ -1,7 +1,11 @@
 <script lang="ts">
   import { Checkbox, Table } from "attractions";
   import * as mymath from "../math";
-  import { getDifferenceSample, updateSampleTable } from "../utils/helpers";
+  import {
+    getDifferenceSample,
+    pretty,
+    updateSampleTable
+  } from "../utils/helpers";
   import { mutableSamplesStore } from "../utils/stores";
 
   const headers = [
@@ -20,6 +24,8 @@
   let mutableSamples: mymath.VarSeries[] = [];
   let differenceSample: mymath.VarSeries;
   let isNormal: boolean[];
+  let output1 = "";
+  let output2 = "";
 
   mutableSamplesStore.subscribe((value) => {
     mutableSamples = value;
@@ -33,7 +39,38 @@
         mymath.identifyNormalDistribEx(mutableSamples[1]),
         mymath.identifyNormalDistribEx(differenceSample)
       ];
+
+      if (isNormal[0] && isNormal[1]) {
+        const res1 = mymath.indepMeanEq(
+          mutableSamples[0].initialArray,
+          mutableSamples[1].initialArray
+        );
+
+        const res2 = mymath.dispersionEq(
+          mutableSamples[0].initialArray,
+          mutableSamples[1].initialArray
+        );
+
+        output1 += `Indep mean test: ${res1[0]}, p = ${pretty(res1[1])}\n`;
+        output2 += `Dispersion test: ${res2[0]}, F = ${pretty(+res2[1])}\n`;
+      } else {
+        if (samplesAreDependent) {
+          const res = mymath.testWilcoxonSignedRank(
+            mutableSamples[0].initialArray,
+            mutableSamples[1].initialArray
+          );
+          output1 += `Wilcoxon signed rank: ${res[0]}, u = ${res[1]}`;
+        } else {
+          const res = mymath.testMannWhitney(
+            mutableSamples[0].initialArray,
+            mutableSamples[1].initialArray
+          );
+          output1 += `Mann-Whitney test: ${res[0]}, u = ${res[1]}`;
+        }
+      }
     }
+    output1 = "";
+    output1 = "";
   });
 </script>
 
@@ -79,3 +116,5 @@
     {/if}
   {/if}
 </div>
+<p class="text-2xl font-medium">{output1}</p>
+<p class="text-2xl font-medium">{output2}</p>
