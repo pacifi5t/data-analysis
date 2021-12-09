@@ -11,7 +11,7 @@ export function depMeanEq(arrX: number[], arrY: number[]) {
   const t = (zMean * Math.sqrt(arrZ.length)) / zStd;
   const p = jStat.ttest(t, arrZ.length - 1, 2);
 
-  return p >= alpha;
+  return [p >= alpha, p];
 }
 
 export function indepMeanEq(arrX: number[], arrY: number[]) {
@@ -81,13 +81,13 @@ export function testWilcoxonSignedRank(arrX: number[], arrY: number[]) {
   }
 
   const ranks = [];
-  const duplicates = new Map();
+  const duplicates = new Map<number, Array<number>>();
   const sorted = [...arrZ].sort((a, b) => a - b);
 
   sorted.forEach((elem, index) => {
     if (sorted.indexOf(elem) !== index) {
       if (duplicates.has(elem)) {
-        duplicates.set(elem, duplicates.get(elem).push(index + 1));
+        duplicates.set(elem, [...duplicates.get(elem), index + 1]);
       } else {
         duplicates.set(elem, [index + 1]);
       }

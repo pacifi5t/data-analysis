@@ -2,6 +2,9 @@ import * as mymath from "../math";
 import { ClassifiedSeries, VarSeries } from "../math/series";
 
 export function pretty(num: number): number {
+  if(num == undefined) {
+    return NaN;
+  }
   return parseFloat(num.toPrecision(4));
 }
 

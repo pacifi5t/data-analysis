@@ -1,12 +1,60 @@
 <script lang="ts">
   import { Checkbox, Table } from "attractions";
   import * as mymath from "../math";
-  import {
-    getDifferenceSample,
-    pretty,
-    updateSampleTable
-  } from "../utils/helpers";
+  import { getDifferenceSample, updateSampleTable } from "../utils/helpers";
   import { mutableSamplesStore } from "../utils/stores";
+
+  function getResult() {
+    output1 = "";
+    output2 = "";
+    if (isNormal[0] && isNormal[1]) {
+      if (samplesAreDependent) {
+        const res1 = mymath.testWilcoxonSignedRank(
+          mutableSamples[0].initialArray,
+          mutableSamples[1].initialArray
+        );
+
+        const res2 = mymath.depMeanEq(
+          mutableSamples[0].initialArray,
+          mutableSamples[1].initialArray
+        );
+        output1 += `Wilcoxon signed rank: ${res1[0]}, u = ${res1[1]}`;
+        output2 += `Dep mean test: ${res2[0]}, p = ${res2[1]}\n`;
+      } else {
+        const res1 = mymath.indepMeanEq(
+          mutableSamples[0].initialArray,
+          mutableSamples[1].initialArray
+        );
+
+        const res2 = mymath.dispersionEq(
+          mutableSamples[0].initialArray,
+          mutableSamples[1].initialArray
+        );
+        output1 += `Indep mean test: ${res1[0]}, p = ${res1[1]}\n`;
+        output2 += `Dispersion test: ${res2[0]}, F = ${+res2[1]}\n`;
+      }
+    } else {
+      if (samplesAreDependent) {
+        const res1 = mymath.testWilcoxonSignedRank(
+          mutableSamples[0].initialArray,
+          mutableSamples[1].initialArray
+        );
+
+        const res2 = mymath.depMeanEq(
+          mutableSamples[0].initialArray,
+          mutableSamples[1].initialArray
+        );
+        output1 += `Wilcoxon signed rank: ${res1[0]}, u = ${res1[1]}`;
+        output2 += `Dep mean test: ${res2[0]}, p = ${res2[1]}\n`;
+      } else {
+        const res = mymath.testMannWhitney(
+          mutableSamples[0].initialArray,
+          mutableSamples[1].initialArray
+        );
+        output1 += `Mann-Whitney test: ${res[0]}, u = ${res[1]}`;
+      }
+    }
+  }
 
   const headers = [
     { text: "", value: "t" },
@@ -40,48 +88,20 @@
         mymath.identifyNormalDistribEx(differenceSample)
       ];
 
-      if (isNormal[0] && isNormal[1]) {
-        const res1 = mymath.indepMeanEq(
-          mutableSamples[0].initialArray,
-          mutableSamples[1].initialArray
-        );
-
-        const res2 = mymath.dispersionEq(
-          mutableSamples[0].initialArray,
-          mutableSamples[1].initialArray
-        );
-
-        output1 += `Indep mean test: ${res1[0]}, p = ${pretty(res1[1])}\n`;
-        output2 += `Dispersion test: ${res2[0]}, F = ${pretty(+res2[1])}\n`;
-      } else {
-        if (samplesAreDependent) {
-          const res = mymath.testWilcoxonSignedRank(
-            mutableSamples[0].initialArray,
-            mutableSamples[1].initialArray
-          );
-          output1 += `Wilcoxon signed rank: ${res[0]}, u = ${res[1]}`;
-        } else {
-          const res = mymath.testMannWhitney(
-            mutableSamples[0].initialArray,
-            mutableSamples[1].initialArray
-          );
-          output1 += `Mann-Whitney test: ${res[0]}, u = ${res[1]}`;
-        }
-      }
+      getResult();
     }
-    output1 = "";
-    output1 = "";
   });
 </script>
 
 <div class="flex space-x-4 py-8 flex-row flex-grow">
-  <span class="text-2xl font-medium">Samples are independent</span>
+  <span class="text-2xl font-medium">Samples are dependent</span>
   <Checkbox
     name="subscribe"
     checked={samplesAreDependent}
     title="Select to subscribe!"
     on:change={() => {
       samplesAreDependent = !samplesAreDependent;
+      getResult();
     }}
     round
   />
@@ -116,5 +136,5 @@
     {/if}
   {/if}
 </div>
-<p class="text-2xl font-medium">{output1}</p>
+<p class="text-2xl pt-4 font-medium">{output1}</p>
 <p class="text-2xl font-medium">{output2}</p>
