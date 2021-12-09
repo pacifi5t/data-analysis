@@ -1,5 +1,7 @@
 import { jStat } from "jstat";
+import { updateClassifiedSeries } from "../utils/helpers";
 import * as mymath from ".";
+import { alpha, VarSeries } from ".";
 
 export function normDistrib(x: number, m: number, s: number) {
   function aproxLaplace(u: number) {
@@ -118,4 +120,22 @@ export function identifyNormalDistrib(array: number[]) {
   const uE = Math.abs(kurtosis / kurtosisStdDev);
   console.log({ uA: uA, uE: uE, normQuan: mymath.normQuan });
   return uA <= mymath.normQuan && uE <= mymath.normQuan ? true : false;
+}
+
+export function identifyNormalDistribEx(series: VarSeries) {
+  const cllasifiedSeries = updateClassifiedSeries(
+    Math.floor(1 + 3.32 * Math.log10(series.length)),
+    series
+  );
+
+  const hi2 = mymath.hiSquare(cllasifiedSeries, series);
+  const p = mymath.pearsonCriteria(
+    mymath.pearsonFunction(hi2, cllasifiedSeries.classCount - 1)
+  );
+  const pearsonQuantile = mymath.pearsonDistribQuan(
+    1 - mymath.alpha,
+    cllasifiedSeries.classCount - 1
+  );
+
+  return hi2 <= pearsonQuantile || p >= alpha;
 }
