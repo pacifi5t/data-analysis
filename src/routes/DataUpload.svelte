@@ -3,6 +3,7 @@
   import { immutableSamplesStore, fileStore } from "../utils/stores";
   import { pretty } from "../utils/helpers";
   import { VarSeries } from "../math";
+  import { filter } from "d3";
 
   const reader = new FileReader();
   const headers = [
@@ -69,12 +70,15 @@
       reader.onload = () => {
         let str = "" + reader.result;
         const temp = [];
-        str.split(/\n| /).forEach((value) => {
-          const num = Number.parseFloat(value);
-          if (!isNaN(num)) {
-            temp.push(num);
-          }
-        });
+        str
+          .replaceAll("\r", "")
+          .split(/\n| |\t/)
+          .forEach((value) => {
+            const num = Number.parseFloat(value);
+            if (!isNaN(num)) {
+              temp.push(num);
+            }
+          });
 
         const data = [];
         for (let i = 0; i < temp.length; i += 2) {
