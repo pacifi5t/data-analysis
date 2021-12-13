@@ -1,5 +1,7 @@
 import { alpha, fisherDistribQuan, mean, normDistribQuan, stdDev } from ".";
 
+const myEpsilon = 1 / Math.pow(10, 6);
+
 export function depMeanEq(arrX: number[], arrY: number[]) {
   const arrZ = [];
   for (let i = 0; i < arrX.length; i++) {
@@ -12,25 +14,43 @@ export function depMeanEq(arrX: number[], arrY: number[]) {
   return [t <= normDistribQuan(1 - alpha / 2), t];
 }
 
-export function indepMeanEq(arrX: number[], arrY: number[]) {
+export function indepMeanEq(arrX: number[], arrY: number[], welch: boolean) {
   const xMean = mean(arrX);
   const yMean = mean(arrY);
-  const v = arrX.length + arrY.length - 2;
-  const stdDeviation =
-    ((arrX.length - 1) * stdDev(arrX, xMean) +
-      (arrY.length - 1) * stdDev(arrY, yMean)) /
-    v;
-  const t =
-    (xMean - yMean) /
-    Math.sqrt(
-      Math.pow(stdDeviation, 2) / arrX.length +
-        Math.pow(stdDeviation, 2) / arrY.length
-    );
-  //TODO: Add Welch test
-  return [t <= normDistribQuan(1 - alpha / 2), t];
+  const xDev = stdDev(arrX, xMean);
+  const yDev = stdDev(arrY, yMean);
+
+  if (welch) {
+    const v =
+      Math.pow(
+        Math.pow(xDev, 2) / arrX.length + Math.pow(yDev, 2) / arrY.length,
+        2
+      ) /
+      (Math.pow(Math.pow(xDev, 2) / arrX.length, 2) / (arrX.length - 1) +
+        Math.pow(Math.pow(yDev, 2) / arrY.length, 2) / (arrY.length - 1));
+    const t =
+      (xMean - yMean) /
+      Math.sqrt(
+        Math.pow(xDev, 2) / arrX.length + Math.pow(yDev, 2) / arrY.length
+      );
+    return [t <= normDistribQuan(1 - alpha / 2), t];
+  } else {
+    const v = arrX.length + arrY.length - 2;
+    const dispersion =
+      ((arrX.length - 1) * Math.pow(xDev, 2) +
+        (arrY.length - 1) * Math.pow(yDev, 2)) /
+      v;
+    const t =
+      (xMean - yMean) /
+      Math.sqrt(dispersion / arrX.length + dispersion / arrY.length);
+    return [t <= normDistribQuan(1 - alpha / 2), t];
+  }
 }
 
-export function dispersionEq(arrX: number[], arrY: number[]) {
+export function dispersionEq(
+  arrX: number[],
+  arrY: number[]
+): [boolean, number] {
   const f =
     Math.pow(stdDev(arrX, mean(arrX)), 2) /
     Math.pow(stdDev(arrY, mean(arrY)), 2);
@@ -43,22 +63,22 @@ export function dispersionEq(arrX: number[], arrY: number[]) {
 }
 
 export function testMannWhitney(arrX: number[], arrY: number[]) {
-  let U = 0;
+  let V = 0;
   for (let i = 0; i < arrX.length; i++) {
     const x = arrX[i];
     for (let j = 0; j < arrY.length; j++) {
       const y = arrY[j];
       if (x > y) {
-        U += 1;
-      } else if (x + Number.EPSILON > y && x - Number.EPSILON < y) {
-        U += 0.5;
+        V += 1;
+      } else if (x + myEpsilon > y && x - myEpsilon < y) {
+        V += 0.5;
       }
     }
   }
 
   const E = (arrX.length * arrY.length) / 2;
   const D = (E / 6) * (arrX.length + arrY.length + 1);
-  const u = (U - E) / Math.sqrt(D);
+  const u = (V - E) / Math.sqrt(D);
   return [Math.abs(u) <= normDistribQuan(1 - alpha / 2), u];
 }
 
