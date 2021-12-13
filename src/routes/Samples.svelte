@@ -5,42 +5,59 @@
   import { mutableSamplesStore } from "../utils/stores";
 
   function getResult() {
-    output1 = "";
-    output2 = "";
     if (isNormal[0] && isNormal[1]) {
-      if (samplesAreDependent) {
-        const res1 = mymath.depMeanEq(
-          mutableSamples[0].initialArray,
-          mutableSamples[1].initialArray
-        );
-        output1 += `Dep mean test: ${res1[0]}, t = ${res1[1]}\n`;
-      } else {
-        const res1 = mymath.indepMeanEq(
-          mutableSamples[0].initialArray,
-          mutableSamples[1].initialArray
-        );
-        output1 += `Indep mean test: ${res1[0]}, t = ${res1[1]}\n`;
-      }
-
-      const res2 = mymath.dispersionEq(
+      const res1 = mymath.dispersionEq(
         mutableSamples[0].initialArray,
         mutableSamples[1].initialArray
       );
-      output2 += `Dispersion test: ${res2[0]}, f = ${+res2[1]}\n`;
-    } else {
+      resItems.push({
+        t: "Dispersion equality",
+        r: res1[0],
+        s: "f = " + res1[1]
+      });
       if (samplesAreDependent) {
-        const res1 = mymath.testWilcoxonSignedRank(
+        const res2 = mymath.depMeanEq(
           mutableSamples[0].initialArray,
           mutableSamples[1].initialArray
         );
-        output1 += `Wilcoxon test: ${res1[0]}, t = ${res1[1]}\n`;
+        resItems.push({
+          t: "Dep. mean equality",
+          r: res2[0],
+          s: "t = " + res2[1]
+        });
       } else {
-        const res = mymath.testMannWhitney(
+        const res1 = mymath.indepMeanEq(
           mutableSamples[0].initialArray,
-          mutableSamples[1].initialArray
+          mutableSamples[1].initialArray,
         );
-        output1 += `Mann-Whitney test: ${res[0]}, u = ${res[1]}`;
+        resItems.push({
+          t: "Indep. mean equality",
+          r: res1[0],
+          s: "t = " + res1[1]
+        });
       }
+    }
+
+    if (samplesAreDependent) {
+      const res3 = mymath.testWilcoxonSignedRank(
+        mutableSamples[0].initialArray,
+        mutableSamples[1].initialArray
+      );
+      resItems.push({
+        t: "Wilcoxon signed rank",
+        r: res3[0],
+        s: "t = " + res3[1]
+      });
+    } else {
+      const res3 = mymath.testMannWhitney(
+        mutableSamples[0].initialArray,
+        mutableSamples[1].initialArray
+      );
+      resItems.push({
+        t: "Mann-Whitney",
+        r: res3[0],
+        s: "u = " + res3[1]
+      });
     }
   }
 
@@ -49,6 +66,12 @@
     { text: "Value", value: "v" },
     { text: "Standard Deviation", value: "d" },
     { text: "Confidence Interval", value: "i" }
+  ];
+
+  const resHeaders = [
+    { text: "Criteria", value: "t" },
+    { text: "Result", value: "r" },
+    { text: "Statistic", value: "s" }
   ];
 
   const messages = [
@@ -60,8 +83,7 @@
   let mutableSamples: mymath.VarSeries[] = [];
   let differenceSample: mymath.VarSeries;
   let isNormal: boolean[];
-  let output1 = "";
-  let output2 = "";
+  let resItems = [];
 
   mutableSamplesStore.subscribe((value) => {
     mutableSamples = value;
@@ -128,5 +150,4 @@
     {/if}
   {/if}
 </div>
-<p class="text-2xl pt-4 font-medium">{output1}</p>
-<p class="text-2xl font-medium">{output2}</p>
+<Table headers={resHeaders} items={resItems} />
