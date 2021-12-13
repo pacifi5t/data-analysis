@@ -111,8 +111,8 @@
         }
 
         immutableSamplesStore.set([
-          new VarSeries(dataSample1),
-          new VarSeries(dataSample2)
+          new VarSeries(dataSample1.filter((x) => x != undefined)),
+          new VarSeries(dataSample2.filter((x) => x != undefined))
         ]);
       };
     }}
