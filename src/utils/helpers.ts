@@ -2,7 +2,7 @@ import * as mymath from "../math";
 import { ClassifiedSeries, VarSeries } from "../math/series";
 
 export function pretty(num: number): number {
-  if(num == undefined) {
+  if (num == undefined) {
     return NaN;
   }
   return parseFloat(num.toPrecision(4));
@@ -72,7 +72,10 @@ export function updateSampleTable(sample: VarSeries) {
 export function getDifferenceSample(sampleX: VarSeries, sampleY: VarSeries) {
   const arrZ = [];
   for (let i = 0; i < sampleX.length; i++) {
-    arrZ.push(sampleX.initialArray[i] - sampleY.initialArray[i]);
+    const z = sampleX.initialArray[i] - sampleY.initialArray[i];
+    arrZ.push(
+      isNaN(z) ? sampleX.initialArray[i] ?? sampleY.initialArray[i] : z
+    );
   }
   return new VarSeries(arrZ);
 }

@@ -10,9 +10,10 @@ export function stdDev(array: number[], mean: number) {
 }
 
 export function median(array: number[]) {
-  return array.length % 2 != 0
-    ? array[Math.round((array.length + 1) / 2)]
-    : (array[array.length / 2] + array[array.length / 2 + 1]) / 2;
+  const sorted = [...array].sort((a, b) => a - b);
+  return sorted.length % 2 != 0
+    ? sorted[Math.round((sorted.length + 1) / 2)]
+    : (sorted[sorted.length / 2] + sorted[sorted.length / 2 + 1]) / 2;
 }
 
 export function skewnessCoef(

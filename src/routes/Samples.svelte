@@ -1,10 +1,15 @@
 <script lang="ts">
   import { Checkbox, Table } from "attractions";
   import * as mymath from "../math";
-  import { getDifferenceSample, updateSampleTable } from "../utils/helpers";
+  import {
+    getDifferenceSample,
+    pretty,
+    updateSampleTable
+  } from "../utils/helpers";
   import { mutableSamplesStore } from "../utils/stores";
 
   function getResult() {
+    resItems = [];
     if (isNormal[0] && isNormal[1]) {
       const res1 = mymath.dispersionEq(
         mutableSamples[0].initialArray,
@@ -13,7 +18,7 @@
       resItems.push({
         t: "Dispersion equality",
         r: res1[0],
-        s: "f = " + res1[1]
+        s: "f = " + pretty(res1[1])
       });
       if (samplesAreDependent) {
         const res2 = mymath.depMeanEq(
@@ -23,17 +28,18 @@
         resItems.push({
           t: "Dep. mean equality",
           r: res2[0],
-          s: "t = " + res2[1]
+          s: "t = " + pretty(res2[1])
         });
       } else {
-        const res1 = mymath.indepMeanEq(
+        const res2 = mymath.indepMeanEq(
           mutableSamples[0].initialArray,
           mutableSamples[1].initialArray,
+          !res1[0]
         );
         resItems.push({
           t: "Indep. mean equality",
-          r: res1[0],
-          s: "t = " + res1[1]
+          r: res2[0],
+          s: "t = " + pretty(res2[1])
         });
       }
     }
@@ -46,7 +52,7 @@
       resItems.push({
         t: "Wilcoxon signed rank",
         r: res3[0],
-        s: "t = " + res3[1]
+        s: "u = " + pretty(res3[1])
       });
     } else {
       const res3 = mymath.testMannWhitney(
@@ -56,7 +62,7 @@
       resItems.push({
         t: "Mann-Whitney",
         r: res3[0],
-        s: "u = " + res3[1]
+        s: "u = " + pretty(res3[1])
       });
     }
   }

@@ -2,10 +2,10 @@ import { alpha, fisherDistribQuan, mean, normDistribQuan, stdDev } from ".";
 
 const myEpsilon = 1 / Math.pow(10, 6);
 
-export function depMeanEq(arrX: number[], arrY: number[]) {
+export function depMeanEq(arrX: number[], arrY: number[]): [boolean, number] {
   const arrZ = [];
   for (let i = 0; i < arrX.length; i++) {
-    arrZ.push(arrX[i] - arrY[i]);
+    arrZ.push(arrX[i] - arrY[i] ?? arrX[i]);
   }
   const zMean = mean(arrZ);
   const zStd = stdDev(arrZ, zMean);
@@ -14,7 +14,11 @@ export function depMeanEq(arrX: number[], arrY: number[]) {
   return [t <= normDistribQuan(1 - alpha / 2), t];
 }
 
-export function indepMeanEq(arrX: number[], arrY: number[], welch: boolean) {
+export function indepMeanEq(
+  arrX: number[],
+  arrY: number[],
+  welch: boolean
+): [boolean, number] {
   const xMean = mean(arrX);
   const yMean = mean(arrY);
   const xDev = stdDev(arrX, xMean);
@@ -62,7 +66,10 @@ export function dispersionEq(
   return [f1 <= f && f <= f2, f];
 }
 
-export function testMannWhitney(arrX: number[], arrY: number[]) {
+export function testMannWhitney(
+  arrX: number[],
+  arrY: number[]
+): [boolean, number] {
   let V = 0;
   for (let i = 0; i < arrX.length; i++) {
     const x = arrX[i];
@@ -82,7 +89,10 @@ export function testMannWhitney(arrX: number[], arrY: number[]) {
   return [Math.abs(u) <= normDistribQuan(1 - alpha / 2), u];
 }
 
-export function testWilcoxonSignedRank(arrX: number[], arrY: number[]) {
+export function testWilcoxonSignedRank(
+  arrX: number[],
+  arrY: number[]
+): [boolean, number] {
   let arrZ = [];
   for (let i = 0; i < arrX.length; i++) {
     arrZ.push(arrX[i] - arrY[i]);
