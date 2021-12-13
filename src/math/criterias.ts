@@ -1,4 +1,3 @@
-import { jStat } from "jstat";
 import { alpha, fisherDistribQuan, mean, normDistribQuan, stdDev } from ".";
 
 export function depMeanEq(arrX: number[], arrY: number[]) {
@@ -9,9 +8,8 @@ export function depMeanEq(arrX: number[], arrY: number[]) {
   const zMean = mean(arrZ);
   const zStd = stdDev(arrZ, zMean);
   const t = (zMean * Math.sqrt(arrZ.length)) / zStd;
-  const p = jStat.ttest(t, arrZ.length - 1, 2);
 
-  return [p >= alpha, p];
+  return [t <= normDistribQuan(1 - alpha / 2), t];
 }
 
 export function indepMeanEq(arrX: number[], arrY: number[]) {
@@ -24,11 +22,12 @@ export function indepMeanEq(arrX: number[], arrY: number[]) {
     v;
   const t =
     (xMean - yMean) /
-    Math.sqrt(stdDeviation / arrX.length + stdDeviation / arrY.length);
-  const p = jStat.ttest(t, v, 2);
-  // console.log(p, p >= alpha);
-
-  return [p >= alpha, p];
+    Math.sqrt(
+      Math.pow(stdDeviation, 2) / arrX.length +
+        Math.pow(stdDeviation, 2) / arrY.length
+    );
+  //TODO: Add Welch test
+  return [t <= normDistribQuan(1 - alpha / 2), t];
 }
 
 export function dispersionEq(arrX: number[], arrY: number[]) {
@@ -37,13 +36,8 @@ export function dispersionEq(arrX: number[], arrY: number[]) {
     Math.pow(stdDev(arrY, mean(arrY)), 2);
   const v1 = arrX.length - 1;
   const v2 = arrY.length - 1;
-
-  // const p = jStat.ftest(f, v1, v2);
-  // console.log(p, p >= alpha);
-
   const f1 = fisherDistribQuan(alpha / 2, v1, v2);
   const f2 = fisherDistribQuan(1 - alpha / 2, v1, v2);
-  // console.log(f, f1, f2, f1 <= f && f <= f2 );
 
   return [f1 <= f && f <= f2, f];
 }
@@ -80,9 +74,11 @@ export function testWilcoxonSignedRank(arrX: number[], arrY: number[]) {
     arrS.push(arrZ[i] > 0 ? 1 : 0);
   }
 
-  const ranks = [];
+  const ranks = new Map<number, number>();
   const duplicates = new Map<number, Array<number>>();
-  const sorted = [...arrZ].sort((a, b) => a - b);
+  const sorted = [...arrZ]
+    .map((value) => Math.abs(value))
+    .sort((a, b) => a - b);
 
   sorted.forEach((elem, index) => {
     if (sorted.indexOf(elem) !== index) {
@@ -94,21 +90,24 @@ export function testWilcoxonSignedRank(arrX: number[], arrY: number[]) {
     }
   });
 
-  for (let i = 0; i < arrS.length; i++) {
-    const elem = arrS[i];
-    ranks.push(
-      duplicates.has(elem)
-        ? duplicates
-            .get(elem)
-            .reduce((total: number, x: number) => total + x, 0) /
-            duplicates.get(elem).length
-        : i
-    );
+  for (let i = 0; i < sorted.length; i++) {
+    const elem = sorted[i];
+    if (duplicates.has(elem)) {
+      ranks.set(
+        elem,
+        duplicates
+          .get(elem)
+          .reduce((total: number, x: number) => total + x, 0) /
+          duplicates.get(elem).length
+      );
+    } else {
+      ranks.set(elem, i + 1);
+    }
   }
 
   let T = 0;
   for (let i = 0; i < arrS.length; i++) {
-    T += arrS[i] * ranks[i];
+    T += arrS[i] * ranks.get(Math.abs(arrZ[i]));
   }
 
   const E = (arrS.length * (arrS.length + 1)) / 4;

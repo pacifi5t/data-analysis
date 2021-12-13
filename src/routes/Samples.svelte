@@ -9,43 +9,31 @@
     output2 = "";
     if (isNormal[0] && isNormal[1]) {
       if (samplesAreDependent) {
-        const res1 = mymath.testWilcoxonSignedRank(
+        const res1 = mymath.depMeanEq(
           mutableSamples[0].initialArray,
           mutableSamples[1].initialArray
         );
-
-        const res2 = mymath.depMeanEq(
-          mutableSamples[0].initialArray,
-          mutableSamples[1].initialArray
-        );
-        output1 += `Wilcoxon signed rank: ${res1[0]}, u = ${res1[1]}`;
-        output2 += `Dep mean test: ${res2[0]}, p = ${res2[1]}\n`;
+        output1 += `Dep mean test: ${res1[0]}, t = ${res1[1]}\n`;
       } else {
         const res1 = mymath.indepMeanEq(
           mutableSamples[0].initialArray,
           mutableSamples[1].initialArray
         );
-
-        const res2 = mymath.dispersionEq(
-          mutableSamples[0].initialArray,
-          mutableSamples[1].initialArray
-        );
-        output1 += `Indep mean test: ${res1[0]}, p = ${res1[1]}\n`;
-        output2 += `Dispersion test: ${res2[0]}, F = ${+res2[1]}\n`;
+        output1 += `Indep mean test: ${res1[0]}, t = ${res1[1]}\n`;
       }
+
+      const res2 = mymath.dispersionEq(
+        mutableSamples[0].initialArray,
+        mutableSamples[1].initialArray
+      );
+      output2 += `Dispersion test: ${res2[0]}, f = ${+res2[1]}\n`;
     } else {
       if (samplesAreDependent) {
         const res1 = mymath.testWilcoxonSignedRank(
           mutableSamples[0].initialArray,
           mutableSamples[1].initialArray
         );
-
-        const res2 = mymath.depMeanEq(
-          mutableSamples[0].initialArray,
-          mutableSamples[1].initialArray
-        );
-        output1 += `Wilcoxon signed rank: ${res1[0]}, u = ${res1[1]}`;
-        output2 += `Dep mean test: ${res2[0]}, p = ${res2[1]}\n`;
+        output1 += `Wilcoxon test: ${res1[0]}, t = ${res1[1]}\n`;
       } else {
         const res = mymath.testMannWhitney(
           mutableSamples[0].initialArray,
@@ -87,6 +75,10 @@
         mymath.identifyNormalDistribEx(mutableSamples[1]),
         mymath.identifyNormalDistribEx(differenceSample)
       ];
+      // console.log(
+      //   mymath.identifyNormalDistrib(mutableSamples[0].initialArray),
+      //   mymath.identifyNormalDistrib(mutableSamples[1].initialArray)
+      // );
 
       getResult();
     }
