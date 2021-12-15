@@ -11,7 +11,7 @@ export function depMeanEq(arrX: number[], arrY: number[]): [boolean, number] {
   const zStd = stdDev(arrZ, zMean);
   const t = (zMean * Math.sqrt(arrZ.length)) / zStd;
 
-  return [t <= normDistribQuan(1 - alpha / 2), t];
+  return [Math.abs(t) <= normDistribQuan(1 - alpha / 2), t];
 }
 
 export function indepMeanEq(
@@ -37,7 +37,7 @@ export function indepMeanEq(
       Math.sqrt(
         Math.pow(xDev, 2) / arrX.length + Math.pow(yDev, 2) / arrY.length
       );
-    return [t <= normDistribQuan(1 - alpha / 2), t];
+    return [Math.abs(t) <= normDistribQuan(1 - alpha / 2), t];
   } else {
     const v = arrX.length + arrY.length - 2;
     const dispersion =
@@ -47,7 +47,7 @@ export function indepMeanEq(
     const t =
       (xMean - yMean) /
       Math.sqrt(dispersion / arrX.length + dispersion / arrY.length);
-    return [t <= normDistribQuan(1 - alpha / 2), t];
+    return [Math.abs(t) <= normDistribQuan(1 - alpha / 2), t];
   }
 }
 
