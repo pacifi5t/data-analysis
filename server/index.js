@@ -1,6 +1,6 @@
-const express = require('express');
-const cors = require('cors');
-const { resolve } = require('path');
+import express from 'express';
+import cors from 'cors';
+import { resolve } from 'path';
 
 const app = express();
 const distPath = resolve('dist') + '/';

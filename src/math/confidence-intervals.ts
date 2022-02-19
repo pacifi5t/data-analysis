@@ -1,4 +1,4 @@
-import { studentDistribQuan } from ".";
+import { normDistribQuan, studentDistribQuan } from ".";
 
 export const alpha = 0.05;
 
@@ -12,10 +12,13 @@ export function meanConfInterval(
 }
 
 export function medianConfInterval(array: number[]) {
-  const q = studentDistribQuan(1 - alpha / 2, array.length);
+  const len = array.length;
+  const sorted = [...array].sort((a, b) => a - b);
+  const q = normDistribQuan(1 - alpha / 2);
   return [
-    array[Math.round(array.length / 2 - (q * Math.sqrt(array.length)) / 2)],
-    array[Math.round(array.length / 2 + 1 + (q * Math.sqrt(array.length)) / 2)]
+    sorted[Math.round(len / 2 - (q * Math.sqrt(len)) / 2)],
+    sorted[Math.round(len / 2 + 1 + (q * Math.sqrt(len)) / 2)] ??
+      sorted[len - 1]
   ];
 }
 

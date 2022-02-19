@@ -26,7 +26,7 @@ export class VarSeries extends Series {
     }
 
     this.length = array.length;
-    this.initialArray = array;
+    this.initialArray = [...array];
     array
       .sort((a, b) => a - b)
       .forEach((elem) => {
@@ -74,7 +74,7 @@ export class ClassifiedSeries extends Series {
       this.initialArray = [];
       return;
     } else {
-      this.initialArray = array;
+      this.initialArray = [...array];
       this.classCount = classCount;
       this.limits = limits;
     }
