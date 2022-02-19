@@ -1,11 +1,8 @@
 module.exports = {
-  purge: ['./index.html', './src/**/*.{svelte,js,ts}'],
-  darkMode: false,
+  content: ['./index.html', './src/**/*.{svelte,js,ts}'],
   theme: {
     extend: {}
   },
-  variants: {
-    extend: {}
-  },
+  
   plugins: []
 };
