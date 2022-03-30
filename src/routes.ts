@@ -1,13 +1,13 @@
 import Layout from "./Layout.svelte";
 import DataUpload from "./routes/DataUpload.svelte";
-import Samples from "./routes/Samples.svelte";
+import Characteristics from "./routes/Characteristics.svelte";
 
 class Route {
   name: string;
-  component: typeof Layout;
+  component: unknown;
   layout: typeof Layout;
 
-  constructor(name: string, component: typeof Layout) {
+  constructor(name: string, component: unknown) {
     this.name = name;
     this.component = component;
     this.layout = Layout;
@@ -16,5 +16,5 @@ class Route {
 
 export const routes = [
   new Route("/", DataUpload),
-  new Route("/samples", Samples)
+  new Route("/chars", Characteristics)
 ];
