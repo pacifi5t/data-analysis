@@ -7,18 +7,17 @@
 
 <nav class="bg-gray-800">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex items-center justify-between h-16">
-      <div class="flex items-center">
-        <div class="flex-shrink-0">
-          <img class="h-8 w-8" src="/svelte.png" alt="Svelte" />
-        </div>
-        <div class="md:block">
-          <div class="ml-10 flex items-baseline space-x-4">
-            <NavItem label="Data upload" href="/" {currentRoute} />
-            <NavItem label="Characteristics" href="/chars" {currentRoute} />
-          </div>
+    <div class="flex items-center h-16">
+      <div class="flex-shrink-0">
+        <img class="h-16 w-16" src="/stopwar.svg" alt="Svelte" />
+      </div>
+      <div class="md:block grow">
+        <div class="ml-10 flex items-baseline space-x-4">
+          <NavItem label="Data upload" href="/" {currentRoute} />
+          <NavItem label="Characteristics" href="/chars" {currentRoute} />
         </div>
       </div>
+      <span class="text-yellow-400 text-lg font-medium">Glory to Ukraine!</span>
     </div>
   </div>
 </nav>
