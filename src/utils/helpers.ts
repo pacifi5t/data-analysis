@@ -2,10 +2,14 @@ import * as mymath from "../math";
 import { ClassifiedSeries, VarSeries } from "../math/series";
 
 export function pretty(num: number): number {
+  return prettyToPrecision(num, 4);
+}
+
+export function prettyToPrecision(num: number, precision: number): number {
   if (num == undefined) {
     return NaN;
   }
-  return parseFloat(num.toPrecision(4));
+  return parseFloat(num.toPrecision(precision));
 }
 
 export function updateClassifiedSeries(
@@ -99,7 +103,11 @@ export function updateCharacteristicsTable(sample: VarSeries) {
 
   const kurtosisCoef = mymath.kurtosisCoef(array, shiftedDev, meanValue);
   const kurtosisDeviation = mymath.kurtosisDeviation(len);
-  const kurtosisInterval = mymath.coefConfInterval(len, kurtosisCoef, kurtosisDeviation);
+  const kurtosisInterval = mymath.coefConfInterval(
+    len,
+    kurtosisCoef,
+    kurtosisDeviation
+  );
   items.push({
     title: "Kurtosis coefficient",
     val: pretty(kurtosisCoef),
