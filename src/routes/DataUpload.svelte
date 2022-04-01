@@ -40,6 +40,41 @@
       }
     }
   }
+
+  function fileUploadHandler(event) {
+    fileStore.set(event.detail.files);
+
+    if (uplodedFiles.length == 0) {
+      immutableSamplesStore.set([]);
+      return;
+    }
+
+    reader.readAsText(uplodedFiles[0]);
+    reader.onload = () => {
+      let fileContents: string[][] = reader.result
+        .toString()
+        .replaceAll("\r", "")
+        .split("\n")
+        .map((value) => {
+          return value.split(/ |\t/).filter((value) => value !== "");
+        });
+
+      const dataSamples = <number[][]>[];
+      for (let i = 0; i < fileContents[0].length; i++) {
+        const sample = <number[]>[];
+        for (let j = 0; j < fileContents.length; j++) {
+          sample.push(Number.parseFloat(fileContents[j][i]));
+        }
+        dataSamples.push(sample);
+      }
+
+      immutableSamplesStore.set(
+        dataSamples.map((value) => {
+          return new VarSeries(value);
+        })
+      );
+    };
+  }
 </script>
 
 <div class="text-xl font-bold">
@@ -47,70 +82,12 @@
     accept=".txt,.dat"
     max={1}
     files={uplodedFiles}
-    on:change={(event) => {
-      fileStore.set(event.detail.files);
-
-      if (uplodedFiles.length == 0) {
-        immutableSamplesStore.set([]);
-        return;
-      }
-
-      reader.readAsText(uplodedFiles[0]);
-
-      reader.onload = () => {
-        let str = "" + reader.result;
-        const temp = [];
-        str
-          .replaceAll("\r", "")
-          .split(/\n| |\t/)
-          .forEach((value) => {
-            const num = Number.parseFloat(value);
-            if (!isNaN(num)) {
-              temp.push(num);
-            }
-          });
-
-        const data = [];
-        for (let i = 0; i < temp.length; i += 2) {
-          const first = temp[i];
-          const second = temp[i + 1];
-          data.push([first, second]);
-        }
-
-        // Define how to parse file
-        const set = new Set();
-        for (let i = 0; i < data.length; i++) {
-          set.add(data[i][1]);
-        }
-        const dataSample1 = [];
-        const dataSample2 = [];
-        if (set.size != 2) {
-          for (let i = 0; i < data.length; i++) {
-            dataSample1.push(data[i][0]);
-            dataSample2.push(data[i][1]);
-          }
-        } else {
-          for (let i = 0; i < data.length; i++) {
-            const elem = data[i];
-            if (elem[1] == 0) {
-              dataSample1.push(elem[0]);
-            } else {
-              dataSample2.push(elem[0]);
-            }
-          }
-        }
-
-        immutableSamplesStore.set([
-          new VarSeries(dataSample1.filter((x) => x != undefined)),
-          new VarSeries(dataSample2.filter((x) => x != undefined))
-        ]);
-      };
-    }}
+    on:change={fileUploadHandler}
   />
 </div>
 
 {#if immutableSamples.length !== 0}
-  <div class="flex flex-row">
+  <div class="flex flex-row mt-10">
     {#each tableItemArray as tableItems, i}
       <div class="flex flex-col">
         <span class="m-auto">Attribute {i + 1}</span>
