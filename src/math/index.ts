@@ -1,5 +1,6 @@
 export * from "./characteristics";
 export * from "./confidence-intervals";
+export * from "./correlation";
 export * from "./criterias";
 export * from "./deviations";
 export * from "./quantiles";
