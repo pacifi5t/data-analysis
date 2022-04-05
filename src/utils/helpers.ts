@@ -2,7 +2,7 @@ import * as mymath from "../math";
 import { ClassifiedSeries, VarSeries } from "../math/series";
 
 export function pretty(num: number): number {
-  return prettyToPrecision(num, 4);
+  return prettyToPrecision(num, 3);
 }
 
 export function prettyToPrecision(num: number, precision: number): number {

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { FileDropzone, Table } from "attractions";
   import { immutableSamplesStore, fileStore } from "../utils/stores";
-  import { pretty, prettyToPrecision } from "../utils/helpers";
+  import { pretty } from "../utils/helpers";
   import { VarSeries } from "../math";
 
   const reader = new FileReader();
@@ -32,8 +32,8 @@
           items.push({
             elem: pretty(elem.data[j]),
             n: pretty(elem.count.get(j)),
-            freq: prettyToPrecision(elem.frequency.get(j), 2),
-            ecdf: prettyToPrecision(elem.empDistrFunc.get(j), 2)
+            freq: pretty(elem.frequency.get(j)),
+            ecdf: pretty(elem.empDistrFunc.get(j))
           });
         }
         tableItemArray.push(items);
@@ -90,7 +90,7 @@
   <div class="flex flex-row mt-10">
     {#each tableItemArray as tableItems, i}
       <div class="flex flex-col">
-        <span class="m-auto">Attribute {i + 1}</span>
+        <span class="m-auto">ATTRIBUTE {i + 1}</span>
         <Table class="px-4" {headers} items={tableItems} />
       </div>
     {/each}

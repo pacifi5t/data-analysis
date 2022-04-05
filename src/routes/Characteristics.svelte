@@ -24,6 +24,18 @@
   });
 </script>
 
-{#each items as item}
-  <Table class="pb-8" {headers} items={item} />
+{#each items as item, i}
+  <div class="flex flex-row">
+    <span class="text-center mx-2">
+      ATTRIBUTE {i + 1}
+    </span>
+    <Table class="pb-8" {headers} items={item} />
+  </div>
 {/each}
+
+<style>
+  span {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+  }
+</style>
