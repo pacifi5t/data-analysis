@@ -8,6 +8,11 @@ export interface CorrelationArray {
   y: number[][];
 }
 
+export interface RankArrayEntry {
+  rx: number;
+  ry: number;
+}
+
 export function pearsonCorrelationEstimate(arrX: number[], arrY: number[]) {
   const xMean = mean(arrX);
   const yMean = mean(arrY);
@@ -107,5 +112,132 @@ export function fStatistic(len: number, classCount: number, estimate: number) {
   const estimateSqr = Math.pow(estimate, 2);
   return (
     estimateSqr / (classCount - 1) / ((1 - estimateSqr) / (len - classCount))
+  );
+}
+
+export function arr2ToRanked(arrX: number[], arrY: number[]) {
+  const sortedX = [...arrX].sort((a, b) => a - b);
+  const duplicatesX = new Map<number, number[]>();
+  const rankMapX = new Map<number, number>();
+  sortedX.forEach((elem, index) => {
+    if (sortedX.indexOf(elem) !== index) {
+      if (duplicatesX.has(elem)) {
+        duplicatesX.set(elem, [...duplicatesX.get(elem), index + 1]);
+      } else {
+        duplicatesX.set(elem, [index + 1]);
+      }
+    }
+  });
+
+  for (let i = 0; i < sortedX.length; i++) {
+    const elem = sortedX[i];
+    if (duplicatesX.has(i)) {
+      rankMapX.set(
+        elem,
+        duplicatesX
+          .get(elem)
+          .reduce((total: number, x: number) => total + x, 0) /
+          duplicatesX.get(elem).length
+      );
+    } else {
+      rankMapX.set(elem, i + 1);
+    }
+  }
+
+  const sortedY = [...arrY].sort((a, b) => a - b);
+  const duplicatesY = new Map<number, number[]>();
+  const rankMapY = new Map<number, number>();
+  sortedY.forEach((elem, index) => {
+    if (sortedY.indexOf(elem) !== index) {
+      if (duplicatesY.has(elem)) {
+        duplicatesY.set(elem, [...duplicatesY.get(elem), index + 1]);
+      } else {
+        duplicatesY.set(elem, [index + 1]);
+      }
+    }
+  });
+
+  for (let i = 0; i < sortedY.length; i++) {
+    const elem = sortedY[i];
+    if (duplicatesY.has(i)) {
+      rankMapY.set(
+        elem,
+        duplicatesY
+          .get(elem)
+          .reduce((total: number, x: number) => total + x, 0) /
+          duplicatesY.get(elem).length
+      );
+    } else {
+      rankMapY.set(elem, i + 1);
+    }
+  }
+
+  const ranked = new Array<RankArrayEntry>();
+  for (let i = 0; i < arrX.length; i++) {
+    ranked.push({ rx: rankMapX.get(arrX[i]), ry: rankMapY.get(arrY[i]) });
+  }
+
+  return {
+    array: ranked.sort((a, b) => a.rx - b.rx),
+    duplicatesX: duplicatesX,
+    duplicatesY: duplicatesY
+  };
+}
+
+export function spearmanCorrelationEstimate(
+  rankedArray: Array<RankArrayEntry>,
+  duplicatesX: Map<number, number[]>,
+  duplicatesY: Map<number, number[]>
+) {
+  if (duplicatesX.size !== 0 || duplicatesY.size !== 0) {
+    const a =
+      Array.from(duplicatesX.values()).reduce(
+        (total, elem) => total + (Math.pow(elem.length, 3) - elem.length),
+        0
+      ) / 12;
+    const b =
+      Array.from(duplicatesY.values()).reduce(
+        (total, elem) => total + (Math.pow(elem.length, 3) - elem.length),
+        0
+      ) / 12;
+
+    return spearmanWithDuplicates(rankedArray, a, b);
+  } else {
+    return spearmanWithoutDuplicates(rankedArray);
+  }
+}
+
+function spearmanWithDuplicates(
+  rankedArray: Array<RankArrayEntry>,
+  a: number,
+  b: number
+) {
+  const len = rankedArray.length;
+  const nom =
+    (len / 6) * (Math.pow(len, 2) - 1) -
+    rankedArray.reduce(
+      (total, elem) => total + Math.pow(elem.rx - elem.ry, 2),
+      0
+    ) -
+    a -
+    b;
+
+  const denom = Math.sqrt(
+    ((len / 6) * (Math.pow(len, 2) - 1) - 2 * a) *
+      ((len / 6) * (Math.pow(len, 2) - 1) - 2 * b)
+  );
+
+  return nom / denom;
+}
+
+function spearmanWithoutDuplicates(rankedArray: Array<RankArrayEntry>) {
+  const len = rankedArray.length;
+  return (
+    1 -
+    (6 / (len * (Math.pow(len, 2) - 1))) *
+      rankedArray.reduce(
+        (total, elem) => total + Math.pow(elem.rx - elem.ry, 2),
+        0
+      )
   );
 }
