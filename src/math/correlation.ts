@@ -1,7 +1,5 @@
 import { max, min, sum } from "d3";
-import { mean, shiftedDeviation } from ".";
-import { alpha } from "./confidence-intervals";
-import { normDistribQuan } from "./quantiles";
+import { mean, shiftedDeviation, alpha, normDistribQuan } from ".";
 
 export interface CorrelationArray {
   x: number[];
@@ -115,7 +113,7 @@ export function fStatistic(len: number, classCount: number, estimate: number) {
   );
 }
 
-export function arr2ToRanked(arrX: number[], arrY: number[]) {
+export function arraysToRankArray(arrX: number[], arrY: number[]) {
   const sortedX = [...arrX].sort((a, b) => a - b);
   const duplicatesX = new Map<number, number[]>();
   const rankMapX = new Map<number, number>();
@@ -185,7 +183,7 @@ export function arr2ToRanked(arrX: number[], arrY: number[]) {
 }
 
 export function spearmanCorrelationEstimate(
-  rankedArray: Array<RankArrayEntry>,
+  rankArray: RankArrayEntry[],
   duplicatesX: Map<number, number[]>,
   duplicatesY: Map<number, number[]>
 ) {
@@ -201,21 +199,21 @@ export function spearmanCorrelationEstimate(
         0
       ) / 12;
 
-    return spearmanWithDuplicates(rankedArray, a, b);
+    return spearmanWithDuplicates(rankArray, a, b);
   } else {
-    return spearmanWithoutDuplicates(rankedArray);
+    return spearmanWithoutDuplicates(rankArray);
   }
 }
 
 function spearmanWithDuplicates(
-  rankedArray: Array<RankArrayEntry>,
+  rankArray: RankArrayEntry[],
   a: number,
   b: number
 ) {
-  const len = rankedArray.length;
+  const len = rankArray.length;
   const nom =
     (len / 6) * (Math.pow(len, 2) - 1) -
-    rankedArray.reduce(
+    rankArray.reduce(
       (total, elem) => total + Math.pow(elem.rx - elem.ry, 2),
       0
     ) -
@@ -230,14 +228,81 @@ function spearmanWithDuplicates(
   return nom / denom;
 }
 
-function spearmanWithoutDuplicates(rankedArray: Array<RankArrayEntry>) {
-  const len = rankedArray.length;
+function spearmanWithoutDuplicates(rankArray: RankArrayEntry[]) {
+  const len = rankArray.length;
   return (
     1 -
     (6 / (len * (Math.pow(len, 2) - 1))) *
-      rankedArray.reduce(
+      rankArray.reduce(
         (total, elem) => total + Math.pow(elem.rx - elem.ry, 2),
         0
       )
+  );
+}
+
+export function kendallCorrelationEstimate(
+  rankArray: RankArrayEntry[],
+  duplicatesX: Map<number, number[]>,
+  duplicatesY: Map<number, number[]>
+) {
+  if (duplicatesX.size !== 0 || duplicatesY.size !== 0) {
+    const c =
+      Array.from(duplicatesX.values()).reduce(
+        (total, elem) => total + elem.length * elem.length,
+        0
+      ) / 2;
+    const d =
+      Array.from(duplicatesY.values()).reduce(
+        (total, elem) => total + elem.length * elem.length,
+        0
+      ) / 2;
+
+    return kendallWithDuplicates(rankArray, c, d);
+  } else {
+    return kendallWithoutDuplicates(rankArray);
+  }
+}
+
+function constantS(rankArray: RankArrayEntry[]) {
+  const len = rankArray.length;
+
+  let s = 0;
+  for (let i = 0; i < len - 1; i++) {
+    for (let j = i + 1; j < len; j++) {
+      const elemI = rankArray[i];
+      const elemJ = rankArray[j];
+      if (elemI.ry < elemJ.ry && elemI.rx !== elemJ.rx) {
+        s += 1;
+      } else if (elemI.ry > elemJ.ry && elemI.rx !== elemJ.rx) {
+        s -= 1;
+      }
+    }
+  }
+
+  return s;
+}
+
+function kendallWithDuplicates(
+  rankArray: RankArrayEntry[],
+  c: number,
+  d: number
+) {
+  const len = rankArray.length;
+
+  return (
+    constantS(rankArray) /
+    Math.sqrt(((len / 2) * (len - 1) - c) * ((len / 2) * (len - 1) - d))
+  );
+}
+
+function kendallWithoutDuplicates(rankArray: RankArrayEntry[]) {
+  return (
+    (constantS(rankArray) * 2) / (rankArray.length * (rankArray.length - 1))
+  );
+}
+
+export function uStatistic(len: number, estimate: number) {
+  return (
+    (estimate * Math.sqrt(9 * len * (len - 1))) / Math.sqrt(2 * (2 * len + 5))
   );
 }
