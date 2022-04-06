@@ -1,11 +1,7 @@
 <script lang="ts">
   import { Table } from "attractions";
   import { mutableSamplesStore } from "../utils/stores";
-  import {
-    determineCorrelation,
-    pretty,
-    prettyToPrecision
-  } from "../utils/helpers";
+  import { pretty, prettyToPrecision } from "../utils/helpers";
   import { scatterPlot } from "../utils/charts";
   import * as mymath from "../math";
   import { onMount } from "svelte";
@@ -65,7 +61,7 @@
       stat: `t = ${pretty(tStat1)}`,
       quan: `Student = ${pretty(studentQuan1)}`,
       sign: Math.abs(tStat1) > studentQuan1 ? "Yes" : "No",
-      corr: determineCorrelation(pearson)
+      corr: Math.abs(tStat1) > studentQuan1 ? "Linear" : "Nonlinear"
     });
 
     const spearman = mymath.spearmanCorrelationEstimate(
@@ -85,7 +81,7 @@
       stat: `t = ${pretty(tStat2)}`,
       quan: `Student = ${pretty(studentQuan2)}`,
       sign: Math.abs(tStat2) > studentQuan2 ? "Yes" : "No",
-      corr: determineCorrelation(spearman)
+      corr: Math.abs(tStat2) > studentQuan2 ? "Monotone" : "Not monotonous"
     });
 
     const kendall = mymath.kendallCorrelationEstimate(
@@ -102,14 +98,19 @@
       stat: `u = ${pretty(uStat)}`,
       quan: `Normal = ${pretty(normQuan)}`,
       sign: Math.abs(uStat) > normQuan ? "Yes" : "No",
-      corr: determineCorrelation(kendall)
+      corr: Math.abs(uStat) > normQuan ? "Monotone" : "Not monotonous"
     });
 
     const correlationArray = mymath.correlationRatioTransformation(arrX, arrY);
     const ratio = mymath.correlationRatioEstimate(len, correlationArray);
     const classCount = correlationArray.x.length;
     const fStat = mymath.fStatistic(len, classCount, ratio);
-    const fisherQuan = mymath.fisherDistribQuan(
+    const fisherQuan1 = mymath.fisherDistribQuan(
+      1 - mymath.alpha,
+      classCount - 1,
+      len - classCount
+    );
+    const fisherQuan2 = mymath.fisherDistribQuan(
       1 - mymath.alpha,
       classCount - 2,
       len - classCount
@@ -119,9 +120,9 @@
       estimate: prettyToPrecision(ratio, 7),
       conf: "-",
       stat: `f = ${pretty(fStat)}`,
-      quan: `Fisher = ${pretty(fisherQuan)}`,
-      sign: Math.abs(fStat) > fisherQuan ? "Yes" : "No",
-      corr: determineCorrelation(ratio)
+      quan: `Fisher = ${pretty(fisherQuan1)}`,
+      sign: fStat > fisherQuan1 ? "Yes" : "No",
+      corr: fStat > fisherQuan2 ? "Nonlinear" : "Linear"
     });
 
     return items;
@@ -130,5 +131,5 @@
 
 {#if mutableSamples.length != 0}
   <Table class="pb-8 mx-2" {headers} items={tableItems} />
-  <div id="scatter" class="mb-8"/>
+  <div id="scatter" class="mb-8" />
 {/if}
