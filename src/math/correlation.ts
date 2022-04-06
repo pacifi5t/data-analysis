@@ -42,7 +42,7 @@ export function correlationRatioTransformation(
   arrY: number[]
 ): CorrelationArray {
   const minX = min(arrX);
-  const k = 1 + 1.44 * Math.log(arrX.length);
+  const k = Math.round(1 + 1.44 * Math.log(arrX.length));
   const h = (max(arrX) - minX) / k;
 
   const arrG = [];
@@ -64,6 +64,7 @@ export function correlationRatioTransformation(
     for (let j = 0; j < k; j++) {
       if (arrX[i] < arrG[j + 1]) {
         transArrY[j].push(arrY[i]);
+        break;
       }
     }
   }
