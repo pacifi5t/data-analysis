@@ -62,7 +62,7 @@ export function correlationRatioTransformation(
 
   for (let i = 0; i < arrX.length; i++) {
     for (let j = 0; j < k; j++) {
-      if (arrX[i] < arrG[j + 1]) {
+      if (arrX[i] <= arrG[j + 1]) {
         transArrY[j].push(arrY[i]);
         break;
       }
@@ -87,7 +87,7 @@ export function correlationRatioEstimate(
   const meanY = correlationArray.y.reduce(
     (total, elem, i) => total + elem.length * meanYGroup[i],
     0
-  );
+  ) / len;
 
   const nom = correlationArray.y.reduce(
     (total, elem, i) =>
