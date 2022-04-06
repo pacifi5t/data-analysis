@@ -6,7 +6,9 @@
     pretty,
     prettyToPrecision
   } from "../utils/helpers";
+  import { scatterPlot } from "../utils/charts";
   import * as mymath from "../math";
+  import { onMount } from "svelte";
 
   const headers = [
     { text: "coeffcient", value: "coef" },
@@ -20,14 +22,23 @@
 
   let mutableSamples: mymath.VarSeries[] = [];
   let tableItems = [];
+  let arrX: number[];
+  let arrY: number[];
 
   mutableSamplesStore.subscribe((value: mymath.VarSeries[]) => {
     mutableSamples = value;
     if (value.length != 0) {
-      tableItems = updateCorrelationTable(
+      [arrX, arrY] = [
         mutableSamples[0].initialArray,
         mutableSamples[1].initialArray
-      );
+      ];
+      tableItems = updateCorrelationTable(arrX, arrY);
+    }
+  });
+
+  onMount(() => {
+    if (mutableSamples.length != 0) {
+      scatterPlot(arrX, arrY);
     }
   });
 
@@ -119,4 +130,5 @@
 
 {#if mutableSamples.length != 0}
   <Table class="pb-8 mx-2" {headers} items={tableItems} />
+  <div id="scatter" class="mb-8"/>
 {/if}
