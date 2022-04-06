@@ -17,8 +17,7 @@ export function normDistribQuan(p: number) {
   return p <= 0.5 ? -phi(p) : phi(1 - p);
 }
 
-export function studentDistribQuan(p: number, classCount: number) {
-  const v = classCount - 1;
+export function studentDistribQuan(p: number, v: number) {
   function g1(u: number) {
     return (Math.pow(u, 3) + u) / 4;
   }
