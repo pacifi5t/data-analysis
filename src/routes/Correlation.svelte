@@ -1,15 +1,19 @@
 <script lang="ts">
   import { Table } from "attractions";
   import { mutableSamplesStore } from "../utils/stores";
-  import { pretty } from "../utils/helpers";
+  import {
+    determineCorrelation,
+    pretty,
+    prettyToPrecision
+  } from "../utils/helpers";
   import * as mymath from "../math";
 
   const headers = [
     { text: "coeffcient", value: "coef" },
     { text: "estimate", value: "estimate" },
     { text: "conf. interval", value: "conf" },
-    { text: "stat.", value: "stat" },
-    { text: "quan.", value: "quan" },
+    { text: "statistic", value: "stat" },
+    { text: "quantile", value: "quan" },
     { text: "significant?", value: "sign" },
     { text: "correlation?", value: "corr" }
   ];
@@ -39,16 +43,18 @@
     const pearson = mymath.pearsonCorrelationEstimate(arrX, arrY);
     const pearsonInterval = mymath.pearsonCorrelationInterval(len, pearson);
     const tStat1 = mymath.tStatistic(len, pearson);
-    //FIXME: Check if quantile works
-    const studentQuan1 = mymath.studentDistribQuan(1 - mymath.alpha / 2, len);
+    const studentQuan1 = mymath.studentDistribQuan(
+      1 - mymath.alpha / 2,
+      len - 2
+    );
     items.push({
       coef: "Pearson",
-      estimate: pretty(pearson),
+      estimate: prettyToPrecision(pearson, 7),
       conf: `${pretty(pearsonInterval[0])} ; ${pretty(pearsonInterval[1])}`,
-      stat: pretty(tStat1),
-      quan: pretty(studentQuan1),
+      stat: `t = ${pretty(tStat1)}`,
+      quan: `Student = ${pretty(studentQuan1)}`,
       sign: Math.abs(tStat1) > studentQuan1 ? "Yes" : "No",
-      corr: ""
+      corr: determineCorrelation(pearson)
     });
 
     const spearman = mymath.spearmanCorrelationEstimate(
@@ -57,15 +63,18 @@
       duplicatesY
     );
     const tStat2 = mymath.tStatistic(len, spearman);
-    const studentQuan2 = mymath.studentDistribQuan(1 - mymath.alpha / 2, len);
+    const studentQuan2 = mymath.studentDistribQuan(
+      1 - mymath.alpha / 2,
+      len - 2
+    );
     items.push({
       coef: "Spearman",
-      estimate: pretty(spearman),
+      estimate: prettyToPrecision(spearman, 7),
       conf: "-",
-      stat: pretty(tStat2),
-      quan: pretty(studentQuan2),
+      stat: `t = ${pretty(tStat2)}`,
+      quan: `Student = ${pretty(studentQuan2)}`,
       sign: Math.abs(tStat2) > studentQuan2 ? "Yes" : "No",
-      corr: ""
+      corr: determineCorrelation(spearman)
     });
 
     const kendall = mymath.kendallCorrelationEstimate(
@@ -77,16 +86,15 @@
     const normQuan = mymath.normDistribQuan(1 - mymath.alpha / 2);
     items.push({
       coef: "Kendall",
-      estimate: pretty(kendall),
+      estimate: prettyToPrecision(kendall, 7),
       conf: "-",
-      stat: pretty(uStat),
-      quan: pretty(normQuan),
+      stat: `u = ${pretty(uStat)}`,
+      quan: `Normal = ${pretty(normQuan)}`,
       sign: Math.abs(uStat) > normQuan ? "Yes" : "No",
-      corr: ""
+      corr: determineCorrelation(kendall)
     });
 
     const correlationArray = mymath.correlationRatioTransformation(arrX, arrY);
-    //FIXME: Fix NaN's
     const ratio = mymath.correlationRatioEstimate(len, correlationArray);
     const classCount = correlationArray.x.length;
     const fStat = mymath.fStatistic(len, classCount, ratio);
@@ -97,16 +105,18 @@
     );
     items.push({
       coef: "Correlation ratio",
-      estimate: pretty(ratio),
+      estimate: prettyToPrecision(ratio, 7),
       conf: "-",
-      stat: pretty(fStat),
-      quan: pretty(fisherQuan),
+      stat: `f = ${pretty(fStat)}`,
+      quan: `Fisher = ${pretty(fisherQuan)}`,
       sign: Math.abs(fStat) > fisherQuan ? "Yes" : "No",
-      corr: ""
+      corr: determineCorrelation(ratio)
     });
-    console.log(items);
+
     return items;
   }
 </script>
 
-<Table class="pb-8" {headers} items={tableItems} />
+{#if mutableSamples.length != 0}
+  <Table class="pb-8 mx-2" {headers} items={tableItems} />
+{/if}

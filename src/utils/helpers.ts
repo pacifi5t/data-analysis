@@ -53,3 +53,14 @@ export function getDifferenceSample(sampleX: VarSeries, sampleY: VarSeries) {
   }
   return new VarSeries(arrZ);
 }
+
+export function determineCorrelation(estimate: number) {
+  const e = Math.abs(estimate);
+  if (1 > e && e >= 0.5) {
+    return "Strong";
+  } else if (0.5 > e && e > 0.1) {
+    return "Weak";
+  } else {
+    return "No";
+  }
+}
