@@ -7,8 +7,8 @@
   const headers = [
     { text: "", value: "title" },
     { text: "Value", value: "val" },
-    { text: "Standard Deviation", value: "stddev" },
-    { text: "Confidence Interval", value: "conf" }
+    { text: "Std. Deviation", value: "stddev" },
+    { text: "Conf. Interval", value: "conf" }
   ];
 
   let mutableSamples: mymath.VarSeries[] = [];
@@ -59,7 +59,7 @@
       stdDevDeviation
     );
     items.push({
-      title: "Standard deviation",
+      title: "Std. deviation",
       val: pretty(stdDeviation),
       stddev: pretty(stdDevDeviation),
       conf: `${pretty(stdDevConfInterval[0])} ; ${pretty(
@@ -76,7 +76,7 @@
       skewnessDeviation
     );
     items.push({
-      title: "Skewness coefficient",
+      title: "Skewness coef.",
       val: pretty(skewnessCoef),
       stddev: pretty(skewnessDeviation),
       conf: `${pretty(skewnessInterval[0])} ; ${pretty(skewnessInterval[1])}`
@@ -90,7 +90,7 @@
       kurtosisDeviation
     );
     items.push({
-      title: "Kurtosis coefficient",
+      title: "Kurtosis coef.",
       val: pretty(kurtosisCoef),
       stddev: pretty(kurtosisDeviation),
       conf: `${pretty(kurtosisInterval[0])} ; ${pretty(kurtosisInterval[1])}`
@@ -100,14 +100,16 @@
   }
 </script>
 
-{#each tableItems as item, i}
-  <div class="flex flex-row">
-    <span class="text-center mx-2">
-      ATTRIBUTE {i + 1}
-    </span>
-    <Table class="pb-8" {headers} items={item} />
-  </div>
-{/each}
+<div class="grid grid-cols-1 xl:grid-cols-2">
+  {#each tableItems as item, i}
+    <div class="flex flex-row">
+      <span class="text-center mx-2">
+        ATTRIBUTE {i + 1}
+      </span>
+      <Table class="pb-8" {headers} items={item} />
+    </div>
+  {/each}
+</div>
 
 <style>
   span {
