@@ -21,6 +21,21 @@ export function pearsonCorrelationEstimate(arrX: number[], arrY: number[]) {
   );
 }
 
+export function pearsonCorrelationEstimateTransformedArray(
+  array: CorrelationArray
+) {
+  const arrY = new Array<number>().concat(...array.y);
+  const arrX: number[] = [];
+
+  for (const each of array.y) {
+    for (let i = 0; i < each.length; i++) {
+      arrX.push(array.x[i]);
+    }
+  }
+
+  return pearsonCorrelationEstimate(arrX, arrY);
+}
+
 export function pearsonCorrelationInterval(
   len: number,
   estimate: number
@@ -84,10 +99,11 @@ export function correlationRatioEstimate(
     meanYGroup.push(sum(group) / group.length);
   }
 
-  const meanY = correlationArray.y.reduce(
-    (total, elem, i) => total + elem.length * meanYGroup[i],
-    0
-  ) / len;
+  const meanY =
+    correlationArray.y.reduce(
+      (total, elem, i) => total + elem.length * meanYGroup[i],
+      0
+    ) / len;
 
   const nom = correlationArray.y.reduce(
     (total, elem, i) =>
@@ -111,6 +127,20 @@ export function fStatistic(len: number, classCount: number, estimate: number) {
   const estimateSqr = Math.pow(estimate, 2);
   return (
     estimateSqr / (classCount - 1) / ((1 - estimateSqr) / (len - classCount))
+  );
+}
+
+export function fStatisticPearson(
+  len: number,
+  classCount: number,
+  ratio: number,
+  pearson: number
+) {
+  const rationSqr = Math.pow(ratio, 2);
+  return (
+    (rationSqr - Math.pow(pearson, 2)) /
+    (classCount - 2) /
+    ((1 - rationSqr) / (len - classCount))
   );
 }
 

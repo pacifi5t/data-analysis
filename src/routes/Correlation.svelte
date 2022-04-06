@@ -5,6 +5,7 @@
   import { scatterPlot } from "../utils/charts";
   import * as mymath from "../math";
   import { onMount } from "svelte";
+  import { fisherDistribQuan } from "../math";
 
   const headers = [
     { text: "coeffcient", value: "coef" },
@@ -16,10 +17,21 @@
     { text: "correlation?", value: "corr" }
   ];
 
+  const headers2 = [
+    { text: "pearson coefficient", value: "pearson" },
+    { text: "correlation ratio", value: "ratio" },
+    { text: "statistic", value: "stat" },
+    { text: "quantile", value: "quan" },
+    { text: "equal?", value: "equal" },
+    { text: "linear?", value: "lin" }
+  ];
+
   let mutableSamples: mymath.VarSeries[] = [];
   let tableItems = [];
+  let tableItems2 = [];
   let arrX: number[];
   let arrY: number[];
+  let ratioIsSignificant = false;
 
   mutableSamplesStore.subscribe((value: mymath.VarSeries[]) => {
     mutableSamples = value;
@@ -28,7 +40,23 @@
         mutableSamples[0].initialArray,
         mutableSamples[1].initialArray
       ];
-      tableItems = updateCorrelationTable(arrX, arrY);
+
+      const { items, pearson, ratio, stat, quan, equal } =
+        updateCorrelationTable(arrX, arrY);
+
+      tableItems = items;
+      if (ratioIsSignificant) {
+        tableItems2 = [
+          {
+            pearson: prettyToPrecision(pearson, 7),
+            ratio: prettyToPrecision(ratio, 7),
+            stat: pretty(stat),
+            quan: pretty(quan),
+            equal,
+            lin: equal
+          }
+        ];
+      }
     }
   });
 
@@ -38,7 +66,7 @@
     }
   });
 
-  export function updateCorrelationTable(arrX: number[], arrY: number[]) {
+  function updateCorrelationTable(arrX: number[], arrY: number[]) {
     const len = arrX.length;
     const {
       array: rankArray,
@@ -104,7 +132,8 @@
     const correlationArray = mymath.correlationRatioTransformation(arrX, arrY);
     const ratio = mymath.correlationRatioEstimate(len, correlationArray);
     const classCount = correlationArray.x.length;
-    const fStat = mymath.fStatistic(len, classCount, ratio);
+    const fStat1 = mymath.fStatistic(len, classCount, ratio);
+    const fStat2 = mymath.fStatisticPearson(len, classCount, ratio, pearson);
     const fisherQuan1 = mymath.fisherDistribQuan(
       1 - mymath.alpha,
       classCount - 1,
@@ -115,21 +144,34 @@
       classCount - 2,
       len - classCount
     );
+
+    ratioIsSignificant = fStat1 > fisherQuan1;
+
     items.push({
       coef: "Correlation ratio",
       estimate: prettyToPrecision(ratio, 7),
       conf: "-",
-      stat: `f = ${pretty(fStat)}`,
+      stat: `f = ${pretty(fStat1)}`,
       quan: `Fisher = ${pretty(fisherQuan1)}`,
-      sign: fStat > fisherQuan1 ? "Yes" : "No",
-      corr: fStat > fisherQuan2 ? "Nonlinear" : "Linear"
+      sign: ratioIsSignificant ? "Yes" : "No",
+      corr: fStat2 > fisherQuan2 ? "Nonlinear" : "Linear"
     });
 
-    return items;
+    return {
+      items,
+      pearson,
+      ratio,
+      stat: fStat2,
+      quan: fisherQuan2,
+      equal: fStat2 <= fisherQuan2
+    };
   }
 </script>
 
 {#if mutableSamples.length != 0}
-  <Table class="pb-8 mx-2" {headers} items={tableItems} />
-  <div id="scatter" class="mb-8" />
+  <Table class="mx-2" {headers} items={tableItems} />
+  {#if ratioIsSignificant}
+    <Table class="py-8" headers={headers2} items={tableItems2} />
+  {/if}
+  <div id="scatter" />
 {/if}
