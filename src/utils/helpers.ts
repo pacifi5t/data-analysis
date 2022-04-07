@@ -1,11 +1,14 @@
-import * as mymath from "../math";
 import { ClassifiedSeries, VarSeries } from "../math/series";
 
 export function pretty(num: number): number {
+  return prettyToPrecision(num, 3);
+}
+
+export function prettyToPrecision(num: number, precision: number): number {
   if (num == undefined) {
     return NaN;
   }
-  return parseFloat(num.toPrecision(4));
+  return parseFloat(num.toPrecision(precision));
 }
 
 export function updateClassifiedSeries(
@@ -38,35 +41,6 @@ export function updateClassifiedSeries(
   });
 
   return new ClassifiedSeries(classCount, limits, classifiedArray);
-}
-
-export function updateSampleTable(sample: VarSeries) {
-  const items = [];
-  const meanValue = mymath.mean(sample.initialArray);
-  const stdDeviation = mymath.stdDev(sample.initialArray, meanValue);
-  const meanStdDev = mymath.meanDeviation(sample.length, stdDeviation);
-  const meanInterval = mymath.meanConfInterval(
-    sample.length,
-    meanStdDev,
-    meanValue
-  );
-  items.push({
-    t: "Mean",
-    v: pretty(meanValue),
-    d: pretty(meanStdDev),
-    i: `${pretty(meanInterval[0])} ; ${pretty(meanInterval[1])}`
-  });
-
-  const medianValue = mymath.median(sample.initialArray);
-  const medianInterval = mymath.medianConfInterval(sample.initialArray);
-  items.push({
-    t: "Median",
-    v: pretty(medianValue),
-    d: "-",
-    i: `${pretty(medianInterval[0])} ; ${pretty(medianInterval[1])}`
-  });
-
-  return items;
 }
 
 export function getDifferenceSample(sampleX: VarSeries, sampleY: VarSeries) {

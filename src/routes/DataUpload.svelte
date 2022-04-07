@@ -3,19 +3,17 @@
   import { immutableSamplesStore, fileStore } from "../utils/stores";
   import { pretty } from "../utils/helpers";
   import { VarSeries } from "../math";
-  import { filter } from "d3";
 
   const reader = new FileReader();
   const headers = [
-    { text: "index", value: "i" },
-    { text: "element", value: "x" },
-    { text: "count", value: "n" },
-    { text: "frequency", value: "p" },
-    { text: "ecdf", value: "F" }
+    { text: "elem", value: "elem" },
+    { text: "n", value: "n" },
+    { text: "freq", value: "freq" },
+    { text: "ecdf", value: "ecdf" }
   ];
-  let items1 = [];
-  let items2 = [];
+
   let uplodedFiles = [];
+  let tableItemArray = [];
   let immutableSamples: VarSeries[];
 
   fileStore.subscribe((value) => {
@@ -27,106 +25,75 @@
 
   $: {
     if (immutableSamples.length != 0) {
-      items1 = [];
-      for (let i = 0; i < immutableSamples[0].data.length; i++) {
-        items1.push({
-          i: i.toString(),
-          x: immutableSamples[0].data[i],
-          n: pretty(immutableSamples[0].count.get(i)),
-          p: pretty(immutableSamples[0].frequency.get(i)),
-          F: pretty(immutableSamples[0].empDistrFunc.get(i))
-        });
-      }
-
-      items2 = [];
-      for (let i = 0; i < immutableSamples[1].data.length; i++) {
-        items2.push({
-          i: i.toString(),
-          x: immutableSamples[1].data[i],
-          n: pretty(immutableSamples[1].count.get(i)),
-          p: pretty(immutableSamples[1].frequency.get(i)),
-          F: pretty(immutableSamples[1].empDistrFunc.get(i))
-        });
+      for (let i = 0; i < immutableSamples.length; i++) {
+        const items = [];
+        for (let j = 0; j < immutableSamples[i].data.length; j++) {
+          const elem = immutableSamples[i];
+          items.push({
+            elem: pretty(elem.data[j]),
+            n: pretty(elem.count.get(j)),
+            freq: pretty(elem.frequency.get(j)),
+            ecdf: pretty(elem.empDistrFunc.get(j))
+          });
+        }
+        tableItemArray.push(items);
       }
     }
+  }
+
+  function fileUploadHandler(event) {
+    fileStore.set(event.detail.files);
+
+    if (uplodedFiles.length == 0) {
+      immutableSamplesStore.set([]);
+      return;
+    }
+
+    reader.readAsText(uplodedFiles[0]);
+    reader.onload = () => {
+      let fileContents: string[][] = reader.result
+        .toString()
+        .replaceAll("\r", "")
+        .split("\n")
+        .map((value) => {
+          return value.split(/ |\t/).filter((value) => value !== "");
+        });
+
+      const dataSamples = <number[][]>[];
+      for (let i = 0; i < fileContents[0].length; i++) {
+        const sample = <number[]>[];
+        for (let j = 0; j < fileContents.length; j++) {
+          sample.push(Number.parseFloat(fileContents[j][i]));
+        }
+        dataSamples.push(sample);
+      }
+
+      immutableSamplesStore.set(
+        dataSamples.map((value) => {
+          return new VarSeries(value);
+        })
+      );
+    };
   }
 </script>
 
 <div class="text-xl font-bold">
   <FileDropzone
-    accept=".txt,.dat"
+    accept=".txt,.dat,.csv"
     max={1}
     files={uplodedFiles}
-    on:change={(event) => {
-      fileStore.set(event.detail.files);
-
-      if (uplodedFiles.length == 0) {
-        immutableSamplesStore.set([]);
-        return;
-      }
-
-      reader.readAsText(uplodedFiles[0]);
-
-      reader.onload = () => {
-        let str = "" + reader.result;
-        const temp = [];
-        str
-          .replaceAll("\r", "")
-          .split(/\n| |\t/)
-          .forEach((value) => {
-            const num = Number.parseFloat(value);
-            if (!isNaN(num)) {
-              temp.push(num);
-            }
-          });
-
-        const data = [];
-        for (let i = 0; i < temp.length; i += 2) {
-          const first = temp[i];
-          const second = temp[i + 1];
-          data.push([first, second]);
-        }
-
-        // Define how to parse file
-        const set = new Set();
-        for (let i = 0; i < data.length; i++) {
-          set.add(data[i][1]);
-        }
-        const dataSample1 = [];
-        const dataSample2 = [];
-        if (set.size != 2) {
-          for (let i = 0; i < data.length; i++) {
-            dataSample1.push(data[i][0]);
-            dataSample2.push(data[i][1]);
-          }
-        } else {
-          for (let i = 0; i < data.length; i++) {
-            const elem = data[i];
-            if (elem[1] == 0) {
-              dataSample1.push(elem[0]);
-            } else {
-              dataSample2.push(elem[0]);
-            }
-          }
-        }
-
-        immutableSamplesStore.set([
-          new VarSeries(dataSample1.filter((x) => x != undefined)),
-          new VarSeries(dataSample2.filter((x) => x != undefined))
-        ]);
-      };
-    }}
+    on:change={fileUploadHandler}
   />
 </div>
 
 {#if immutableSamples.length !== 0}
-  <div class="grid grid-cols-2 gap-4">
-    <div>
-      <Table {headers} items={items1} />
-    </div>
-    <div>
-      <Table {headers} items={items2} />
-    </div>
+  <div class="flex flex-row mt-10">
+    {#each tableItemArray as tableItems, i}
+      <div class="flex flex-col">
+        <span class="m-auto">ATTRIBUTE {i + 1}</span>
+        <Table class="px-4" {headers} items={tableItems} />
+      </div>
+    {/each}
   </div>
 {/if}
 

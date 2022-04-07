@@ -17,8 +17,7 @@ export function normDistribQuan(p: number) {
   return p <= 0.5 ? -phi(p) : phi(1 - p);
 }
 
-export function studentDistribQuan(p: number, classCount: number) {
-  const v = classCount - 1;
+export function studentDistribQuan(p: number, v: number) {
   function g1(u: number) {
     return (Math.pow(u, 3) + u) / 4;
   }
@@ -84,6 +83,6 @@ export function fisherDistribQuan(p: number, v1: number, v2: number) {
         (Math.pow(d, 4) / 2880) *
           (Math.pow(u, 5) + 44 * Math.pow(u, 3) + 183 * u) +
         (Math.pow(d, 4) / (155520 * s * s)) *
-          (9 * Math.pow(u, 5) - 284 * Math.pow(u, 3) - 1531 * u));
+          (9 * Math.pow(u, 5) - 284 * Math.pow(u, 3) - 1513 * u));
   return Math.exp(2 * z);
 }
