@@ -153,7 +153,7 @@
       stat: `f = ${pretty(fStat1)}`,
       quan: `Fisher = ${pretty(fisherQuan1)}`,
       sign: ratioIsSignificant ? "Yes" : "No",
-      corr: fStat2 > fisherQuan2 ? "Stochastic" : "None"
+      corr: ratioIsSignificant ? "Stochastic" : "None"
     });
 
     return {
@@ -163,7 +163,7 @@
       ratio,
       stat: fStat2,
       quan: fisherQuan2,
-      equal: fStat2 <= fisherQuan2
+      equal: fStat2 <= fisherQuan2 ? "Yes" : "No"
     };
   }
 </script>
@@ -173,5 +173,5 @@
   {#if ratioIsSignificant}
     <Table class="py-8" headers={headers2} items={tableItems2} />
   {/if}
-  <div id="scatter" />
+  <div id="scatter" class="py-8"/>
 {/if}

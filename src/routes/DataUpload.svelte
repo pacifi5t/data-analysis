@@ -79,7 +79,7 @@
 
 <div class="text-xl font-bold">
   <FileDropzone
-    accept=".txt,.dat"
+    accept=".txt,.dat,.csv"
     max={1}
     files={uplodedFiles}
     on:change={fileUploadHandler}

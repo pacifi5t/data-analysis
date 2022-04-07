@@ -84,6 +84,16 @@ export function correlationRatioTransformation(
     }
   }
 
+  let emptyYArrays = 0;
+  for (let i = 0; i < transArrY.length + emptyYArrays; i++) {
+    const index = i - emptyYArrays;
+    if (transArrY[index].length == 0) {
+      transArrX.splice(index, 1);
+      transArrY.splice(index, 1);
+      emptyYArrays++;
+    }
+  }
+
   return { x: transArrX, y: transArrY };
 }
 
@@ -160,7 +170,7 @@ export function arraysToRankArray(arrX: number[], arrY: number[]) {
 
   for (let i = 0; i < sortedX.length; i++) {
     const elem = sortedX[i];
-    if (duplicatesX.has(i)) {
+    if (duplicatesX.has(elem)) {
       rankMapX.set(
         elem,
         duplicatesX
@@ -188,7 +198,7 @@ export function arraysToRankArray(arrX: number[], arrY: number[]) {
 
   for (let i = 0; i < sortedY.length; i++) {
     const elem = sortedY[i];
-    if (duplicatesY.has(i)) {
+    if (duplicatesY.has(elem)) {
       rankMapY.set(
         elem,
         duplicatesY
