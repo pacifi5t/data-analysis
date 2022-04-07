@@ -83,6 +83,6 @@ export function fisherDistribQuan(p: number, v1: number, v2: number) {
         (Math.pow(d, 4) / 2880) *
           (Math.pow(u, 5) + 44 * Math.pow(u, 3) + 183 * u) +
         (Math.pow(d, 4) / (155520 * s * s)) *
-          (9 * Math.pow(u, 5) - 284 * Math.pow(u, 3) - 1531 * u));
+          (9 * Math.pow(u, 5) - 284 * Math.pow(u, 3) - 1513 * u));
   return Math.exp(2 * z);
 }
