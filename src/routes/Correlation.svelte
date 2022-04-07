@@ -5,7 +5,6 @@
   import { scatterPlot } from "../utils/charts";
   import * as mymath from "../math";
   import { onMount } from "svelte";
-  import { fisherDistribQuan } from "../math";
 
   const headers = [
     { text: "coeffcient", value: "coef" },
@@ -89,7 +88,7 @@
       stat: `t = ${pretty(tStat1)}`,
       quan: `Student = ${pretty(studentQuan1)}`,
       sign: Math.abs(tStat1) > studentQuan1 ? "Yes" : "No",
-      corr: Math.abs(tStat1) > studentQuan1 ? "Linear" : "Nonlinear"
+      corr: Math.abs(tStat1) > studentQuan1 ? "Linear" : "No linear"
     });
 
     const spearman = mymath.spearmanCorrelationEstimate(
@@ -154,12 +153,13 @@
       stat: `f = ${pretty(fStat1)}`,
       quan: `Fisher = ${pretty(fisherQuan1)}`,
       sign: ratioIsSignificant ? "Yes" : "No",
-      corr: fStat2 > fisherQuan2 ? "Nonlinear" : "Linear"
+      corr: fStat2 > fisherQuan2 ? "Stochastic" : "None"
     });
 
     return {
       items,
-      pearson,
+      pearson:
+        mymath.pearsonCorrelationEstimateTransformedArray(correlationArray),
       ratio,
       stat: fStat2,
       quan: fisherQuan2,

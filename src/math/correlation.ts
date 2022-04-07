@@ -27,8 +27,8 @@ export function pearsonCorrelationEstimateTransformedArray(
   const arrY = new Array<number>().concat(...array.y);
   const arrX: number[] = [];
 
-  for (const each of array.y) {
-    for (let i = 0; i < each.length; i++) {
+  for (let i = 0; i < array.y.length; i++) {
+    for (let j = 0; j < array.y[i].length; j++) {
       arrX.push(array.x[i]);
     }
   }
