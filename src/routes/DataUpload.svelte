@@ -7,9 +7,9 @@
   const reader = new FileReader();
   const headers = [
     { text: "elem", value: "elem" },
-    { text: "n", value: "n" },
-    { text: "freq", value: "freq" },
-    { text: "ecdf", value: "ecdf" }
+    { text: "n", value: "n" }
+    // { text: "freq", value: "freq" },
+    // { text: "ecdf", value: "ecdf" }
   ];
 
   let uplodedFiles = [];
@@ -31,9 +31,9 @@
           const elem = immutableSamples[i];
           items.push({
             elem: pretty(elem.data[j]),
-            n: pretty(elem.count.get(j)),
-            freq: pretty(elem.frequency.get(j)),
-            ecdf: pretty(elem.empDistrFunc.get(j))
+            n: pretty(elem.count.get(j))
+            // freq: pretty(elem.frequency.get(j)),
+            // ecdf: pretty(elem.empDistrFunc.get(j))
           });
         }
         tableItemArray.push(items);
