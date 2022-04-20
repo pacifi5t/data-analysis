@@ -46,6 +46,7 @@
 
     if (uplodedFiles.length == 0) {
       immutableSamplesStore.set([]);
+      tableItemArray = [];
       return;
     }
 
@@ -55,8 +56,12 @@
         .toString()
         .replaceAll("\r", "")
         .split("\n")
+        .filter((value) => value !== "")
         .map((value) => {
-          return value.split(/ |\t/).filter((value) => value !== "");
+          return value
+            .trim()
+            .split(/ |\t/)
+            .filter((value) => value !== "");
         });
 
       const dataSamples = <number[][]>[];
