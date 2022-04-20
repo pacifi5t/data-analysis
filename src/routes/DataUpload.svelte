@@ -1,6 +1,6 @@
 <script lang="ts">
   import { FileDropzone, Table } from "attractions";
-  import { immutableSamplesStore, fileStore } from "../utils/stores";
+  import { immutableSamplesStore, fileStore, headersStore } from "../utils/stores";
   import { pretty } from "../utils/helpers";
   import { VarSeries } from "../math";
 
@@ -15,6 +15,7 @@
   let uplodedFiles = [];
   let tableItemArray = [];
   let immutableSamples: VarSeries[];
+  let attributeHeaders = [];
 
   fileStore.subscribe((value) => {
     uplodedFiles = value;
@@ -22,6 +23,9 @@
   immutableSamplesStore.subscribe((value) => {
     immutableSamples = value;
   });
+  headersStore.subscribe((value) => {
+    attributeHeaders = value;
+  })
 
   $: {
     if (immutableSamples.length != 0) {
@@ -63,11 +67,14 @@
             .split(/ |\t/)
             .filter((value) => value !== "");
         });
-
+      
+      attributeHeaders = fileContents[0];
+      headersStore.set(attributeHeaders);
+      
       const dataSamples = <number[][]>[];
       for (let i = 0; i < fileContents[0].length; i++) {
         const sample = <number[]>[];
-        for (let j = 0; j < fileContents.length; j++) {
+        for (let j = 1; j < fileContents.length; j++) {
           sample.push(Number.parseFloat(fileContents[j][i]));
         }
         dataSamples.push(sample);
@@ -95,7 +102,7 @@
   <div class="flex flex-row mt-10">
     {#each tableItemArray as tableItems, i}
       <div class="flex flex-col">
-        <span class="m-auto">ATTRIBUTE {i + 1}</span>
+        <span class="m-auto">{attributeHeaders[i]}</span>
         <Table class="px-4" {headers} items={tableItems} />
       </div>
     {/each}
