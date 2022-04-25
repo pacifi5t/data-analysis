@@ -1,7 +1,9 @@
 <script lang="ts">
   import { Button, Dropdown, DropdownShell, Table } from "attractions";
   import { attributesStore, mutableSamplesStore } from "../utils/stores";
+  import { scatterPlotRegression } from "../utils/charts";
   import { pretty } from "../utils/helpers";
+  import { onMount } from "svelte";
   import * as mymath from "../math";
 
   const headers = [
@@ -25,8 +27,18 @@
     updateTable();
   }
 
+  onMount(() => {
+    if (seriesArray.length != 0) {
+      scatterPlotRegression(
+        seriesArray[attrIndex].initialArray,
+        seriesArray.at(-1).initialArray,
+        parameters[0],
+        parameters[1]
+      );
+    }
+  });
+
   function updateTable() {
-    
     items = [];
     parameters = [];
 
@@ -73,6 +85,12 @@
                   on:click={() => {
                     attrIndex = i;
                     updateTable();
+                    scatterPlotRegression(
+                      seriesArray[attrIndex].initialArray,
+                      seriesArray.at(-1).initialArray,
+                      parameters[0],
+                      parameters[1]
+                    );
                   }}
                 >
                   {a}
@@ -94,4 +112,5 @@
     </div>
     <Table {headers} {items} />
   </div>
+  <div id="regression" class="py-8" />
 {/if}
