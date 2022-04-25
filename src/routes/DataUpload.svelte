@@ -1,6 +1,10 @@
 <script lang="ts">
   import { FileDropzone, Table } from "attractions";
-  import { immutableSamplesStore, fileStore, headersStore } from "../utils/stores";
+  import {
+    immutableSamplesStore,
+    fileStore,
+    attributesStore
+  } from "../utils/stores";
   import { pretty } from "../utils/helpers";
   import { VarSeries } from "../math";
 
@@ -23,9 +27,9 @@
   immutableSamplesStore.subscribe((value) => {
     immutableSamples = value;
   });
-  headersStore.subscribe((value) => {
+  attributesStore.subscribe((value) => {
     attributeHeaders = value;
-  })
+  });
 
   $: {
     if (immutableSamples.length != 0) {
@@ -67,10 +71,10 @@
             .split(/ |\t/)
             .filter((value) => value !== "");
         });
-      
+
       attributeHeaders = fileContents[0];
-      headersStore.set(attributeHeaders);
-      
+      attributesStore.set(attributeHeaders);
+
       const dataSamples = <number[][]>[];
       for (let i = 0; i < fileContents[0].length; i++) {
         const sample = <number[]>[];
