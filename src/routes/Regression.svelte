@@ -5,6 +5,7 @@
   import { pretty } from "../utils/helpers";
   import { onMount } from "svelte";
   import * as mymath from "../math";
+  import { linearFn2 } from "../math";
 
   const headers = [
     { text: "", value: "title" },
@@ -39,22 +40,22 @@
   });
 
   function updateTable() {
+    const arrX = seriesArray[attrIndex].initialArray;
+    const arrY = seriesArray.at(-1).initialArray;
+
     items = [];
     parameters = [];
 
-    parameters.push(
-      mymath.linearA0(
-        seriesArray[attrIndex].initialArray,
-        seriesArray.at(-1).initialArray
-      )
-    );
+    parameters.push(mymath.linearA0(arrX, arrY));
+    parameters.push(mymath.linearA1(arrX, arrY));
 
-    parameters.push(
-      mymath.linearA1(
-        seriesArray[attrIndex].initialArray,
-        seriesArray.at(-1).initialArray
-      )
-    );
+    const eArray = [];
+    for (let i = 0; i < seriesArray[attrIndex].length; i++) {
+      eArray.push(arrY[i] - linearFn2(arrX[i], parameters[0], parameters[1]));
+    }
+
+    const sse = eArray.reduce((total, value) => total + value * value, 0);
+    const remainsDispersion = sse / (arrX.length - parameters.length - 1);
 
     for (let i = 0; i < 2; i++) {
       //TODO: Add other characteristics
