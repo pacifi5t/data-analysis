@@ -11,3 +11,7 @@ export function linearA1(arrX: number[], arrY: number[]) {
     shiftedDeviation(arrX, mean(arrX))
   );
 }
+
+export function linearFn2(x: number, a0: number, a1: number) {
+  return a0 + a1 * x;
+}

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 import * as d3 from "d3";
+import * as mymath from '../math'
 
 /**
  * @param {number[]} arrX
@@ -84,7 +85,7 @@ export function scatterPlotRegression(arrX, arrY, a0, a1) {
 
   const data = arrX.map((value, i) => ({ x: value, y: arrY[i] }));
 
-  const arrY2 = arrX.map((value) => a0 + a1 * value);
+  const arrY2 = arrX.map((value) => mymath.linearFn2(value, a0, a1));
   const data2 = arrX.map((value, i) => ({ x: value, y: arrY2[i] }));
 
   const margin = { x: 40, y: 40 },
