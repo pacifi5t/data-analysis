@@ -5,7 +5,6 @@
   import { pretty } from "../utils/helpers";
   import { onMount } from "svelte";
   import * as mymath from "../math";
-  import { linearFn2 } from "../math";
 
   const headers = [
     { text: "", value: "title" },
@@ -51,19 +50,29 @@
 
     const eArray = [];
     for (let i = 0; i < seriesArray[attrIndex].length; i++) {
-      eArray.push(arrY[i] - linearFn2(arrX[i], parameters[0], parameters[1]));
+      eArray.push(
+        arrY[i] - mymath.linearFn2(arrX[i], parameters[0], parameters[1])
+      );
     }
 
     const sse = eArray.reduce((total, value) => total + value * value, 0);
     const remainsDispersion = sse / (arrX.length - parameters.length - 1);
+    const dispArray = [
+      mymath.dispersionA0(arrX, remainsDispersion),
+      mymath.dispersionA1(arrX, remainsDispersion)
+    ];
+    const confArray = [
+      mymath.paramConfInterval(parameters[0], dispArray[0], arrX.length),
+      mymath.paramConfInterval(parameters[1], dispArray[1], arrX.length)
+    ];
 
     for (let i = 0; i < 2; i++) {
       //TODO: Add other characteristics
       items.push({
         title: `a${i}`,
         parameter: pretty(parameters[i]),
-        stddev: "",
-        conf: "",
+        stddev: pretty(Math.sqrt(dispArray[i])),
+        conf: `${confArray[i][0]} ; ${confArray[i][1]}`,
         stat: "",
         p: "",
         sign: ""
