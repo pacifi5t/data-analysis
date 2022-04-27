@@ -46,3 +46,26 @@ export function paramConfInterval(
 export function regressionTStat(param: number, paramDispersion: number) {
   return param / Math.sqrt(paramDispersion);
 }
+
+export function determinationCoef(
+  arrY: number[],
+  remainsDispersion: number,
+  paramsCount: number
+) {
+  return (
+    1 -
+    ((arrY.length - paramsCount - 1) * remainsDispersion) /
+      ((arrY.length - 1) * shiftedDeviation(arrY, mean(arrY)))
+  );
+}
+
+export function regressionFStat(
+  deteminationCoef: number,
+  len: number,
+  paramsCount: number
+) {
+  return (
+    ((deteminationCoef / (1 - deteminationCoef)) * (len - paramsCount - 1)) /
+    paramsCount
+  );
+}

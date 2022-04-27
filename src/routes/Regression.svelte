@@ -5,6 +5,7 @@
   import { pretty } from "../utils/helpers";
   import { onMount } from "svelte";
   import * as mymath from "../math";
+  import { alpha } from "../math";
 
   const headers = [
     { text: "", value: "title" },
@@ -12,8 +13,17 @@
     { text: "Std. Deviation", value: "stddev" },
     { text: "Conf. Interval", value: "conf" },
     { text: "t-statistic", value: "stat" },
-    { text: "p-value", value: "p" },
     { text: "Significant?", value: "sign" }
+  ];
+
+  const headers2 = [
+    { text: "Remains dispersion", value: "disp" },
+    { text: "Determination coefficient", value: "coef" },
+    { text: "f-statistic", value: "stat" },
+    { text: "Skewness coef.", value: "skew" },
+    { text: "Kurtosis coef.", value: "kurt" },
+    { text: "Student quan.", value: "stud" },
+    { text: "Is normal?", value: "norm" }
   ];
 
   const attributes: string[] = $attributesStore;
@@ -21,6 +31,7 @@
 
   let attrIndex = 0;
   let items = [];
+  let items2 = [];
   let parameters: number[] = [];
 
   if (attributes.length != 0) {
@@ -43,6 +54,7 @@
     const arrY = seriesArray.at(-1).initialArray;
 
     items = [];
+    items2 = [];
     parameters = [];
 
     parameters.push(mymath.linearA0(arrX, arrY));
@@ -82,10 +94,38 @@
         stddev: pretty(Math.sqrt(dispArray[i])),
         conf: `${pretty(confArray[i][0])} ; ${pretty(confArray[i][1])}`,
         stat: pretty(tStatArray[i]),
-        p: "",
         sign: Math.abs(tStatArray[i]) > studentQuan
       });
     }
+
+    const determinationCoef = mymath.determinationCoef(
+      arrY,
+      remainsDispersion,
+      parameters.length
+    );
+    const fstat = mymath.regressionFStat(
+      determinationCoef,
+      arrY.length,
+      parameters.length
+    );
+    const eMean = mymath.mean(eArray);
+    const eShiftedDev = mymath.shiftedDeviation(eArray, eMean);
+    const skew = mymath.skewnessCoef(eArray, eShiftedDev, eMean);
+    const kurt = mymath.kurtosisCoef(eArray, eShiftedDev, eMean);
+    const studentQuan2 = mymath.studentDistribQuan(
+      1 - alpha / 2,
+      eArray.length - parameters.length - 1
+    );
+
+    items2.push({
+      disp: pretty(remainsDispersion),
+      coef: pretty(determinationCoef),
+      stat: pretty(fstat),
+      skew: pretty(skew),
+      kurt: pretty(kurt),
+      stud: pretty(studentQuan2),
+      norm: studentQuan2 > Math.abs(skew) && studentQuan2 > Math.abs(kurt)
+    });
   }
 </script>
 
@@ -131,4 +171,5 @@
     <Table {headers} {items} />
   </div>
   <div id="regression" class="py-8" />
+  <Table headers={headers2} items={items2} />
 {/if}
