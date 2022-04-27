@@ -103,10 +103,10 @@
 </div>
 
 {#if immutableSamples.length !== 0}
-  <div class="flex flex-row mt-10">
+  <div class="grid grid-cols-7 gap-y-8 mt-10">
     {#each tableItemArray as tableItems, i}
       <div class="flex flex-col">
-        <span class="m-auto">{attributeHeaders[i]}</span>
+        <span class="mx-auto">{attributeHeaders[i]}</span>
         <Table class="px-4" {headers} items={tableItems} />
       </div>
     {/each}
