@@ -36,6 +36,8 @@
   let items2 = [];
   let parameters: number[] = [];
 
+  let remainsDispersion = 0;
+
   if (attributes.length != 0) {
     updateTable();
   }
@@ -46,7 +48,12 @@
         seriesArray[attrIndex].initialArray,
         seriesArray.at(-1).initialArray,
         parameters[0],
-        parameters[1]
+        parameters[1],
+        remainsDispersion,
+        mymath.dispersionA1(
+          seriesArray[attrIndex].initialArray,
+          remainsDispersion
+        )
       );
     }
   });
@@ -70,7 +77,7 @@
     }
 
     const sse = eArray.reduce((total, value) => total + value * value, 0);
-    const remainsDispersion = sse / (arrX.length - parameters.length - 1);
+    remainsDispersion = sse / (arrX.length - parameters.length - 1);
     const dispArray = [
       mymath.dispersionA0(arrX, remainsDispersion),
       mymath.dispersionA1(arrX, remainsDispersion)
@@ -156,7 +163,12 @@
                       seriesArray[attrIndex].initialArray,
                       seriesArray.at(-1).initialArray,
                       parameters[0],
-                      parameters[1]
+                      parameters[1],
+                      remainsDispersion,
+                      mymath.dispersionA1(
+                        seriesArray[attrIndex].initialArray,
+                        remainsDispersion
+                      )
                     );
                   }}
                 >

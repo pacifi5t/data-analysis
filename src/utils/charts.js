@@ -75,8 +75,17 @@ export function scatterPlot(arrX, arrY) {
  * @param {number[]} arrY
  * @param {number} a0
  * @param {number} a1
+ * @param {number} remainsDispersion
+ * @param {number} a1Disp
  */
-export function scatterPlotRegression(arrX, arrY, a0, a1) {
+export function scatterPlotRegression(
+  arrX,
+  arrY,
+  a0,
+  a1,
+  remainsDispersion,
+  a1Disp
+) {
   try {
     document.getElementById("regression").replaceChildren("");
   } catch (e) {
@@ -89,6 +98,35 @@ export function scatterPlotRegression(arrX, arrY, a0, a1) {
   const data2 = arrX
     .map((value, i) => ({ x: value, y: arrY2[i] }))
     .sort((a, b) => a.x - b.x);
+
+  const meanX = mymath.mean(arrX);
+  const studentQuan = mymath.studentDistribQuan(
+    1 - mymath.alpha / 2,
+    arrX.length - 2
+  );
+  let confInterval = [[], []];
+  for (let i = 0; i < arrX.length; i++) {
+    const x = arrX[i];
+    const fn = mymath.linearFn2(x, a0, a1);
+    const dispSqrt = Math.sqrt(
+      remainsDispersion / arrX.length + a1Disp * Math.pow(x - meanX, 2)
+    );
+    confInterval[0].push(fn - dispSqrt * studentQuan);
+    confInterval[1].push(fn + dispSqrt * studentQuan);
+  }
+
+  let yPrediction = [[], []];
+  for (let i = 0; i < arrX.length; i++) {
+    const x = arrX[i];
+    const fn = mymath.linearFn2(x, a0, a1);
+    const dispSqrt = Math.sqrt(
+      remainsDispersion / arrX.length +
+        a1Disp * Math.pow(x - meanX, 2) +
+        remainsDispersion
+    );
+    yPrediction[0].push(fn - dispSqrt * studentQuan);
+    yPrediction[1].push(fn + dispSqrt * studentQuan);
+  }
 
   const margin = { x: 40, y: 40 },
     width = 800 - margin.x * 2,
@@ -110,8 +148,8 @@ export function scatterPlotRegression(arrX, arrY, a0, a1) {
   const y = d3
     .scaleLinear()
     .domain([
-      d3.min(arrY.concat(arrY2)),
-      d3.max(arrY.concat(arrY2))
+      d3.min(arrY.concat(arrY2, ...yPrediction, ...confInterval)),
+      d3.max(arrY.concat(arrY2, ...yPrediction, ...confInterval))
     ])
     .range([height, 0]);
 
@@ -137,6 +175,80 @@ export function scatterPlotRegression(arrX, arrY, a0, a1) {
     .datum(data2)
     .attr("fill", "none")
     .attr("stroke", "#ff3e00")
+    .attr("stroke-width", 3)
+    .attr(
+      "d",
+      d3
+        .line()
+        .curve(d3.curveBasis)
+        .x((d) => x(d.x))
+        .y((d) => y(d.y))
+    );
+
+  confInterval[0] = arrX
+    .map((v, i) => ({ x: v, y: confInterval[0][i] }))
+    .sort((a, b) => a.x - b.x);
+  confInterval[1] = arrX
+    .map((v, i) => ({ x: v, y: confInterval[1][i] }))
+    .sort((a, b) => a.x - b.x);
+  yPrediction[0] = arrX
+    .map((v, i) => ({ x: v, y: yPrediction[0][i] }))
+    .sort((a, b) => a.x - b.x);
+  yPrediction[1] = arrX
+    .map((v, i) => ({ x: v, y: yPrediction[1][i] }))
+    .sort((a, b) => a.x - b.x);
+  console.log(yPrediction, confInterval);
+
+  svg
+    .append("path")
+    .datum(yPrediction[0])
+    .attr("fill", "none")
+    .attr("stroke", "red")
+    .attr("stroke-width", 3)
+    .attr(
+      "d",
+      d3
+        .line()
+        .curve(d3.curveBasis)
+        .x((d) => x(d.x))
+        .y((d) => y(d.y))
+    );
+
+  svg
+    .append("path")
+    .datum(yPrediction[1])
+    .attr("fill", "none")
+    .attr("stroke", "red")
+    .attr("stroke-width", 3)
+    .attr(
+      "d",
+      d3
+        .line()
+        .curve(d3.curveBasis)
+        .x((d) => x(d.x))
+        .y((d) => y(d.y))
+    );
+
+  svg
+    .append("path")
+    .datum(confInterval[0])
+    .attr("fill", "none")
+    .attr("stroke", "green")
+    .attr("stroke-width", 3)
+    .attr(
+      "d",
+      d3
+        .line()
+        .curve(d3.curveBasis)
+        .x((d) => x(d.x))
+        .y((d) => y(d.y))
+    );
+
+  svg
+    .append("path")
+    .datum(confInterval[1])
+    .attr("fill", "none")
+    .attr("stroke", "green")
     .attr("stroke-width", 3)
     .attr(
       "d",
