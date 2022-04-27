@@ -1,6 +1,11 @@
-import { pearsonCorrelationEstimate, shiftedDeviation, mean } from ".";
-import { alpha } from "./confidence-intervals";
-import { studentDistribQuan } from "./quantiles";
+import {
+  pearsonCorrelationEstimate,
+  shiftedDeviation,
+  mean,
+  stdDev,
+  alpha,
+  studentDistribQuan
+} from ".";
 
 export function linearA0(arrX: number[], arrY: number[]) {
   return mean(arrY) - linearA1(arrX, arrY) * mean(arrX);
@@ -55,7 +60,7 @@ export function determinationCoef(
   return (
     1 -
     ((arrY.length - paramsCount - 1) * remainsDispersion) /
-      ((arrY.length - 1) * shiftedDeviation(arrY, mean(arrY)))
+      ((arrY.length - 1) * Math.pow(stdDev(arrY, mean(arrY)), 2))
   );
 }
 
