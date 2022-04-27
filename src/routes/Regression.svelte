@@ -23,7 +23,9 @@
     { text: "Skewness coef.", value: "skew" },
     { text: "Kurtosis coef.", value: "kurt" },
     { text: "Student quan.", value: "stud" },
-    { text: "Is normal?", value: "norm" }
+    { text: "Fisher quan", value: "fish" },
+    { text: "Is normal?", value: "norm" },
+    { text: "Is significant?", value: "sign" }
   ];
 
   const attributes: string[] = $attributesStore;
@@ -116,6 +118,11 @@
       1 - alpha / 2,
       eArray.length - parameters.length - 1
     );
+    const fisherQuan = mymath.fisherDistribQuan(
+      1 - alpha / 2,
+      parameters.length,
+      arrX.length - parameters.length - 1
+    );
 
     items2.push({
       disp: pretty(remainsDispersion),
@@ -124,6 +131,8 @@
       skew: pretty(skew),
       kurt: pretty(kurt),
       stud: pretty(studentQuan2),
+      fish: pretty(fisherQuan),
+      sign: fstat > fisherQuan,
       norm: studentQuan2 > Math.abs(skew) && studentQuan2 > Math.abs(kurt)
     });
   }
