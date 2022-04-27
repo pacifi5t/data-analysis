@@ -42,3 +42,7 @@ export function paramConfInterval(
     studentDistribQuan(1 - alpha / 2, len - 2) * Math.sqrt(paramDispersion);
   return [param - quanStdDev, param + quanStdDev];
 }
+
+export function regressionTStat(param: number, paramDispersion: number) {
+  return param / Math.sqrt(paramDispersion);
+}

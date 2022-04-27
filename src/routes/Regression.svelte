@@ -11,7 +11,7 @@
     { text: "Parameter", value: "parameter" },
     { text: "Std. Deviation", value: "stddev" },
     { text: "Conf. Interval", value: "conf" },
-    { text: "Statistic", value: "stat" },
+    { text: "t-statistic", value: "stat" },
     { text: "p-value", value: "p" },
     { text: "Significant?", value: "sign" }
   ];
@@ -65,17 +65,25 @@
       mymath.paramConfInterval(parameters[0], dispArray[0], arrX.length),
       mymath.paramConfInterval(parameters[1], dispArray[1], arrX.length)
     ];
+    const tStatArray = [
+      mymath.regressionTStat(parameters[0], dispArray[0]),
+      mymath.regressionTStat(parameters[1], dispArray[1])
+    ];
+
+    const studentQuan = mymath.studentDistribQuan(
+      1 - mymath.alpha / 2,
+      arrX.length - parameters.length - 1
+    );
 
     for (let i = 0; i < 2; i++) {
-      //TODO: Add other characteristics
       items.push({
         title: `a${i}`,
         parameter: pretty(parameters[i]),
         stddev: pretty(Math.sqrt(dispArray[i])),
-        conf: `${confArray[i][0]} ; ${confArray[i][1]}`,
-        stat: "",
+        conf: `${pretty(confArray[i][0])} ; ${pretty(confArray[i][1])}`,
+        stat: pretty(tStatArray[i]),
         p: "",
-        sign: ""
+        sign: Math.abs(tStatArray[i]) > studentQuan
       });
     }
   }
