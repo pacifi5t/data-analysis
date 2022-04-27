@@ -18,7 +18,7 @@
 
   const headers2 = [
     { text: "Remains dispersion", value: "disp" },
-    { text: "Determination coefficient", value: "coef" },
+    { text: "Determination coef.", value: "coef" },
     { text: "f-statistic", value: "stat" },
     { text: "Skewness coef.", value: "skew" },
     { text: "Kurtosis coef.", value: "kurt" },
@@ -147,8 +147,8 @@
 
 {#if attributes.length != 0}
   <div class="flex gap-8">
-    <div class="flex-col w-80">
-      <div class="flex gap-4">
+    <div class="flex-col my-auto">
+      <div class="flex gap-6">
         <span class="text-xl py-2">Independent attribute:</span>
         <DropdownShell let:toggle>
           <Button on:click={toggle}>{attributes[attrIndex] ?? ""}</Button>
@@ -191,6 +191,6 @@
     </div>
     <Table {headers} {items} />
   </div>
-  <div id="regression" class="py-8" />
   <Table headers={headers2} items={items2} />
+  <div id="regression" class="py-8" />
 {/if}
