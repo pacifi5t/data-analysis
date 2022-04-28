@@ -72,13 +72,26 @@
             .filter((value) => value !== "");
         });
 
-      attributeHeaders = fileContents[0];
+      const firstRowIsHeaders = Number.isNaN(
+        Number.parseFloat(fileContents[0][0])
+      );
+      if (firstRowIsHeaders) {
+        attributeHeaders = fileContents[0];
+      } else {
+        const headers = [];
+        for (let i = 0; i < fileContents[0].length; i++) {
+          headers.push(`ATTR${i + 1}`);
+        }
+        attributeHeaders = headers;
+      }
+
       attributesStore.set(attributeHeaders);
 
       const dataSamples = <number[][]>[];
       for (let i = 0; i < fileContents[0].length; i++) {
         const sample = <number[]>[];
-        for (let j = 1; j < fileContents.length; j++) {
+        let j = firstRowIsHeaders ? 1 : 0;
+        for (; j < fileContents.length; j++) {
           sample.push(Number.parseFloat(fileContents[j][i]));
         }
         dataSamples.push(sample);
