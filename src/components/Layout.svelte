@@ -15,7 +15,6 @@
         <div class="ml-10 flex items-baseline space-x-4">
           <NavItem label="Data upload" href="/" {currentRoute} />
           <NavItem label="Characteristics" href="/chars" {currentRoute} />
-          <NavItem label="Correlation" href="/correlation" {currentRoute} />
           <NavItem label="Regression" href="/regression" {currentRoute} />
         </div>
       </div>

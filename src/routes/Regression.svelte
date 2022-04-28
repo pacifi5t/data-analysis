@@ -19,12 +19,12 @@
   const headers2 = [
     { text: "Remains dispersion", value: "disp" },
     { text: "Determination coef.", value: "coef" },
-    { text: "f-statistic", value: "stat" },
     { text: "Skewness coef.", value: "skew" },
     { text: "Kurtosis coef.", value: "kurt" },
     { text: "Student quan.", value: "stud" },
+    { text: "f-statistic", value: "stat" },
     { text: "Fisher quan", value: "fish" },
-    { text: "Is normal?", value: "norm" },
+    { text: "Is remains normal?", value: "norm" },
     { text: "Is significant?", value: "sign" }
   ];
 
