@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Table } from "attractions";
   import { pretty } from "../utils/helpers";
-  import { mutableSamplesStore } from "../utils/stores";
+  import { attributesStore, mutableSamplesStore } from "../utils/stores";
   import * as mymath from "../math";
 
   const headers = [
@@ -104,7 +104,7 @@
   {#each tableItems as item, i}
     <div class="flex flex-row">
       <span class="text-center mx-2">
-        ATTRIBUTE {i + 1}
+        {$attributesStore[i]}
       </span>
       <Table class="pb-8" {headers} items={item} />
     </div>

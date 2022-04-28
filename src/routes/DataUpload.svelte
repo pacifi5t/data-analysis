@@ -1,26 +1,34 @@
 <script lang="ts">
   import { FileDropzone, Table } from "attractions";
-  import { immutableSamplesStore, fileStore } from "../utils/stores";
+  import {
+    immutableSamplesStore,
+    fileStore,
+    attributesStore
+  } from "../utils/stores";
   import { pretty } from "../utils/helpers";
   import { VarSeries } from "../math";
 
   const reader = new FileReader();
   const headers = [
     { text: "elem", value: "elem" },
-    { text: "n", value: "n" },
-    { text: "freq", value: "freq" },
-    { text: "ecdf", value: "ecdf" }
+    { text: "n", value: "n" }
+    // { text: "freq", value: "freq" },
+    // { text: "ecdf", value: "ecdf" }
   ];
 
   let uplodedFiles = [];
   let tableItemArray = [];
   let immutableSamples: VarSeries[];
+  let attributeHeaders = [];
 
   fileStore.subscribe((value) => {
     uplodedFiles = value;
   });
   immutableSamplesStore.subscribe((value) => {
     immutableSamples = value;
+  });
+  attributesStore.subscribe((value) => {
+    attributeHeaders = value;
   });
 
   $: {
@@ -31,9 +39,9 @@
           const elem = immutableSamples[i];
           items.push({
             elem: pretty(elem.data[j]),
-            n: pretty(elem.count.get(j)),
-            freq: pretty(elem.frequency.get(j)),
-            ecdf: pretty(elem.empDistrFunc.get(j))
+            n: pretty(elem.count.get(j))
+            // freq: pretty(elem.frequency.get(j)),
+            // ecdf: pretty(elem.empDistrFunc.get(j))
           });
         }
         tableItemArray.push(items);
@@ -46,6 +54,7 @@
 
     if (uplodedFiles.length == 0) {
       immutableSamplesStore.set([]);
+      tableItemArray = [];
       return;
     }
 
@@ -55,14 +64,34 @@
         .toString()
         .replaceAll("\r", "")
         .split("\n")
+        .filter((value) => value !== "")
         .map((value) => {
-          return value.split(/ |\t/).filter((value) => value !== "");
+          return value
+            .trim()
+            .split(/ |\t/)
+            .filter((value) => value !== "");
         });
+
+      const firstRowIsHeaders = Number.isNaN(
+        Number.parseFloat(fileContents[0][0])
+      );
+      if (firstRowIsHeaders) {
+        attributeHeaders = fileContents[0];
+      } else {
+        const headers = [];
+        for (let i = 0; i < fileContents[0].length; i++) {
+          headers.push(`ATTR${i + 1}`);
+        }
+        attributeHeaders = headers;
+      }
+
+      attributesStore.set(attributeHeaders);
 
       const dataSamples = <number[][]>[];
       for (let i = 0; i < fileContents[0].length; i++) {
         const sample = <number[]>[];
-        for (let j = 0; j < fileContents.length; j++) {
+        let j = firstRowIsHeaders ? 1 : 0;
+        for (; j < fileContents.length; j++) {
           sample.push(Number.parseFloat(fileContents[j][i]));
         }
         dataSamples.push(sample);
@@ -87,10 +116,10 @@
 </div>
 
 {#if immutableSamples.length !== 0}
-  <div class="flex flex-row mt-10">
+  <div class="grid grid-cols-7 gap-y-8 mt-10">
     {#each tableItemArray as tableItems, i}
       <div class="flex flex-col">
-        <span class="m-auto">ATTRIBUTE {i + 1}</span>
+        <span class="mx-auto">{attributeHeaders[i]}</span>
         <Table class="px-4" {headers} items={tableItems} />
       </div>
     {/each}

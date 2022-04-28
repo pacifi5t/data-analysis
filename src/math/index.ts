@@ -6,4 +6,5 @@ export * from "./deviations";
 export * from "./quantiles";
 export * from "./parameters";
 export * from "./series";
+export * from "./regression";
 export * from "./other";
